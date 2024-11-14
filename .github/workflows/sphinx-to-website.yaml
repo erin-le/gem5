@@ -1,0 +1,39 @@
+---
+name: Generate Sphinx Docs and Commit to Website
+on:
+    push:
+        branches:
+          # - stable
+            - sphinx-website
+jobs:
+  # docs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+
+# I'm not sure that the default Sphinx build will work, but I'll keep it here as a placeholder for now
+            - name: Generate Sphinx docs
+            - uses: ammaraskar/sphinx-action@master
+              with:
+                  pre-build-command:
+                  docs-folder: docs/
+
+            - name: Commit documentation changes to gem5/website repo
+              # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
+              run: |
+                  git clone https://github.com/erin-le/gem5-website.git website --branch stable --single-branch stable
+                  cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
+                  cd website
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git add .
+                  git commit -m "Update documentation" -a || true
+                  # The above command will fail if no changes were present, so we ignore
+                  # the return code.
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                  branch: stable
+                  directory: website
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
