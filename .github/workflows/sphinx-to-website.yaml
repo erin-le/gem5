@@ -12,11 +12,14 @@ jobs:
         steps:
             - uses: actions/checkout@v1
 
-# I'm not sure that the default Sphinx build will work, but I'll keep it here as a placeholder for now
+# default Sphinx command from sphinx-action doesn't work with gem5, using a custom command
             - name: Generate Sphinx docs
               uses: ammaraskar/sphinx-action@master
               with:
-                  pre-build-command:
+                  pre-build-command: |
+                      scons build/ALL/gem5.opt
+                      ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
+                  build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
                   docs-folder: docs/
 
             - name: Commit documentation changes to gem5/website repo
