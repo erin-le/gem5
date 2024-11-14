@@ -14,7 +14,7 @@ jobs:
 
 # I'm not sure that the default Sphinx build will work, but I'll keep it here as a placeholder for now
             - name: Generate Sphinx docs
-            - uses: ammaraskar/sphinx-action@master
+              uses: ammaraskar/sphinx-action@master
               with:
                   pre-build-command:
                   docs-folder: docs/
