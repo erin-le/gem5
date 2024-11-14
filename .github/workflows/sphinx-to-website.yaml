@@ -9,12 +9,13 @@ jobs:
   # docs:
     build:
         runs-on: ubuntu-latest
+        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         steps:
             - uses: actions/checkout@v1
 
 # default Sphinx command from sphinx-action doesn't work with gem5, using a custom command
-            - name: gem5 docker image
-              run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+            # - name: gem5 docker image
+            #   run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
             - name: Generate Sphinx docs
               # uses: ammaraskar/sphinx-action@master
               # with:
@@ -26,6 +27,7 @@ jobs:
               run: |
                   pwd
                   ls .
+                  pwd
                   ls ..
                   scons build/ALL/gem5.opt
                   cd docs
