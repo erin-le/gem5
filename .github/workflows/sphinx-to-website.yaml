@@ -14,7 +14,7 @@ jobs:
 
 # default Sphinx command from sphinx-action doesn't work with gem5, using a custom command
             - name: gem5 docker image
-              run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:v24-0
+              run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
             - name: Generate Sphinx docs
               # uses: ammaraskar/sphinx-action@master
               # with:
@@ -24,7 +24,6 @@ jobs:
               #     build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
               #     docs-folder: docs/
               run: |
-                  cd gem5
                   scons build/ALL/gem5.opt
                   cd docs
                   ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
