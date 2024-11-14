@@ -24,6 +24,7 @@ jobs:
               #     build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
               #     docs-folder: docs/
               run: |
+                  pwd
                   scons build/ALL/gem5.opt
                   cd docs
                   ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
