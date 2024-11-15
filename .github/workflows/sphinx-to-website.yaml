@@ -23,7 +23,7 @@ jobs:
               uses: ammaraskar/sphinx-action@master
               with:
                   pre-build-command: |
-                      ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
+                      ./build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
                   build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
                   docs-folder: docs/
               # run: |
