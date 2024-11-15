@@ -17,21 +17,21 @@ jobs:
             # - name: gem5 docker image
             #   run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
             - name: Generate Sphinx docs
-              # uses: ammaraskar/sphinx-action@master
-              # with:
-              #     pre-build-command: |
-              #         scons build/ALL/gem5.opt
-              #         ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
-              #     build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
-              #     docs-folder: docs/
-              run: |
-                  python3 -m venv build/
-                  source build/bin/activate
-                  pip install sphinx
-                  scons build/ALL/gem5.opt
-                  cd docs
-                  ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
-                  SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
+              uses: ammaraskar/sphinx-action@master
+              with:
+                  pre-build-command: |
+                      scons build/ALL/gem5.opt
+                      ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
+                  build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
+                  docs-folder: docs/
+              # run: |
+              #     python3 -m venv build/
+              #     source build/bin/activate
+              #     pip install sphinx
+              #     scons build/ALL/gem5.opt
+              #     cd docs
+              #     ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
+              #     SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
 
 
 
