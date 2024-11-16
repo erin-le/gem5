@@ -47,7 +47,9 @@ jobs:
               #     ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
               #     SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
 
-
+            - name: Add frontmatter
+              cd docs
+              python3 add-frontmatter.py
 
             - name: Commit documentation changes to gem5/website repo
               # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
