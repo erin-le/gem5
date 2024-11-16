@@ -13,18 +13,30 @@ jobs:
         steps:
             - uses: actions/checkout@v1
 
-            - name: Build gem5
-              run: |
-                scons build/ALL/gem5.opt -j $(nproc)
-                ./build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
-
+            - name: Cache gem5 # remove caching in final
+              id: cache-gem5
+              uses: actions/cache@v4
+              with:
+                path: build/ALL
+                key: gem5.opt
 # default Sphinx command from sphinx-action doesn't work with gem5, using a custom command
             # - name: gem5 docker image
             #   run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+            - name: Build gem5
+              if: steps.cache-gem5.outputs.cache-hit != 'true'
+              run: scons build/ALL/gem5.opt -j $(nproc)
+
+            - name: Generate RST
+              run: |
+                apt-get install python3-sphinx
+                cd docs
+                ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
+                
             - name: Generate Sphinx docs
               uses: ammaraskar/sphinx-action@master
               with:                      
-                  build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
+                  build-command: |
+                    SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
                   docs-folder: docs/
               # run: |
               #     python3 -m venv build/
