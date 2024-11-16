@@ -14,16 +14,16 @@ jobs:
             - uses: actions/checkout@v1
 
             - name: Build gem5
-              run: scons build/ALL/gem5.opt -j $(nproc)
+              run: |
+                scons build/ALL/gem5.opt -j $(nproc)
+                ./build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
 
 # default Sphinx command from sphinx-action doesn't work with gem5, using a custom command
             # - name: gem5 docker image
             #   run: docker run -u $UID:$GID --volume .:/gem5 --rm ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
             - name: Generate Sphinx docs
               uses: ammaraskar/sphinx-action@master
-              with:
-                  pre-build-command: |
-                      ./build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
+              with:                      
                   build-command: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
                   docs-folder: docs/
               # run: |
