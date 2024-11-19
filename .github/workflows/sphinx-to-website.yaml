@@ -84,11 +84,11 @@ jobs:
                   cd docs
                   python3 add-frontmatter.py
 
-            - uses: actions/checkout@v4
+            # - uses: actions/checkout@v4
+            #     with:
+            #       repository: erin-le/gem5-website
+            #       path: website
             - name: Commit documentation changes to gem5/website repo
-              with:
-                  repository: erin-le/gem5-website
-                  path: website
               run: |
                   pwd
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
