@@ -70,6 +70,8 @@ jobs:
 
             - name: Commit documentation changes to gem5/website repo
               # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
                   mkdir website/_pages/documentation/general_docs/sphinx_docs
@@ -79,11 +81,13 @@ jobs:
                   git config --local user.name "GitHub Action"
                   git add .
                   git commit -m "Update Sphinx documentation" -a || true
+                  git push
                   # The above command will fail if no changes were present, so we ignore
                   # the return code.
-            - name: Push changes
-              uses: ad-m/github-push-action@master
-              with:
-                  branch: sphinx-tester
-                  directory: website
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
+            # - name: Push changes
+
+            #   uses: ad-m/github-push-action@master
+            #   with:
+            #       branch: sphinx-tester
+            #       directory: website
+            #       github_token: ${{ secrets.GITHUB_TOKEN }}
