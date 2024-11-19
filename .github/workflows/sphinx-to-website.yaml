@@ -28,9 +28,9 @@ jobs:
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         steps:
             - name: checkout gem5
-              uses: actions/checkout@v1
+              uses: actions/checkout@v4
             - name: checkout website
-              uses: actions/checkout@v1
+              uses: actions/checkout@v4
               with:
                   repository: erin-le/gem5-website
                   path: website
@@ -99,12 +99,13 @@ jobs:
                   cd docs
                   python3 add-frontmatter.py
 
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v4
               with:
                   repository: erin-le/gem5-website
                   path: website
             - name: Commit documentation changes to gem5/website repo
               run: |
+                  git config --global --add safe.directory "$GITHUB_WORKSPACE"
                   pwd
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
                   # Note: the following account information will not work on GHES
