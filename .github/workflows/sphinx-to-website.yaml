@@ -21,6 +21,13 @@ jobs:
               with:
                   repository: erin-le/gem5-website
                   path: website
+            - name: debugging ls
+              run: |
+                  pwd
+                  ls
+                  ls ..
+                  ls website
+
 
             - name: install Sphinx
                   # | echo y
@@ -78,24 +85,36 @@ jobs:
                   python3 add-frontmatter.py
 
             - name: Commit documentation changes to gem5/website repo
-              # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              # git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
+              uses: actions/checkout@v4
+              with:
+                  repository: erin-le/gem5-website
+                  path: website
               run: |
-                  mkdir website/_pages/documentation/general_docs/sphinx_docs
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
-                  cd website
-                  git config --local user.email "action@github.com"
-                  git config --local user.name "GitHub Action"
+                  # Note: the following account information will not work on GHES
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
                   git add .
                   git commit -m "Update Sphinx documentation" -a || true
-                  git remote -v
-                  git remote set-url origin ssh://git@github.com:erin-le/gem5.git
-                  git remote -v
-                  git push --set-upstream https://user:$GITHUB_TOKEN@github.com/erin-le/gem5-website sphinx-tester
-                  # The above command will fail if no changes were present, so we ignore
-                  # the return code.
+                  git push
+              # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
+              # env:
+              #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              # # git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
+              # run: |
+              #     # mkdir website/_pages/documentation/general_docs/sphinx_docs
+              #     cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
+              #     cd website
+              #     git config --local user.email "action@github.com"
+              #     git config --local user.name "GitHub Action"
+              #     git add .
+              #     git commit -m "Update Sphinx documentation" -a || true
+              #     git remote -v
+              #     git remote set-url origin ssh://git@github.com:erin-le/gem5.git
+              #     git remote -v
+              #     git push --set-upstream https://user:$GITHUB_TOKEN@github.com/erin-le/gem5-website sphinx-tester
+              #     # The above command will fail if no changes were present, so we ignore
+              #     # the return code.
             # - name: Push changes
 
             #   uses: ad-m/github-push-action@master
