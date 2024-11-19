@@ -1,0 +1,19 @@
+gem5.prebuilt package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   gem5.prebuilt.demo
+   gem5.prebuilt.riscvmatched
+
+Module contents
+---------------
+
+.. automodule:: gem5.prebuilt
+   :members:
+   :undoc-members:
+   :show-inheritance:
