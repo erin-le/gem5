@@ -73,7 +73,7 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
+                  git clone --single-branch --branch sphinx-tester -- git@github.com:erin-le/gem5-website.git website
                   mkdir website/_pages/documentation/general_docs/sphinx_docs
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
                   cd website
