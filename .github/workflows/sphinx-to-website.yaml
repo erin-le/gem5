@@ -46,7 +46,10 @@ jobs:
               #     build-command: |
               #         SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
               #     docs-folder: docs/
-              run: ../build/ALL/gem5.opt gem5-sphinx -M html . _build
+              run: |
+                  cd docs
+                  pwd
+                  ../build/ALL/gem5.opt gem5-sphinx -M html . _build
 
               # SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
 
