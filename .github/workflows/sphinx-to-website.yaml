@@ -14,7 +14,9 @@ jobs:
             - uses: actions/checkout@v1
 
             - name: install Sphinx
-              run: apt-get install python3-sphinx | echo y
+              run: |
+                  apt-get install python3-sphinx | echo y
+                  sphinx-build --version
 
             - name: Cache gem5 # remove caching in final
               id: cache-gem5
