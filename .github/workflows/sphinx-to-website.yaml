@@ -7,7 +7,20 @@ on:
             - sphinx-website
 jobs:
   # docs:
-    sphinx-to-website:
+    # push-to-website:
+    #   runs-on: ubuntu-latest
+    #   steps:
+    #     - uses: actions/checkout@v4
+    #     - run: |
+    #         date > generated.txt
+    #         # Note: the following account information will not work on GHES
+    #         git config user.name "github-actions[bot]"
+    #         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    #         git add .
+    #         git commit -m "generated"
+    #         git push
+
+    build-sphinx:
         permissions:
             contents: write
 
@@ -25,7 +38,9 @@ jobs:
               run: |
                   pwd
                   ls
+                  echo "___"
                   ls ..
+                  echo "___"
                   ls website
 
 
@@ -84,10 +99,10 @@ jobs:
                   cd docs
                   python3 add-frontmatter.py
 
-            # - uses: actions/checkout@v4
-            #     with:
-            #       repository: erin-le/gem5-website
-            #       path: website
+            - uses: actions/checkout@v4
+              with:
+                  repository: erin-le/gem5-website
+                  path: website
             - name: Commit documentation changes to gem5/website repo
               run: |
                   pwd
