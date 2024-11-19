@@ -71,7 +71,7 @@ jobs:
             - name: Commit documentation changes to gem5/website repo
               # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
               run: |
-                  git clone https://github.com/erin-le/gem5-website.git website --branch stable --single-branch stable
+                  git clone https://github.com/erin-le/gem5-website.git website --single-branch sphinx-tester
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
                   cd website
                   git config --local user.email "action@github.com"
@@ -83,6 +83,6 @@ jobs:
             - name: Push changes
               uses: ad-m/github-push-action@master
               with:
-                  branch: stable
+                  branch: sphinx-tester
                   directory: website
                   github_token: ${{ secrets.GITHUB_TOKEN }}
