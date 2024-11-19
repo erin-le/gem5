@@ -17,6 +17,7 @@ jobs:
                   # | echo y
                   #pip install sphinx
               run: |
+                  apt-get update
                   apt-get install python3-sphinx -y --fix-missing
                   sphinx-build --version
 
