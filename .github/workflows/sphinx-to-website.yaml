@@ -14,7 +14,13 @@ jobs:
         runs-on: ubuntu-latest
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         steps:
-            - uses: actions/checkout@v1
+            - name: checkout gem5
+              uses: actions/checkout@v4
+            - name: checkout website
+              uses: actions/checkout@v4
+              with:
+                  repository: erin-le/gem5-website
+                  path: website
 
             - name: install Sphinx
                   # | echo y
@@ -75,8 +81,8 @@ jobs:
               # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              # git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
               run: |
-                  git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
                   mkdir website/_pages/documentation/general_docs/sphinx_docs
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
                   cd website
