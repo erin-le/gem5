@@ -28,9 +28,9 @@ jobs:
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         steps:
             - name: checkout gem5
-              uses: actions/checkout@v4
+              uses: actions/checkout@v1
             - name: checkout website
-              uses: actions/checkout@v4
+              uses: actions/checkout@v1
               with:
                   repository: erin-le/gem5-website
                   path: website
@@ -99,7 +99,7 @@ jobs:
                   cd docs
                   python3 add-frontmatter.py
 
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v1
               with:
                   repository: erin-le/gem5-website
                   path: website
