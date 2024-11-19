@@ -14,10 +14,10 @@ jobs:
             - uses: actions/checkout@v1
 
             - name: install Sphinx
-                  # apt-get install python3-sphinx | echo y
-
+                  # | echo y
+                  #pip install sphinx
               run: |
-                  pip install sphinx
+                  apt-get install python3-sphinx -y
                   sphinx-build --version
 
             - name: Cache gem5 # remove caching in final
