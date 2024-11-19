@@ -46,7 +46,11 @@ jobs:
               #     build-command: |
               #         SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
               #     docs-folder: docs/
-              run: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
+              run: ../build/ALL/gem5.opt gem5-sphinx -M html . _build
+
+              # SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
+
+
               # run: |
               #     python3 -m venv build/
               #     source build/bin/activate
