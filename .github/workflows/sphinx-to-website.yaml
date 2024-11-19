@@ -71,13 +71,13 @@ jobs:
             - name: Commit documentation changes to gem5/website repo
               # git clone https://github.com/gem5/website.git --branch stable --single-branch stable
               run: |
-                  git clone https://github.com/erin-le/gem5-website.git --single-branch sphinx-tester -- website
+                  git clone --single-branch --branch sphinx-tester -- https://github.com/erin-le/gem5-website.git website
                   cp -r docs/_build/html/* website/_pages/documentation/general_docs/sphinx_docs
                   cd website
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
                   git add .
-                  git commit -m "Update documentation" -a || true
+                  git commit -m "Update Sphinx documentation" -a || true
                   # The above command will fail if no changes were present, so we ignore
                   # the return code.
             - name: Push changes
