@@ -41,11 +41,12 @@ jobs:
                   ../build/ALL/gem5.opt gem5-sphinx-apidoc -o . ../src/python/gem5 -F -e
 
             - name: Generate Sphinx docs
-              uses: ammaraskar/sphinx-action@master
-              with:
-                  build-command: |
-                      SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
-                  docs-folder: docs/
+              # uses: ammaraskar/sphinx-action@master
+              # with:
+              #     build-command: |
+              #         SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
+              #     docs-folder: docs/
+              run: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
               # run: |
               #     python3 -m venv build/
               #     source build/bin/activate
