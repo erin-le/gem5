@@ -14,12 +14,22 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
     # f.write(html)
     for line in html:
         if "<li><a href=" in line:
-            modified_line = line.replace("/", ".").replace(
-                "<.a><.li>", "</a></li>"
+            modified_line = (
+                line.replace("/", ".")
+                .replace("<.a>", "</a>")
+                .replace("<.li>", "</li>")
             )
             f.write(modified_line)
+        elif (
+            line == '<h1 class="logo"><a href="../index.html">gem5</a></h1>'
+            or line
+            == '<li class="toctree-l1"><a class="reference internal" href="../gem5.html">gem5 package</a></li>'
+        ):
+            modified_line = line.replace("../", "./")
+            f.write(modified_line)
         else:
-            f.write(line)
+            modified_line = line
+        f.write(modified_line)
 
 for filename in os.listdir("./_build/html"):
 
