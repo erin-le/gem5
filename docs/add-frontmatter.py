@@ -15,15 +15,6 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
     search_flag = False
     for line in html:
         modified_line = None
-        # remove the search bar
-        if "<search" in line:
-            search_flag = True
-            modified_line = ""
-        if "</search>" in line:
-            search_flag = False
-            modified_line = ""
-        if search_flag == True:
-            modified_line = ""
 
         # make the links at the bottom of index.html work
         if "<li><a href=" in line:
@@ -57,7 +48,17 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
                     '<h1 class="logo"><a href="./index.html">gem5</a></h1>'
                 )
             else:
-                modified_line = line
+                # remove the search bar
+                if "<search" in line:
+                    search_flag = True
+                    modified_line = ""
+                elif "</search>" in line:
+                    search_flag = False
+                    modified_line = ""
+                elif search_flag == True:
+                    modified_line = ""
+                else:
+                    modified_line = line
         f.write(modified_line)
 
 for filename in os.listdir("./_build/html"):
