@@ -60,7 +60,7 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
                 else:
                     modified_line = line
         f.write(modified_line)
-
+        print("latest version gotten")
 for filename in os.listdir("./_build/html"):
 
     # print(filename)
