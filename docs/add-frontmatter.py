@@ -4,14 +4,17 @@ import os
 # for filename in os.listdir('/Volumes/Crucial/gem5-dev/website/_pages/documentation/general_docs/sphinx_docs'):
 
 with open(f"./_build/html/_modules/index.html", "r+") as f:
-    html = f.read()
+    # html = f.read()
     f.seek(0, 0)
     f.write("---\n")
     f.write(f'title: "Sphinx Documentation"\n')
     f.write("parent: sphinx-docs\n")
-    f.write(f"permalink: /documentation/general_docs/sphinx_docs\n")
+    f.write(f"permalink: /documentation/general_docs/sphinx_docs/index.html\n")
     f.write("---\n")
-    f.write(html)
+    # f.write(html)
+    for line in f:
+        if "<li><a href=" in line:
+            modified_line = line.replace("/", ".")
 
 
 for filename in os.listdir("./_build/html"):
@@ -27,12 +30,15 @@ for filename in os.listdir("./_build/html"):
             f.write("---\n")
             f.write(f'title: "{filename}"\n')
             f.write("parent: sphinx-docs\n")
-            modified_filename = filename.replace(".", "/").replace(
-                "/html", ".html"
-            )
+            # modified_filename = filename.replace(".", "/").replace(
+            #     "/html", ".html"
+            # )
 
+            # f.write(
+            #     f"permalink: /documentation/general_docs/sphinx_docs/{modified_filename}\n"
+            # )
             f.write(
-                f"permalink: /documentation/general_docs/sphinx_docs/{modified_filename}\n"
+                f"permalink: /documentation/general_docs/sphinx_docs/{filename}\n"
             )
             f.write("---\n")
             f.write(html)
