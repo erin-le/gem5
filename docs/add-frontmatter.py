@@ -27,7 +27,10 @@ for filename in os.listdir("./_build/html"):
             f.write("---\n")
             f.write(f'title: "{filename}"\n')
             f.write("parent: sphinx-docs\n")
-            modified_filename = filename.replace("gem5.", "gem5/")
+            modified_filename = filename.replace(".", "/").replace(
+                "/html", ".html"
+            )
+
             f.write(
                 f"permalink: /documentation/general_docs/sphinx_docs/{modified_filename}\n"
             )
