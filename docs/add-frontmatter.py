@@ -14,15 +14,17 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
     # f.write(html)
     search_flag = False
     for line in html:
+        modified_line = None
         # remove the search bar
         if "<search" in line:
             search_flag = True
+            modified_line = ""
         if "</search>" in line:
             search_flag = False
-            continue
+            modified_line = ""
         if search_flag == True:
-            continue
-        modified_line = None
+            modified_line = ""
+
         # make the links at the bottom of index.html work
         if "<li><a href=" in line:
             if (
