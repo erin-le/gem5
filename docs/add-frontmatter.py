@@ -13,7 +13,7 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
     f.write(f"permalink: /documentation/general_docs/sphinx_docs/index.html\n")
     f.write("---\n")
     # f.write(html)
-    # search_flag = False
+    search_flag = False
     for line in html:
         modified_line = None
 
