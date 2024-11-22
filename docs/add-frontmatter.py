@@ -53,7 +53,7 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
                 if 'id="searchbox"' in line:
                     search_flag = True
                     modified_line = ""
-                elif "<script>document.getElementById('searchbox')" in line:
+                elif "'searchbox').style.display = \"block\"</script>" in line:
                     search_flag = False
                     modified_line = ""
                 elif search_flag == True:
