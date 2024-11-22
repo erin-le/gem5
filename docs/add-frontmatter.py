@@ -60,11 +60,19 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
                     modified_line = ""
                 else:
                     modified_line = line
+        # if '</html>searchbox\').style.display = "block"</script>' in line:
+        #     f.write("</html>")
+        # else:
+        f.write(modified_line)
+        print("latest version gotten")
+
+with open(f"./_build/html/_modules/index.html", "r+") as f:
+    html = f.readlines()
+    for line in html:
         if '</html>searchbox\').style.display = "block"</script>' in line:
             f.write("</html>")
         else:
-            f.write(modified_line)
-        print("latest version gotten")
+            f.write(line)
 for filename in os.listdir("./_build/html"):
 
     # print(filename)
