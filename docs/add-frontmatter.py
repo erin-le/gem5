@@ -2,6 +2,7 @@ import os
 
 # for filename in os.listdir('../../docs/_build/html'):
 # for filename in os.listdir('/Volumes/Crucial/gem5-dev/website/_pages/documentation/general_docs/sphinx_docs'):
+search_bar_lines = []
 
 with open(f"./_build/html/_modules/index.html", "r+") as f:
     html = f.readlines()
@@ -12,7 +13,7 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
     f.write(f"permalink: /documentation/general_docs/sphinx_docs/index.html\n")
     f.write("---\n")
     # f.write(html)
-    search_flag = False
+    # search_flag = False
     for line in html:
         modified_line = None
 
@@ -49,10 +50,13 @@ with open(f"./_build/html/_modules/index.html", "r+") as f:
                 )
             else:
                 # remove the search bar
-                if "<search" in line:
+                if 'id="searchbox"' in line:
                     search_flag = True
                     modified_line = ""
-                elif "</search>" in line:
+                elif (
+                    "<script>document.getElementById('searchbox').style.display"
+                    in line
+                ):
                     search_flag = False
                     modified_line = ""
                 elif search_flag == True:
