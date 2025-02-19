@@ -1,0 +1,99 @@
+[
+    {
+        "category": "binary",
+        "id": "weblink-valid",
+        "description": "A test resource; arm-hello64-static in a trench coat.",
+        "architecture": "ARM",
+        "is_zipped": false,
+        "md5sum": "71b2cb004fe2cda4556f0b1a38638af6",
+        "url": "http://dist.gem5.org/dist/develop/test-progs/hello/bin/arm/linux/hello64-static",
+        "source": "src/test-source",
+        "resource_version": "1.0.0",
+        "gem5_versions": [
+            "develop",
+            "24.0",
+            "24.1"
+        ]
+    },
+    {
+        "category": "binary",
+        "id": "weblink-invalid",
+        "description": "A test resource; arm-hello64-static in a trench coat.",
+        "architecture": "ARM",
+        "is_zipped": false,
+        "md5sum": "71b2cb004fe2cda4556f0b1a38638af6",
+        "url": "http://dist.gem5.org/dist/develop/test-progs/hello/bin/arm/linux/hello64-",
+        "source": "src/test-source",
+        "resource_version": "1.0.0",
+        "gem5_versions": [
+            "develop",
+            "24.0",
+            "24.1"
+        ]
+    },
+    {
+        "category": "binary",
+        "id": "path-direct-valid",
+        "description": "A test resource; arm-hello64-static in a trench coat.",
+        "architecture": "ARM",
+        "is_zipped": false,
+        "md5sum": "71b2cb004fe2cda4556f0b1a38638af6",
+        "url": "/home/bees/gem5-6th-worktree/gem5-dev/staging-24.1.1.0/pr-1870/test-resource-arm",
+        "source": "src/test-source",
+        "resource_version": "1.0.0",
+        "gem5_versions": [
+            "develop",
+            "24.0",
+            "24.1"
+        ]
+    },
+    {
+        "category": "binary",
+        "id": "path-direct-invalid",
+        "description": "A test resource; arm-hello64-static in a trench coat.",
+        "architecture": "ARM",
+        "is_zipped": false,
+        "md5sum": "71b2cb004fe2cda4556f0b1a38638af6",
+        "url": "/home/bees/gem5-6th-worktree/gem5-dev/staging-24.1.1.0/pr-1870/test-resource-aaaa",
+        "source": "src/test-source",
+        "resource_version": "1.0.0",
+        "gem5_versions": [
+            "develop",
+            "24.0",
+            "24.1"
+        ]
+    },
+    {
+        "category": "binary",
+        "id": "path-file-valid",
+        "description": "A test resource; arm-hello64-static in a trench coat.",
+        "architecture": "ARM",
+        "is_zipped": false,
+        "md5sum": "71b2cb004fe2cda4556f0b1a38638af6",
+        "url": "file:///home/bees/gem5-6th-worktree/gem5-dev/staging-24.1.1.0/pr-1870/test-resource-arm",
+        "source": "src/test-source",
+        "resource_version": "1.0.0",
+        "gem5_versions": [
+            "develop",
+            "24.0",
+            "24.1"
+        ]
+    },
+
+    {
+        "category": "binary",
+        "id": "path-file-invalid",
+        "description": "A test resource; arm-hello64-static in a trench coat.",
+        "architecture": "ARM",
+        "is_zipped": false,
+        "md5sum": "71b2cb004fe2cda4556f0b1a38638af6",
+        "url": "file:///home/bees/gem5-6th-worktree/gem5-dev/staging-24.1.1.0/pr-1870/test-resource-aaaa",
+        "source": "src/test-source",
+        "resource_version": "1.0.0",
+        "gem5_versions": [
+            "develop",
+            "24.0",
+            "24.1"
+        ]
+    }
+]
