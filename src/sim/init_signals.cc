@@ -451,6 +451,7 @@ initSignals()
     // Install a SIGIO handler to handle asynchronous file IO. See the
     // PollQueue class.
     installSignalHandler(SIGIO, ioHandler);
+    initSigRtmin();
 }
 
 void initSigRtmin()
