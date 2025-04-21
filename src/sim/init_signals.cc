@@ -233,7 +233,15 @@ static void
 externalProcessHandler(int sigtype)
 {
     async_event = true;
+    async_hypercall = true;
+    /* Wake up some event queue to handle event */
+    getEventQueue(0)->wakeup();
 
+}
+
+void
+processExternalSignal(void)
+{
     std::string shared_mem_name_str = "shared_gem5_signal_mem_" +
         std::to_string(getpid());
     const char* shared_mem_name = shared_mem_name_str.c_str();
@@ -381,7 +389,9 @@ externalProcessHandler(int sigtype)
     munmap(shm_ptr, shared_mem_size);
     close(shm_fd);
 
-    exitSimulationLoopNow(hypercall_id, payload_map);
+    // exitSimulationLoopNow(hypercall_id, payload_map);
+    exitSimLoopWithHypercall("Handling external signal!", 0, curTick(), 0,
+    payload_map, hypercall_id, false);
 }
 
 std::string
@@ -451,7 +461,6 @@ initSignals()
     // Install a SIGIO handler to handle asynchronous file IO. See the
     // PollQueue class.
     installSignalHandler(SIGIO, ioHandler);
-    initSigRtmin();
 }
 
 void initSigRtmin()

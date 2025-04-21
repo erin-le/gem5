@@ -330,6 +330,10 @@ doSimLoop(EventQueue *eventq)
                 async_exception = false;
                 return NULL;
             }
+            if (async_hypercall){
+                async_hypercall = false;
+                processExternalSignal();
+            }
         }
 
         Event *exit_event = eventq->serviceOne();
