@@ -157,7 +157,6 @@ def send_signal(pid: int, id: int, payload: str) -> None:
             )
             break
     logger.debug("Done message received")
-    # print(f"Done message received for pid {pid}")
     shm.close()
     try:
         shm.unlink()
