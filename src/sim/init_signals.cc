@@ -242,21 +242,32 @@ externalProcessHandler(int sigtype)
 void
 processExternalSignal(void)
 {
+    // Running into issues with external signals on mac; below are comments
+    // with things I tried
+
+    // tried adding a '/' at the beginning of the name so the first part was
+    // "shared_gem5_signal_mem_", doesn't work
     std::string shared_mem_name_str = "shared_gem5_signal_mem_" +
         std::to_string(getpid());
     const char* shared_mem_name = shared_mem_name_str.c_str();
+    std::cerr << "shared_mem_name_str is: " << shared_mem_name_str <<std::endl;
     const std::size_t shared_mem_size = 4096;
-
+    //tried adding `| O_CREAT ` to the second argument and the handler
+    // progresses past this, but stops on mmap with `Invalid argument`.
     int shm_fd = shm_open(shared_mem_name, O_RDWR, 0666); //0666 = rw-rw-rw-
     if (shm_fd == -1) {
-        std::cerr << "Error: Unable to open shared memory" << std::endl;
+        std::cerr << "Error: Unable to open shared memory: "
+        << std::strerror(errno)<<std::endl;
         return;
     }
-
+    // ftruncate(shm_fd, shared_mem_size); //tried this, doesn't work, also
+    // apparently not supposed to be used if you are attaching to shared mem
+    // instead of creating it
     void* shm_ptr = mmap(0, shared_mem_size, PROT_READ | PROT_WRITE,
         MAP_SHARED, shm_fd, 0);
     if (shm_ptr == MAP_FAILED) {
-        std::cerr << "Error: Unable to map shared memory" << std::endl;
+        std::cerr << "Error: Unable to map shared memory: "
+        << std::strerror(errno)<<std::endl;
         close(shm_fd);
         return;
     }

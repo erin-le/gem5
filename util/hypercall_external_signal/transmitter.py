@@ -73,7 +73,7 @@ from multiprocessing import shared_memory
 from time import sleep
 from typing import Optional
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -85,8 +85,11 @@ def send_signal(pid: int, id: int, payload: str) -> None:
     :param id: Message ID for the signal
     :param payload: String payload to send
     """
+    # Running into issues opening shared memory on Mac, tried adding '/' to
+    # the name, so the first part was "/shared_gem5_signal_mem_". Didn't work
     shared_mem_name = "shared_gem5_signal_mem_" + str(pid)
     shared_mem_size = 4096
+    logger.debug(f"shared_mem_name is: {shared_mem_name}")
     try:
         shm = shared_memory.SharedMemory(
             name=shared_mem_name, create=True, size=shared_mem_size
