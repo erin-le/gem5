@@ -647,6 +647,12 @@ def define_common_args(config):
             default=config._defaults.resource_url,
             help="The URL where the resources reside.",
         ),
+        Argument(
+            "--gcov",
+            action="store_true",
+            default=False,
+            help="Build gem5 for running with gcov.",
+        ),
     ]
 
     # NOTE: There is a limitation which arises due to this format. If you have
@@ -715,6 +721,7 @@ class RunParser(ArgParser):
         common_args.host.add_to(parser)
         common_args.include_tags.add_to(parser)
         common_args.exclude_tags.add_to(parser)
+        common_args.gcov.add_to(parser)
 
 
 class ListParser(ArgParser):
@@ -798,6 +805,7 @@ class RerunParser(ArgParser):
         common_args.variant.add_to(parser)
         common_args.length.add_to(parser)
         common_args.host.add_to(parser)
+        common_args.gcov.add_to(parser)
 
 
 config = _Config()
