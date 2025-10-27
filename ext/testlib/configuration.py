@@ -158,6 +158,11 @@ class _Config:
     def _parse_commandline_args(self, parser):
         args = parser.parse_args()
 
+        # Use debug builds to run gcov on TestLib. This does the equivalent of
+        # passing `--variant=debug` when running main.py.
+        if args.gcov:
+            args.variant = ("debug",)
+
         self._config_file_args = {}
 
         for attr in dir(args):
