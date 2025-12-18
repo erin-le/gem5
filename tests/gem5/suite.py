@@ -41,8 +41,8 @@ import os
 import subprocess
 import sys
 
-from testlib.configuration import config as testlib_config
 from testlib.configuration import (
+    config,
     constants,
 )
 from testlib.helper import log_call
@@ -103,8 +103,6 @@ def gem5_verify_config(
     testsuites = []
 
     for host in valid_hosts:
-        if testlib_config.gcov:
-            valid_variants = (constants.debug_tag,)
         for opt in valid_variants:
             for isa in valid_isas:
                 # Create a tempdir fixture to be shared throughout the test.
