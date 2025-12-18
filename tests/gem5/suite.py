@@ -43,7 +43,10 @@ import sys
 
 from testlib.configuration import config as testlib_config
 from testlib.configuration import constants
-from testlib.helper import log_call
+from testlib.helper import (
+    gcov_delete_files,
+    log_call,
+)
 from testlib.suite import TestSuite
 from testlib.test_util import TestFunction
 
@@ -169,6 +172,17 @@ def _create_test_run_gem5(config, config_args, gem5_args):
         else:
             _gem5_args = gem5_args
 
+        params.log.message(
+            f"Printing params to see what it contains: {params}"
+        )
+        params.log.message(f"Printing fixtures: {fixtures}")
+        if testlib_config.gcov:
+            params.log.message(
+                "Now cleaning up gcda and .py.gcno files from previous runs or "
+                "build process..."
+            )
+            gcov_delete_files(testlib_config.build_dir, "all")
+
         # FIXME/TODO: I don't like the idea of having to modify this test run
         # or always collect results even if not using a verifier. There should
         # be some configuration in here that only gathers certain results for
@@ -197,5 +211,52 @@ def _create_test_run_gem5(config, config_args, gem5_args):
             stdout=sys.stdout,
             stderr=sys.stderr,
         )
+        if testlib_config.gcov:
+
+            params.log.message(
+                "Now trying to delete .py.gcno and .py.gcda "
+                "files after running tests, but before running gcovr"
+            )
+            gcov_delete_files(testlib_config.build_dir, "py")
+            # run gcovr to get coverage metrics on an individual test
+            params.log.message("Now running gcovr...")
+            params.log.message(
+                f"testlib_config.base_dir is: {testlib_config.base_dir}"
+            )
+            params.log.message(
+                f"testlib_config.build_dir is: {testlib_config.build_dir}"
+            )
+            params.log.message(
+                f"tempdir is {tempdir}. With os.join, the json output file "
+                f"paths are {os.path.join(tempdir, "gcov-results.json")} and "
+                f"{os.path.join(tempdir, "gcov-summary.json")}"
+            )
+
+            command = [
+                "gcovr",  # must be on gcovr version >= 7.1, otherwise gcovr won't be able to handle more than 9999 lines of code
+                "--verbose",
+                "--merge-mode-functions",
+                "separate",
+                "--root",
+                testlib_config.base_dir,
+                "--object-directory",
+                # "/home/bees/gem5-3rd-worktree/gcov-riscv-boot-tests-2/build/ALL",
+                testlib_config.build_dir,
+                "--gcov-ignore-parse-errors=suspicious_hits.warn",
+                "--json",
+                # os.join(testlib_config.result_path, "gcov-results/"),
+                os.path.join(tempdir, "gcov-results.json"),
+                "--json-pretty",
+                "--json-summary",
+                os.path.join(tempdir, "gcov-summary.json"),
+                "--json-summary-pretty",
+            ]
+            log_call(
+                params.log,
+                command,
+                time=params.time,
+                stdout=sys.stdout,
+                stderr=sys.stderr,
+            )
 
     return test_run_gem5
