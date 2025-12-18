@@ -41,10 +41,8 @@ import os
 import subprocess
 import sys
 
-from testlib.configuration import (
-    config,
-    constants,
-)
+from testlib.configuration import config as testlib_config
+from testlib.configuration import constants
 from testlib.helper import log_call
 from testlib.suite import TestSuite
 from testlib.test_util import TestFunction
