@@ -268,6 +268,8 @@ class Gem5Fixture(SConsFixture):
         self.path = self.target
         self.directory = config.base_dir
 
+        self.gcov = config.gcov
+
         self.isa = isa
         self.protocol = protocol
         self.set_global()
