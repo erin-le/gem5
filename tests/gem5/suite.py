@@ -186,21 +186,20 @@ def _create_test_run_gem5(config, config_args, gem5_args):
         # fixture, but we always require it even if that verifier isn't being
         # ran.
         tempdir = fixtures[constants.tempdir_fixture_name].path
-        gem5 = fixtures[constants.gem5_binary_fixture_name].path
 
-        gcov = fixtures[constants.gem5_binary_fixture_name].gcov
-        gem5_target_dir = fixtures[
-            constants.gem5_binary_fixture_name
-        ].target_dir
-        gem5_base_dir = fixtures[constants.gem5_binary_fixture_name].directory
+        gem5_fixture = fixtures[constants.gem5_binary_fixture_name]
+
+        gem5 = gem5_fixture.path
+        gcov = gem5_fixture.gcov
+        gem5_build_target_dir = gem5_fixture.target_dir
+        gem5_base_dir = gem5_fixture.directory
 
         if gcov:
             params.log.message(
-                "Now cleaning up gcda and .py.gcno files from previous runs or "
-                "build process..."
+                "Now cleaning up gcda and .py.gcno files from previous runs "
+                "or build process..."
             )
-            # gcov_delete_files(testlib_config.build_dir, "all")
-            gcov_delete_files(gem5_target_dir, "all")
+            gcov_delete_files(gem5_build_target_dir, "all")
 
         command = [
             gem5,
@@ -220,29 +219,16 @@ def _create_test_run_gem5(config, config_args, gem5_args):
             stdout=sys.stdout,
             stderr=sys.stderr,
         )
-        if gcov:
 
+        # run gcovr to get coverage metrics for each individual test
+        if gcov:
             params.log.message(
-                "Now trying to delete .py.gcno and .py.gcda "
-                "files after running tests, but before running gcovr"
+                "Now removing .py.gcno and .py.gcda files after running tests "
+                ", but before running gcovr"
             )
-            # gcov_delete_files(testlib_config.build_dir, "py")
-            gcov_delete_files(gem5_target_dir, "py")
-            # run gcovr to get coverage metrics on an individual test
+            gcov_delete_files(gem5_build_target_dir, "py")
+
             params.log.message("Now running gcovr...")
-            params.log.message(
-                # f"testlib_config.base_dir is: {testlib_config.base_dir}"
-                f"gem5_base_dir is: {gem5_base_dir}"
-            )
-            params.log.message(
-                # f"testlib_config.build_dir is: {testlib_config.build_dir}"
-                f"gem5_target_dir is: {gem5_target_dir}"
-            )
-            params.log.message(
-                f"tempdir is {tempdir}. With os.join, the json output file "
-                f"paths are {os.path.join(tempdir, "gcov-results.json")} and "
-                f"{os.path.join(tempdir, "gcov-summary.json")}"
-            )
 
             command = [
                 "gcovr",  # must be on gcovr version >= 7.1, otherwise gcovr won't be able to handle more than 9999 lines of code
@@ -250,15 +236,11 @@ def _create_test_run_gem5(config, config_args, gem5_args):
                 "--merge-mode-functions",
                 "separate",
                 "--root",
-                # testlib_config.base_dir,
                 gem5_base_dir,
                 "--object-directory",
-                # "/home/bees/gem5-3rd-worktree/gcov-riscv-boot-tests-2/build/ALL",
-                # testlib_config.build_dir,
-                gem5_target_dir,
+                gem5_build_target_dir,
                 "--gcov-ignore-parse-errors=suspicious_hits.warn",
                 "--json",
-                # os.join(testlib_config.result_path, "gcov-results/"),
                 os.path.join(tempdir, "gcov-results.json"),
                 "--json-pretty",
                 "--json-summary",
