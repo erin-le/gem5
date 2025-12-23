@@ -244,7 +244,7 @@ class SConsFixture(UniqueFixture):
         # problems when running gcov.
         log.test_log.message(
             ""
-            "Now removing gcda and .py.gcno files generated during the build"
+            "Now removing gcda and .py.gcno files generated during the build "
             "process..."
         )
         if config.gcov:

@@ -165,11 +165,6 @@ class _Config:
             if not attr.startswith("_"):
                 self._config_file_args[attr] = getattr(args, attr)
 
-        # Use debug builds to run gcov on TestLib. This does the equivalent of
-        # passing `--variant=debug` when running main.py.
-        if "gcov" in dir(args):
-            self._config_file_args["variant"] = ("debug",)
-
         self._config.update(self._config_file_args)
 
     def _run_post_processors(self):
@@ -236,7 +231,7 @@ def define_defaults(defaults):
     defaults.resource_path = os.path.abspath(
         os.path.join(defaults.base_dir, "tests", "gem5", "resources")
     )
-    defaults.gcov = False
+    defaults.gcov = ""
 
 
 def define_constants(constants):
@@ -659,9 +654,16 @@ def define_common_args(config):
         ),
         Argument(
             "--gcov",
-            action="store_true",
+            action="store",
+            choices=["test-only", "ind-test-and-gcov", "all-test-and-gcov"],
+            nargs="?",
             default=config._defaults.gcov,
-            help="Build gem5 for running with gcov.",
+            help="Build gem5 for running with gcov. If test-only is passed, "
+            "TestLib will only run the tests. If ind-test-and-gcov is passed, "
+            "TestLib will run gcovr, a tool for running gcov, after each"
+            "individual test. If all-test-and-gcov is passed, TestLib will "
+            "run all of the specified tests, then run gcovr after all of them "
+            "finish.",
         ),
     ]
 

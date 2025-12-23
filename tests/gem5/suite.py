@@ -172,11 +172,6 @@ def _create_test_run_gem5(config, config_args, gem5_args):
         else:
             _gem5_args = gem5_args
 
-        params.log.message(
-            f"Printing params to see what it contains: {params}"
-        )
-        params.log.message(f"Printing fixtures: {fixtures}")
-
         # FIXME/TODO: I don't like the idea of having to modify this test run
         # or always collect results even if not using a verifier. There should
         # be some configuration in here that only gathers certain results for
@@ -194,7 +189,7 @@ def _create_test_run_gem5(config, config_args, gem5_args):
         gem5_build_target_dir = gem5_fixture.target_dir
         gem5_base_dir = gem5_fixture.directory
 
-        if gcov:
+        if gcov == "ind-test-and-gcov":
             params.log.message(
                 "Now cleaning up gcda and .py.gcno files from previous runs "
                 "or build process..."
@@ -221,7 +216,7 @@ def _create_test_run_gem5(config, config_args, gem5_args):
         )
 
         # run gcovr to get coverage metrics for each individual test
-        if gcov:
+        if gcov == "ind-test-and-gcov":
             params.log.message(
                 "Now removing .py.gcno and .py.gcda files after running tests "
                 ", but before running gcovr"
