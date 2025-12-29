@@ -676,7 +676,7 @@ for variant_path in variant_paths:
               "src/SConscript to support that compiler.")))
 
     if env['GCC']:
-        gcc_min_version = "11"
+        gcc_min_version = "14.3"
         gcc_max_version = "14.2"
         gcc_version = env['CXXVERSION']
         if compareVersions(gcc_version, gcc_min_version) < 0 or \
@@ -710,8 +710,23 @@ for variant_path in variant_paths:
             '-fno-builtin-realloc', '-fno-builtin-free'])
 
         if GetOption('gcov'):
-            env.Append(CCFLAGS=['-fprofile-arcs', '-ftest-coverage'],
-                       LINKFLAGS=['-lgcov', '--coverage'])
+            env.Append(CCFLAGS=['-fprofile-arcs', '-ftest-coverage'], #,
+                       LINKFLAGS=['-lgcov', '--coverage']) #, '-fPIC'
+            # Arm uses a small code model by default. However, this does not
+            # allow for a large enough distance between symbols to also
+            # accommodate gcov, so we set the code model to large.
+
+            if main["BIN_TARGET_ARCH"] == "aarch64":
+            #     # pass
+            #     # env.Append(CCFLAGS=['-mcmodel=large'],
+            #     #            LINKFLAGS=['-mcmodel=large'])
+            #     # If compiling gem5 with symbols for gcov, however, it is
+            #     # necessary to use the next code model (large).
+            #     # if GetOption('gcov'):
+                # env.Append(CCFLAGS=['-mcmodel=large', '-static'])
+                # env.Append(LINKFLAGS=['-mcmodel=large', '-static'])
+                env.Append(CCFLAGS=['-fPIC'])
+                env.Append(LINKFLAGS=['-fPIC'])
 
     elif env['CLANG']:
         clang_min_version = "14"
