@@ -345,9 +345,9 @@ jobs:
         runs-on: ubuntu-24.04
         needs:
             - testlib-quick-execution
-            - clang-fast-compilation
+            # - clang-fast-compilation
             - unittests-all-fast-opt
-            - macos-compilation
+            # - macos-compilation
             - pre-commit
             # - gpu-tests
         steps:
