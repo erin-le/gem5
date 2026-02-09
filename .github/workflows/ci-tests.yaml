@@ -91,6 +91,7 @@ jobs:
               run: |
                   ls .
                   scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
+                  ls .
 
             - name: Run gcovr
               working-directory: ${{ github.workspace }}
@@ -298,6 +299,7 @@ jobs:
                   . gcovr-env/bin/activate
                   pip3 install gcovr>=7.1
                   ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=all-test-and-gcov ${{  matrix.test-dir }}
+                  ls ..
 
         # Get the basename of the matrix.test-dir path (to name the artifact).
             - name: Sanitize test-dir for artifact name
