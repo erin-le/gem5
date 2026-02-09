@@ -90,7 +90,9 @@ jobs:
               working-directory: ${{ github.workspace }}
               run: |
                   ls .
-                  scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
+                  pwd .
+                  scons --no-compress-debug build/ALL/mem/cache/replacement_policies/fifo_rp.test.${{ matrix.type }} --gcov -j $(nproc)
+                  pwd .
                   ls .
 
             - name: Run gcovr
@@ -295,6 +297,7 @@ jobs:
               working-directory: ${{ github.workspace }}/tests
               run: |
                   ls ..
+                  pwd ..
                   python3 -m venv gcovr-env
                   . gcovr-env/bin/activate
                   pip3 install gcovr>=7.1
