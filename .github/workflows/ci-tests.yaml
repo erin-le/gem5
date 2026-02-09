@@ -93,7 +93,7 @@ jobs:
               working-directory: ${{ github.workspace }}
               run: |
                   python3 -m venv gcovr-env
-                  ./gcovr-env/bin/activate
+                  . gcovr-env/bin/activate
                   pip3 install gcovr>=7.1
 
             - name: Run gcovr
@@ -286,7 +286,7 @@ jobs:
               working-directory: ${{ github.workspace }}
               run: |
                   python3 -m venv gcovr-env
-                  ./gcovr-env/bin/activate
+                  . gcovr-env/bin/activate
                   pip3 install gcovr>=7.1
 
         # Run the testlib quick tests in the given directory.
