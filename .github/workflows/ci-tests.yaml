@@ -89,17 +89,14 @@ jobs:
             - name: CI Unittests (${{ matrix.type }})
               working-directory: ${{ github.workspace }}
               run: scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
-            - name: Install gcovr
+
+            - name: Run gcovr
               working-directory: ${{ github.workspace }}
               run: |
                   python3 -m venv gcovr-env
                   . gcovr-env/bin/activate
                   pip3 install gcovr>=7.1
-
-            - name: Run gcovr
-              working-directory: ${{ github.workspace }}
-              run: gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn
-                  --root ${{ github.workspace }} --object-directory ${{ github.workspace }}/build/ALL --xml unittests.xml
+                  gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn --root ${{ github.workspace }} --object-directory ${{ github.workspace }}/build/ALL --xml unittests.xml
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v5
