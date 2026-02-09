@@ -104,6 +104,12 @@ jobs:
                   python3 -m venv gcovr-env
                   . gcovr-env/bin/activate
                   pip3 install gcovr>=7.1
+                  echo "ls ."
+                  ls .
+                  echo "ls build"
+                  ls build
+                  echo "pwd build"
+                  pwd build
                   gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn --root ${{ github.workspace }} --object-directory ${{ github.workspace }}/build/ALL --xml unittests.xml
 
             - name: Upload coverage reports to Codecov
