@@ -81,7 +81,7 @@ jobs:
         #runs-on: [self-hosted, linux, x64]
         runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit] # only runs if pre-commit passes.
         timeout-minutes: 60
         steps:
@@ -101,9 +101,6 @@ jobs:
             - name: Run gcovr
               working-directory: ${{ github.workspace }}
               run: |
-                  python3 -m venv gcovr-env
-                  . gcovr-env/bin/activate
-                  pip3 install gcovr>=7.1
                   echo "ls ."
                   ls .
                   echo "ls build"
@@ -124,7 +121,7 @@ jobs:
         if: github.event.pull_request.draft == false
     # In order to make sure the environment is exactly the same, we run in
     # the same container we use to build gem5 and run the testlib tests. This
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit]
         steps:
             - uses: actions/checkout@v4
@@ -223,7 +220,7 @@ jobs:
         #runs-on: [self-hosted, linux, x64]
         runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit, testlib-quick-matrix, get-date]
         strategy:
             matrix:
@@ -269,7 +266,7 @@ jobs:
         # runs-on: [self-hosted, linux, x64]
         runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit, testlib-quick-matrix, testlib-quick-gem5-builds]
         timeout-minutes: 360 # 6 hours
         strategy:
@@ -307,9 +304,6 @@ jobs:
               run: |
                   ls ..
                   pwd ..
-                  python3 -m venv gcovr-env
-                  . gcovr-env/bin/activate
-                  pip3 install gcovr>=7.1
                   ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=all-test-and-gcov ${{  matrix.test-dir }}
                   ls ..
 
