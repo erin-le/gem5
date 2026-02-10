@@ -317,7 +317,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  files: ./build/ALL/ALL-gcov-results.xml
+                  files: ./tests/testing-results/ALL-gcov-results.xml
 
         # Upload the tests/testing-results directory as an artifact.
             - name: Upload results
