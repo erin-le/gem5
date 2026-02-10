@@ -81,7 +81,7 @@ jobs:
         #runs-on: [self-hosted, linux, x64]
         runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
-        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit] # only runs if pre-commit passes.
         timeout-minutes: 60
         steps:
@@ -121,7 +121,7 @@ jobs:
         if: github.event.pull_request.draft == false
     # In order to make sure the environment is exactly the same, we run in
     # the same container we use to build gem5 and run the testlib tests. This
-        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit]
         steps:
             - uses: actions/checkout@v4
@@ -220,7 +220,7 @@ jobs:
         #runs-on: [self-hosted, linux, x64]
         runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
-        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit, testlib-quick-matrix, get-date]
         strategy:
             matrix:
@@ -266,7 +266,7 @@ jobs:
         # runs-on: [self-hosted, linux, x64]
         runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
-        container: ghcr.io/ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
         needs: [pre-commit, testlib-quick-matrix, testlib-quick-gem5-builds]
         timeout-minutes: 360 # 6 hours
         strategy:
