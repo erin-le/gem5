@@ -92,7 +92,7 @@ jobs:
                   ls .
 
                   pwd .
-                  scons --no-compress-debug build/ALL/mem/cache/replacement_policies/fifo_rp.test.${{ matrix.type }} --gcov -j $(nproc)
+                  scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
                   pwd .
                   ls .
                   echo "ls build"
