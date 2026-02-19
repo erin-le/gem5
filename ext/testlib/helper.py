@@ -648,6 +648,8 @@ def run_gcovr(
         if dir != isa:
             command.append("--gcov-exclude-directory")
             command.append(f'"{os.path.dirname(build_target_dir)}/{dir}$"')
+
+    log.message(f"gcovr command is: {command}")
     log_call(
         log,
         command,
