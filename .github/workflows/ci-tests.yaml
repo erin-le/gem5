@@ -303,6 +303,10 @@ jobs:
               working-directory: ${{ github.workspace }}/tests
               run: |
                   ls ..
+                  echo "running ls on build"
+                  ls ../build
+                  echo "running ls on build/ALL"
+                  ls ../build/ALL
                   pwd ..
                   ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=all-test-and-gcov ${{  matrix.test-dir }}
                   ls ..
