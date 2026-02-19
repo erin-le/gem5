@@ -309,6 +309,9 @@ jobs:
                   ls ../build/ALL
                   pwd ..
                   ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=all-test-and-gcov ${{  matrix.test-dir }}
+                  echo "Looking for gcno and gcda files..."
+                  find ../ -name "*.gcno"
+                  find ../ -name "*.gcda"
                   ls ..
 
         # Get the basename of the matrix.test-dir path (to name the artifact).
