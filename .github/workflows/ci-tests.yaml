@@ -239,7 +239,7 @@ jobs:
                       testlib-build-all
 
             - name: Build gem5
-              run: scons --no-compress-debug ${{ matrix.build-target }} -j $(nproc)
+              run: scons --no-compress-debug ${{ matrix.build-target }} --gcov -j $(nproc)
 
             - name: Sanitize build-target for artifact name
               id: sanitize-build-target
