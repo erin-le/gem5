@@ -229,8 +229,9 @@ jobs:
             - uses: actions/checkout@v4
 
             - name: Cache build/ALL
+              id: cache-build-all
               uses: actions/cache/restore@v4
-              if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
+            #   if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
               with:
                   path: build/ALL
                   key: testlib-build-all #-${{ needs.get-date.outputs.date }}
@@ -244,6 +245,13 @@ jobs:
               id: sanitize-build-target
               if: success() || failure()
               run: echo "sanitized-build-target=$(echo '${{ matrix.build-target }}' | sed 's/[\\|\.]/-/g' | sed 's/[\/|__w|gem5|build]//g')" >> $GITHUB_OUTPUT
+
+            - name: Save gem5
+              uses: actions/cache/save@v5
+              with:
+                  path: build/ALL
+                  key: ${{ steps.cache-build-all.outputs.cache-primary-key }}
+
 
         # Upload the gem5 binary as an artifact.
         # Note: the "achor.txt" file is a hack to make sure the paths are
