@@ -285,18 +285,18 @@ jobs:
         steps:
         # Checkout the repository then download the gem5.opt artifact.
             - uses: actions/checkout@v4
-            - uses: actions/download-artifact@v4
-              name: Download gem5 artifacts
-              with:
-                  pattern: ci-tests-${{ github.run_number }}-testlib-quick-all-gem5-builds*
-                  merge-multiple: true
+        #     - uses: actions/download-artifact@v4
+        #       name: Download gem5 artifacts
+        #       with:
+        #           pattern: ci-tests-${{ github.run_number }}-testlib-quick-all-gem5-builds*
+        #           merge-multiple: true
 
-        # Check that the gem5.opt artifact exists and is executable.
-            - name: Chmod gem5.{opt,debug,fast} to be executable
-              run: |
-                  find . -name "gem5.opt" -exec chmod u+x {} \;
-                  find . -name "gem5.debug" -exec chmod u+x {} \;
-                  find . -name "gem5.fast" -exec chmod u+x {} \;
+        # # Check that the gem5.opt artifact exists and is executable.
+        #     - name: Chmod gem5.{opt,debug,fast} to be executable
+        #       run: |
+        #           find . -name "gem5.opt" -exec chmod u+x {} \;
+        #           find . -name "gem5.debug" -exec chmod u+x {} \;
+        #           find . -name "gem5.fast" -exec chmod u+x {} \;
 
         # # Initialize Python environment for running gcovr
         #     - name: Install gcovr
