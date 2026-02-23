@@ -328,7 +328,7 @@ jobs:
                   echo "running ls on build/ALL"
                   ls ../build/ALL
                   pwd ..
-                  ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=all-test-and-gcov ${{  matrix.test-dir }}
+                  ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=test-only ${{  matrix.test-dir }}
                   echo "Looking for gcno and gcda files..."
                   find ../ -name "*.gcno"
                   find ../ -name "*.gcda"
@@ -344,7 +344,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  files: ./tests/testing-results/ALL-gcov-results.xml
+                #   files: ./tests/testing-results/ALL-gcov-results.xml
 
         # Upload the tests/testing-results directory as an artifact.
             - name: Upload results
