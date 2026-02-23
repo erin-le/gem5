@@ -285,6 +285,17 @@ jobs:
         steps:
         # Checkout the repository then download the gem5.opt artifact.
             - uses: actions/checkout@v4
+
+            - name: Cache build/ALL
+              id: cache-build-all
+              uses: actions/cache/restore@v4
+            #   if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
+              with:
+                  path: build/ALL
+                  key: testlib-build-all #-${{ needs.get-date.outputs.date }}
+                  restore-keys: |
+                      testlib-build-all
+
         #     - uses: actions/download-artifact@v4
         #       name: Download gem5 artifacts
         #       with:
