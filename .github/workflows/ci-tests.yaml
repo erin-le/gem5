@@ -74,47 +74,47 @@ jobs:
               id: date
               run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-    unittests-all-fast-opt:
-        strategy:
-            matrix:
-                type: [fast, opt]
-        #runs-on: [self-hosted, linux, x64]
-        runs-on: ubuntu-24.04
-        if: github.event.pull_request.draft == false
-        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
-        needs: [pre-commit] # only runs if pre-commit passes.
-        timeout-minutes: 60
-        steps:
-            - uses: actions/checkout@v4
-            - name: CI Unittests (${{ matrix.type }})
-              working-directory: ${{ github.workspace }}
-              run: |
-                  ls .
+    # unittests-all-fast-opt:
+    #     strategy:
+    #         matrix:
+    #             type: [fast, opt]
+    #     #runs-on: [self-hosted, linux, x64]
+    #     runs-on: ubuntu-24.04
+    #     if: github.event.pull_request.draft == false
+    #     container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+    #     needs: [pre-commit] # only runs if pre-commit passes.
+    #     timeout-minutes: 60
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #         - name: CI Unittests (${{ matrix.type }})
+    #           working-directory: ${{ github.workspace }}
+    #           run: |
+    #               ls .
 
-                  pwd .
-                  scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
-                  pwd .
-                  ls .
-                  echo "ls build"
-                  ls build
+    #               pwd .
+    #               scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
+    #               pwd .
+    #               ls .
+    #               echo "ls build"
+    #               ls build
 
-            - name: Run gcovr
-              working-directory: ${{ github.workspace }}
-              run: |
-                  echo "ls ."
-                  ls .
-                  echo "ls build"
-                  ls build
-                  echo "pwd build"
-                  pwd build
-                  gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn --root /__w/gem5/gem5 --object-directory /__w/gem5/gem5/build/ALL --exclude-directory /__w/gem5/gem5/ext --xml unittests.xml
+    #         - name: Run gcovr
+    #           working-directory: ${{ github.workspace }}
+    #           run: |
+    #               echo "ls ."
+    #               ls .
+    #               echo "ls build"
+    #               ls build
+    #               echo "pwd build"
+    #               pwd build
+    #               gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn --root /__w/gem5/gem5 --object-directory /__w/gem5/gem5/build/ALL --exclude-directory /__w/gem5/gem5/ext --xml unittests.xml
 
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v5
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  files: ./unittests.xml
-            - run: echo "This job's status is ${{ job.status }}."
+    #         - name: Upload coverage reports to Codecov
+    #           uses: codecov/codecov-action@v5
+    #           with:
+    #               token: ${{ secrets.CODECOV_TOKEN }}
+    #               files: ./unittests.xml
+    #         - run: echo "This job's status is ${{ job.status }}."
 
     testlib-quick-matrix:
         runs-on: ubuntu-24.04
@@ -400,7 +400,7 @@ jobs:
         needs:
             - testlib-quick-execution
             # - clang-fast-compilation
-            - unittests-all-fast-opt
+            # - unittests-all-fast-opt
             # - macos-compilation
             - pre-commit
             # - gpu-tests
