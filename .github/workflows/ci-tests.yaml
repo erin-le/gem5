@@ -98,22 +98,22 @@ jobs:
                   echo "ls build"
                   ls build
 
-            - name: Run gcovr
-              working-directory: ${{ github.workspace }}
-              run: |
-                  echo "ls ."
-                  ls .
-                  echo "ls build"
-                  ls build
-                  echo "pwd build"
-                  pwd build
-                  gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn --root /__w/gem5/gem5 --object-directory /__w/gem5/gem5/build/ALL --exclude-directory /__w/gem5/gem5/ext --xml unittests.xml
+            # - name: Run gcovr
+            #   working-directory: ${{ github.workspace }}
+            #   run: |
+            #       echo "ls ."
+            #       ls .
+            #       echo "ls build"
+            #       ls build
+            #       echo "pwd build"
+            #       pwd build
+            #       gcovr --verbose --merge-mode-functions separate --gcov-ignore-parse-errors=suspicious_hits.warn --gcov-ignore-parse-errors=negative_hits.warn --root /__w/gem5/gem5 --object-directory /__w/gem5/gem5/build/ALL --exclude-directory /__w/gem5/gem5/ext --xml unittests.xml
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  files: ./unittests.xml
+                #   files: ./unittests.xml
             - run: echo "This job's status is ${{ job.status }}."
 
     testlib-quick-matrix:
