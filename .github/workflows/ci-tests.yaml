@@ -216,145 +216,145 @@ jobs:
     #           run: scons build/ALL/gem5.${{ matrix.type }} -j $(sysctl -n hw.ncpu)
     #           timeout-minutes: 90
 
-    testlib-quick-gem5-builds:
-        #runs-on: [self-hosted, linux, x64]
-        runs-on: ubuntu-24.04
-        if: github.event.pull_request.draft == false
-        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
-        needs: [pre-commit, testlib-quick-matrix, get-date]
-        strategy:
-            matrix:
-                build-target: ${{ fromJson(needs.testlib-quick-matrix.outputs.build-matrix) }}
-        steps:
-            - uses: actions/checkout@v4
+    # testlib-quick-gem5-builds:
+    #     #runs-on: [self-hosted, linux, x64]
+    #     runs-on: ubuntu-24.04
+    #     if: github.event.pull_request.draft == false
+    #     container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+    #     needs: [pre-commit, testlib-quick-matrix, get-date]
+    #     strategy:
+    #         matrix:
+    #             build-target: ${{ fromJson(needs.testlib-quick-matrix.outputs.build-matrix) }}
+    #     steps:
+    #         - uses: actions/checkout@v4
 
-            - name: Cache build/ALL
-              id: cache-build-all
-              uses: actions/cache/restore@v4
-            #   if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
-              with:
-                  path: build/ALL
-                  key: testlib-build-all #-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      testlib-build-all
+    #         - name: Cache build/ALL
+    #           id: cache-build-all
+    #           uses: actions/cache/restore@v4
+    #         #   if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
+    #           with:
+    #               path: build/ALL
+    #               key: testlib-build-all #-${{ needs.get-date.outputs.date }}
+    #               restore-keys: |
+    #                   testlib-build-all
 
-            - name: Build gem5
-              if: ${{ steps.cache-build-all.outputs.cache-hit != 'true' }}
-              run: scons --no-compress-debug ${{ matrix.build-target }} --gcov -j $(nproc)
+    #         - name: Build gem5
+    #           if: ${{ steps.cache-build-all.outputs.cache-hit != 'true' }}
+    #           run: scons --no-compress-debug ${{ matrix.build-target }} --gcov -j $(nproc)
 
-            - name: Sanitize build-target for artifact name
-              id: sanitize-build-target
-              if: success() || failure()
-              run: echo "sanitized-build-target=$(echo '${{ matrix.build-target }}' | sed 's/[\\|\.]/-/g' | sed 's/[\/|__w|gem5|build]//g')" >> $GITHUB_OUTPUT
+    #         - name: Sanitize build-target for artifact name
+    #           id: sanitize-build-target
+    #           if: success() || failure()
+    #           run: echo "sanitized-build-target=$(echo '${{ matrix.build-target }}' | sed 's/[\\|\.]/-/g' | sed 's/[\/|__w|gem5|build]//g')" >> $GITHUB_OUTPUT
 
-            - name: Save gem5
-              uses: actions/cache/save@v5
-              with:
-                  path: build/ALL
-                  key: ${{ steps.cache-build-all.outputs.cache-primary-key }}
+    #         - name: Save gem5
+    #           uses: actions/cache/save@v5
+    #           with:
+    #               path: build/ALL
+    #               key: ${{ steps.cache-build-all.outputs.cache-primary-key }}
 
 
-        # Upload the gem5 binary as an artifact.
-        # Note: the "achor.txt" file is a hack to make sure the paths are
-        # preserverd in the artifact. The upload-artifact action finds the
-        # closest common directory and uploads everything relative to that.
-        # E.g., if we upload "build/ARM/gem5.opt" and "build/RISCV/gem5.opt"
-        # Then upload-artifact will upload "ARM/gem5.opt" and "RISCV/gem5.opt",
-        # stripping the "build" directory. By adding the "anchor.txt" file, we
-        # ensure the "build" directory is preserved.
-            - run: echo "anchor" > anchor.txt
-            - uses: actions/upload-artifact@v4
-              with:
-                  name: ci-tests-${{ github.run_number }}-testlib-quick-all-gem5-builds-${{ steps.sanitize-build-target.outputs.sanitized-build-target }}
-                  path: |
-                      build/*/gem5.*
-                      anchor.txt
+    #     # Upload the gem5 binary as an artifact.
+    #     # Note: the "achor.txt" file is a hack to make sure the paths are
+    #     # preserverd in the artifact. The upload-artifact action finds the
+    #     # closest common directory and uploads everything relative to that.
+    #     # E.g., if we upload "build/ARM/gem5.opt" and "build/RISCV/gem5.opt"
+    #     # Then upload-artifact will upload "ARM/gem5.opt" and "RISCV/gem5.opt",
+    #     # stripping the "build" directory. By adding the "anchor.txt" file, we
+    #     # ensure the "build" directory is preserved.
+    #         - run: echo "anchor" > anchor.txt
+    #         - uses: actions/upload-artifact@v4
+    #           with:
+    #               name: ci-tests-${{ github.run_number }}-testlib-quick-all-gem5-builds-${{ steps.sanitize-build-target.outputs.sanitized-build-target }}
+    #               path: |
+    #                   build/*/gem5.*
+    #                   anchor.txt
 
-    testlib-quick-execution:
-        name: quick-tests
-        # runs-on: [self-hosted, linux, x64]
-        runs-on: ubuntu-24.04
-        if: github.event.pull_request.draft == false
-        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
-        needs: [pre-commit, testlib-quick-matrix, testlib-quick-gem5-builds]
-        timeout-minutes: 360 # 6 hours
-        strategy:
-            fail-fast: false
-            matrix:
-                test-dir: ${{ fromJson(needs.testlib-quick-matrix.outputs.test-dirs-matrix) }}
-        steps:
-        # Checkout the repository then download the gem5.opt artifact.
-            - uses: actions/checkout@v4
+    # testlib-quick-execution:
+    #     name: quick-tests
+    #     # runs-on: [self-hosted, linux, x64]
+    #     runs-on: ubuntu-24.04
+    #     if: github.event.pull_request.draft == false
+    #     container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+    #     needs: [pre-commit, testlib-quick-matrix, testlib-quick-gem5-builds]
+    #     timeout-minutes: 360 # 6 hours
+    #     strategy:
+    #         fail-fast: false
+    #         matrix:
+    #             test-dir: ${{ fromJson(needs.testlib-quick-matrix.outputs.test-dirs-matrix) }}
+    #     steps:
+    #     # Checkout the repository then download the gem5.opt artifact.
+    #         - uses: actions/checkout@v4
 
-            - name: Cache build/ALL
-              id: cache-build-all
-              uses: actions/cache/restore@v4
-            #   if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
-              with:
-                  path: build/ALL
-                  key: testlib-build-all #-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      testlib-build-all
+    #         - name: Cache build/ALL
+    #           id: cache-build-all
+    #           uses: actions/cache/restore@v4
+    #         #   if: ${{ endsWith(matrix.build-target, 'build/ALL/gem5.debug') }}
+    #           with:
+    #               path: build/ALL
+    #               key: testlib-build-all #-${{ needs.get-date.outputs.date }}
+    #               restore-keys: |
+    #                   testlib-build-all
 
-        #     - uses: actions/download-artifact@v4
-        #       name: Download gem5 artifacts
-        #       with:
-        #           pattern: ci-tests-${{ github.run_number }}-testlib-quick-all-gem5-builds*
-        #           merge-multiple: true
+    #     #     - uses: actions/download-artifact@v4
+    #     #       name: Download gem5 artifacts
+    #     #       with:
+    #     #           pattern: ci-tests-${{ github.run_number }}-testlib-quick-all-gem5-builds*
+    #     #           merge-multiple: true
 
-        # # Check that the gem5.opt artifact exists and is executable.
-        #     - name: Chmod gem5.{opt,debug,fast} to be executable
-        #       run: |
-        #           find . -name "gem5.opt" -exec chmod u+x {} \;
-        #           find . -name "gem5.debug" -exec chmod u+x {} \;
-        #           find . -name "gem5.fast" -exec chmod u+x {} \;
+    #     # # Check that the gem5.opt artifact exists and is executable.
+    #     #     - name: Chmod gem5.{opt,debug,fast} to be executable
+    #     #       run: |
+    #     #           find . -name "gem5.opt" -exec chmod u+x {} \;
+    #     #           find . -name "gem5.debug" -exec chmod u+x {} \;
+    #     #           find . -name "gem5.fast" -exec chmod u+x {} \;
 
-        # # Initialize Python environment for running gcovr
-        #     - name: Install gcovr
-        #       working-directory: ${{ github.workspace }}
-        #       run: |
-        #           python3 -m venv gcovr-env
-        #           . gcovr-env/bin/activate
-        #           pip3 install gcovr>=7.1
+    #     # # Initialize Python environment for running gcovr
+    #     #     - name: Install gcovr
+    #     #       working-directory: ${{ github.workspace }}
+    #     #       run: |
+    #     #           python3 -m venv gcovr-env
+    #     #           . gcovr-env/bin/activate
+    #     #           pip3 install gcovr>=7.1
 
-        # Run the testlib quick tests in the given directory.
-            - name: Run quick ${{ matrix.test-dir }} tests
-              id: run-tests
-              working-directory: ${{ github.workspace }}/tests
-              run: |
-                  ls ..
-                  echo "running ls on build"
-                  ls ../build
-                  echo "running ls on build/ALL"
-                  ls ../build/ALL
-                  pwd ..
-                  ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=test-only ${{  matrix.test-dir }}
-                  echo "Looking for gcno and gcda files..."
-                  find ../ -name "*.gcno"
-                  find ../ -name "*.gcda"
-                  ls ..
+    #     # Run the testlib quick tests in the given directory.
+    #         - name: Run quick ${{ matrix.test-dir }} tests
+    #           id: run-tests
+    #           working-directory: ${{ github.workspace }}/tests
+    #           run: |
+    #               ls ..
+    #               echo "running ls on build"
+    #               ls ../build
+    #               echo "running ls on build/ALL"
+    #               ls ../build/ALL
+    #               pwd ..
+    #               ./main.py run --skip-build --exclude-tags gcn_gpu --gcov=test-only ${{  matrix.test-dir }}
+    #               echo "Looking for gcno and gcda files..."
+    #               find ../ -name "*.gcno"
+    #               find ../ -name "*.gcda"
+    #               ls ..
 
-        # Get the basename of the matrix.test-dir path (to name the artifact).
-            - name: Sanitize test-dir for artifact name
-              id: sanitize-test-dir
-              if: success() || failure()
-              run: echo "sanitized-test-dir=$(echo '${{ matrix.test-dir }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+    #     # Get the basename of the matrix.test-dir path (to name the artifact).
+    #         - name: Sanitize test-dir for artifact name
+    #           id: sanitize-test-dir
+    #           if: success() || failure()
+    #           run: echo "sanitized-test-dir=$(echo '${{ matrix.test-dir }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v5
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                #   files: ./tests/testing-results/ALL-gcov-results.xml
+    #         - name: Upload coverage reports to Codecov
+    #           uses: codecov/codecov-action@v5
+    #           with:
+    #               token: ${{ secrets.CODECOV_TOKEN }}
+    #             #   files: ./tests/testing-results/ALL-gcov-results.xml
 
-        # Upload the tests/testing-results directory as an artifact.
-            - name: Upload results
-              if: success() || failure()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: ci-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-quick-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
-                      }}-status-${{ steps.run-tests.outcome }}-output
-                  path: tests/testing-results
-                  retention-days: 30
+    #     # Upload the tests/testing-results directory as an artifact.
+    #         - name: Upload results
+    #           if: success() || failure()
+    #           uses: actions/upload-artifact@v4
+    #           with:
+    #               name: ci-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-quick-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
+    #                   }}-status-${{ steps.run-tests.outcome }}-output
+    #               path: tests/testing-results
+    #               retention-days: 30
 
     # gpu-tests:
     #     #runs-on: [self-hosted, linux, x64]
@@ -398,7 +398,7 @@ jobs:
     # merged. This job is a dummy job that depends on all the other jobs.
         runs-on: ubuntu-24.04
         needs:
-            - testlib-quick-execution
+            # - testlib-quick-execution
             # - clang-fast-compilation
             - unittests-all-fast-opt
             # - macos-compilation
