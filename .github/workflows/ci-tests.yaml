@@ -131,7 +131,7 @@ jobs:
               id: dir-matrix
               run: |
                   unset PREV
-                  echo 'test-dirs-matrix=["gem5/riscv_boot_tests"]' >>$GITHUB_OUTPUT
+                  echo 'test-dirs-matrix=["gem5/riscv_boot_tests", "gem5/x86_boot_tests"]' >>$GITHUB_OUTPUT
             - name: Get the build targets for testlib-quick-gem5-builds
               working-directory: ${{ github.workspace }}/tests
               id: build-matrix
