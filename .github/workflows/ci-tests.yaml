@@ -339,11 +339,12 @@ jobs:
               id: sanitize-test-dir
               if: success() || failure()
               run: echo "sanitized-test-dir=$(echo '${{ matrix.test-dir }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
-
+        # Upload coverage reports. Each test directory will have a separate coverage report, which will be marked by the flag.
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: ${{ steps.sanitize-test-dir.outputs.sanitized-test-dir}}
                 #   files: ./tests/testing-results/ALL-gcov-results.xml
 
         # Upload the tests/testing-results directory as an artifact.
