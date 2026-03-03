@@ -304,7 +304,7 @@ TlmGenerator::recv(ARM::CHI::Payload *payload, ARM::CHI::Phase *phase)
     }
 
     if (!isActive()) {
-        exitSimLoop("TlmGenerator done");
+        exitSimulationLoopClassic("TlmGenerator done");
     }
 }
 

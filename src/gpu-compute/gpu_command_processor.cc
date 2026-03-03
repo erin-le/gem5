@@ -393,7 +393,7 @@ GPUCommandProcessor::dispatchKernelObject(AMDKernelCode *akc, void *raw_pkt,
         delete akc;
 
         // Notify the run script that a kernel has been skipped
-        exitSimLoop("Skipping GPU Kernel");
+        exitSimulationLoopClassic("Skipping GPU Kernel");
 
         return;
     }
