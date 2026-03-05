@@ -18,6 +18,27 @@ jobs:
               id: date
               run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
+  # this builds and runs unittests.fast, opt, and debug
+    unittests-fast-opt-debug:
+        strategy:
+            matrix:
+                type: [fast, opt, debug]
+        runs-on: [self-hosted, linux, x64]
+        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Run ALL/unittests.${{ matrix.type }} UnitTests
+              run: scons build/ALL/unittests.${{ matrix.type }} -j --gcov $(nproc)
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: unittests-${{ matrix.type }}
+
+
     get-testlib-very-long-dirs:
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
