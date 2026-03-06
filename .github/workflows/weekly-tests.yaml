@@ -36,7 +36,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: unittests-${{ matrix.type }}
+                  flags: unittests-${{ matrix.type }},overall-unittests
 
     # get TestLib test directories for quick, long, and very-long tests
     get-testlib-dirs:
@@ -171,17 +171,17 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: ${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
-            - name: Upload coverage reports to Codecov - length flag
-              uses: codecov/codecov-action@v5
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: ${{matrix.test-type.length}}
-            - name: Upload coverage reports to Codecov - combination flag
-              uses: codecov/codecov-action@v5
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: ${{matrix.test-type.length}}-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
+                  flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-${{matrix.test-type.length}},${{matrix.test-type.length}}-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
+            # - name: Upload coverage reports to Codecov - length flag
+            #   uses: codecov/codecov-action@v5
+            #   with:
+            #       token: ${{ secrets.CODECOV_TOKEN }}
+            #       flags: ${{matrix.test-type.length}}
+            # - name: Upload coverage reports to Codecov - combination flag
+            #   uses: codecov/codecov-action@v5
+            #   with:
+            #       token: ${{ secrets.CODECOV_TOKEN }}
+            #       flags: ${{matrix.test-type.length}}-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
 
     gpu-tests:
         runs-on: ubuntu-24.04
