@@ -1,7 +1,7 @@
 ---
 # This workflow runs all of the very-long tests within main.py
 
-name: Weekly Tests - check that combined flags have expected coverage
+name: Weekly Tests
 
 on:
     # This is triggered weekly via the 'scheduler.yaml' workflow.
@@ -36,13 +36,13 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: overall-unittests
+                  flags: unittests-${{ matrix.type }},overall-unittests
 
     # get TestLib test directories for quick, long, and very-long tests
     get-testlib-dirs:
         strategy:
             matrix:
-                type: [quick] #, long, very-long
+                type: [quick, long, very-long]
         runs-on: ubuntu-24.04
         container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
         outputs:
@@ -50,8 +50,8 @@ jobs:
                           # }}'}, {length: very-long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}'}]
 
             test-dirs-matrix-quick: ${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}
-            # test-dirs-matrix-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-long }}
-            # test-dirs-matrix-very-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}
+            test-dirs-matrix-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-long }}
+            test-dirs-matrix-very-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}
         steps:
             - uses: actions/checkout@v4
             - name: Get directories for testlib-very-long
@@ -107,9 +107,11 @@ jobs:
             - id: flatten-matrix
               run: |
                   echo '${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }}'
-                  primary='["quick"]'
+                  primary='["quick", "long", "very-long"]'
                   secondary='{
-                      "quick": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }}
+                      "quick": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }},
+                      "long": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-long }},
+                      "very-long": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long }}
                   }'
 
                   flat_matrix=$(echo $secondary | jq -c '[
@@ -166,11 +168,11 @@ jobs:
                       }}-status-${{ steps.run-tests.outcome }}-output
                   path: tests/testing-results
 
-            - name: Upload coverage reports to Codecov
+            - name: Upload coverage reports to Codecov - testdir flag
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: overall-length-${{matrix.test-type.length}}
+                  flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-${{matrix.test-type.length}},${{matrix.test-type.length}}-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
             # - name: Upload coverage reports to Codecov - length flag
             #   uses: codecov/codecov-action@v5
             #   with:
