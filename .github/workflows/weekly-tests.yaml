@@ -36,7 +36,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: '["unittests", "${{ matrix.type }}"]'
+                  flags: '["unittests", "${{ matrix.type }}", "unittests-${{ matrix.type }}"]'
 
     # get TestLib test directories for quick, long, and very-long tests
     get-testlib-dirs:
@@ -171,7 +171,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: "['${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}', '${{matrix.test-type.length}}']"
+                  flags: "['${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}', '${{matrix.test-type.length}}', '${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}-${{matrix.test-type.length}}']"
 
     gpu-tests:
         runs-on: ubuntu-24.04
