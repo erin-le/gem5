@@ -168,11 +168,11 @@ jobs:
                       }}-status-${{ steps.run-tests.outcome }}-output
                   path: tests/testing-results
 
-            - name: Upload coverage reports to Codecov - testdir flag
+            - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-${{matrix.test-type.length}},${{matrix.test-type.length}}-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
+                  flags: overall-length-${{matrix.test-type.length}}
             # - name: Upload coverage reports to Codecov - length flag
             #   uses: codecov/codecov-action@v5
             #   with:
