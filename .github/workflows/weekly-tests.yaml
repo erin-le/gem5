@@ -38,12 +38,15 @@ jobs:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   flags: unittests-${{ matrix.type }}
 
-
-    get-testlib-very-long-dirs:
+    # get TestLib test directories for quick, long, and very-long tests
+    get-testlib-dirs:
+        strategy:
+        matrix:
+            type: [quick, long, very-long]
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         outputs:
-            test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
+            test-dirs-matrix-${{ matrix.type }}: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
         steps:
             - uses: actions/checkout@v4
             - name: Get directories for testlib-very-long
@@ -54,7 +57,8 @@ jobs:
                   echo "test-dirs-matrix=$(\
                     ./main.py list gem5 \
                     --suites \
-                    --length very-long \
+                    --length ${{ matrix.type }} \
+                    --gcov=test-only \
                     --exclude-tags gcn_gpu | \
                     grep "$SUITEUID:" | \
                     cut -d: -f2 | \
@@ -71,16 +75,17 @@ jobs:
                   )" >>$GITHUB_OUTPUT
 
     # start running the very-long tests
-    testlib-very-long-tests:
-        name: very-long-tests
+    testlib-tests:
+        name: testlib-tests
         strategy:
             fail-fast: false
             matrix:
-                test-type: ${{ fromJson(needs.get-testlib-very-long-dirs.outputs.test-dirs-matrix) }}
+                type: [quick, long, very-long]
+                test-type: ${{ fromJson(needs.get-testlib-very-long-dirs.outputs.test-dirs-matrix-${{ matrix.type }}) }}
         runs-on: [self-hosted, linux, x64]
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         timeout-minutes: 4320 # 3 days
-        needs: [get-date, get-testlib-very-long-dirs]
+        needs: [get-date, get-testlib-dirs]
         steps:
             - uses: actions/checkout@v4
 
@@ -92,11 +97,11 @@ jobs:
                   restore-keys: |
                       testlib-build-all
 
-            - name: Run very-long ${{ matrix.test-type }} tests
+            - name: Run ${{ matrix.type }} ${{ matrix.test-type }} tests
               id: run-tests
               timeout-minutes: 4290
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type }} --length very-long -j$(nproc) -vv --exclude-tags gcn_gpu
+              run: ./main.py run ${{ matrix.test-type }} --length ${{ matrix.type }} -j$(nproc) -vv --exclude-tags gcn_gpu
 
             - name: Sanitize test-dir for artifact name
               id: sanitize-test-dir
@@ -110,6 +115,12 @@ jobs:
                   name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-very-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
                       }}-status-${{ steps.run-tests.outcome }}-output
                   path: tests/testing-results
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: [$steps.sanitize-test-dir.outputs.sanitized-test-dir, $matrix.type]
 
     gpu-tests:
         runs-on: [self-hosted, linux, x64]
