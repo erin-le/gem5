@@ -84,8 +84,8 @@ jobs:
             matrix:
                 # type: [quick, long, very-long]
                 # test-type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-${{ matrix.type }}) }}
-                type: [{length: quick, testdir: $fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-quick)}, {length: long, testdir: $fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-long)},
-                     {length: very-long, testdir: $fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long)}]
+                type: [{length: quick, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-quick)}}'}, {length: long, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-long)}}'},
+                     {length: very-long, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long)}}'}]
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         timeout-minutes: 4320 # 3 days
@@ -123,7 +123,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: [$steps.sanitize-test-dir.outputs.sanitized-test-dir, $matrix.type]
+                  flags: ['${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}', '${{matrix.type}}']
 
     gpu-tests:
         runs-on: ubuntu-24.04
