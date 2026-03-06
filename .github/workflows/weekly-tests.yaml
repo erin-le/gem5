@@ -102,6 +102,7 @@ jobs:
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         outputs:
             test-dirs-matrix-flattened: ${{ steps.flatten-matrix.outputs.matrix }}
+        needs: [get-date, get-testlib-dirs]
         steps:
             - id: flatten-matrix
               run: |
