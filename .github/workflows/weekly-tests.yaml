@@ -132,7 +132,8 @@ jobs:
             - name: Run ${{ matrix.type }} ${{ matrix.test-type }} tests
               id: run-tests
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type.testdir }} --length ${{ matrix.test-type.length }} -j$(nproc) -vv --exclude-tags gcn_gpu
+              run: ./main.py run ${{ matrix.test-type.testdir }} --length ${{ matrix.test-type.length }} --gcov=test-only -j$(nproc) -vv --exclude-tags
+                  gcn_gpu
 
             - name: Sanitize test-dir for artifact name
               id: sanitize-test-dir
