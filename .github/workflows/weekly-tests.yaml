@@ -41,8 +41,8 @@ jobs:
     # get TestLib test directories for quick, long, and very-long tests
     get-testlib-dirs:
         strategy:
-        matrix:
-            type: [quick, long, very-long]
+            matrix:
+                type: [quick, long, very-long]
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         outputs:
