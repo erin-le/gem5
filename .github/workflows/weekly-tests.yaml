@@ -46,12 +46,12 @@ jobs:
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         outputs:
-            test-dirs-matrix: [{length: quick, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}'}, {length: long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-long
-                          }}'}, {length: very-long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}'}]
+            # test-dirs-matrix: [{length: quick, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}'}, {length: long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-long
+                          # }}'}, {length: very-long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}'}]
 
-            # test-dirs-matrix-quick: ${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}
-            # test-dirs-matrix-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-long }}
-            # test-dirs-matrix-very-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}
+            test-dirs-matrix-quick: ${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}
+            test-dirs-matrix-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-long }}
+            test-dirs-matrix-very-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}
         steps:
             - uses: actions/checkout@v4
             - name: Get directories for testlib-very-long
@@ -79,21 +79,48 @@ jobs:
                     jq -ncR '[inputs]'\
                   )" >>$GITHUB_OUTPUT
 
+    match-length-and-test-matrix:
+        name: match-length-and-test-matrix
+        strategy:
+            matrix:
+                type: [quick, long, very-long]
+        runs-on: ubuntu-24.04
+        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        outputs:
+            test-dirs-matrix-flattened: ${{ steps.flatten-matrix.outputs.matrix }}
+        steps:
+            - id: flatten-matrix
+              run: |
+                  primary='["quick", "long", "very-long"]'
+                  secondary='{
+                      "quick": ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }},
+                      "long": ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-long }},
+                      "very-long": ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long }},
+                  }'
+
+                  flat_matrix=$(echo $secondary | jq -c '[
+                    to_entries[] |
+                    .key as $k |
+                    .value[] |
+                    {length: $k, testdir: .}
+                  ]')
+
+                  echo "matrix=$flat_matrix" >> $GITHUB_OUTPUT
+
     # start running the very-long tests
     testlib-tests:
         name: testlib-tests
         strategy:
             fail-fast: false
             matrix:
-                type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix.length) }}
-                test-type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix.testdir) }}
+                test-type: ${{ fromJson(needs.match-length-and-test-matrix.outputs.test-dirs-matrix-flattened) }}
                 # type: [quick, long, very-long]
                 # test-type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-${{ matrix.type }}) }}
                 # type: [{length: quick, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-quick)}}'}, {length: long, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-long)}}'}, {length: very-long, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long)}}'}]
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         timeout-minutes: 4320 # 3 days
-        needs: [get-date, get-testlib-dirs]
+        needs: [get-date, get-testlib-dirs, match-length-and-test-matrix]
         steps:
             - uses: actions/checkout@v4
 
@@ -108,12 +135,12 @@ jobs:
             - name: Run ${{ matrix.type }} ${{ matrix.test-type }} tests
               id: run-tests
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type }} --length ${{ matrix.type }} -j$(nproc) -vv --exclude-tags gcn_gpu
+              run: ./main.py run ${{ matrix.test-type.testdir }} --length ${{ matrix.test-type.length }} -j$(nproc) -vv --exclude-tags gcn_gpu
 
             - name: Sanitize test-dir for artifact name
               id: sanitize-test-dir
               if: success() || failure()
-              run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+              run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type.testdir }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
             - name: Upload results
               if: success() || failure()
@@ -127,7 +154,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: ['${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}', '${{matrix.type}}']
+                  flags: ['${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}', '${{matrix.test-type.length}}']
 
     gpu-tests:
         runs-on: ubuntu-24.04
