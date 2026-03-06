@@ -1,0 +1,211 @@
+---
+# This workflow runs all of the very-long tests within main.py
+
+name: Weekly Tests - check that combined flags have expected coverage
+
+on:
+    # This is triggered weekly via the 'scheduler.yaml' workflow.
+    workflow_dispatch:
+
+jobs:
+
+    get-date:
+        runs-on: ubuntu-24.04
+        outputs:
+            date: ${{ steps.date.outputs.date }}
+        steps:
+            - name: Get the current date
+              id: date
+              run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+  # this builds and runs unittests.fast, opt, and debug
+    unittests-fast-opt-debug:
+        strategy:
+            matrix:
+                type: [fast, opt, debug]
+        runs-on: ubuntu-24.04
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Run ALL/unittests.${{ matrix.type }} UnitTests
+              run: scons build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: overall-unittests
+
+    # get TestLib test directories for quick, long, and very-long tests
+    get-testlib-dirs:
+        strategy:
+            matrix:
+                type: [quick] #, long, very-long
+        runs-on: ubuntu-24.04
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        outputs:
+            # test-dirs-matrix: [{length: quick, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}'}, {length: long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-long
+                          # }}'}, {length: very-long, testdir: '${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}'}]
+
+            test-dirs-matrix-quick: ${{ steps.dir-matrix.outputs.test-dirs-matrix-quick }}
+            # test-dirs-matrix-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-long }}
+            # test-dirs-matrix-very-long: ${{ steps.dir-matrix.outputs.test-dirs-matrix-very-long }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Get directories for testlib-very-long
+              working-directory: ${{ github.workspace }}/tests
+              id: dir-matrix
+              run: |
+                  unset PREV
+                  echo "test-dirs-matrix-${{ matrix.type }}=$(\
+                    ./main.py list gem5 \
+                    --suites \
+                    --length ${{ matrix.type }} \
+                    --gcov=test-only \
+                    --exclude-tags gcn_gpu | \
+                    grep "$SUITEUID:" | \
+                    cut -d: -f2 | \
+                    cut -d/ -f 2- | \
+                    xargs dirname | \
+                    sort -u  | \
+                    while read x; do \
+                      if [ -z "${PREV}" ] || [ "$x" != "${PREV}/*" ]; then \
+                        PREV=$x; \
+                        echo $x; \
+                      fi; \
+                    done  | \
+                    jq -ncR '[inputs]'\
+                  )" >>$GITHUB_OUTPUT
+                  ./main.py list gem5 \
+                    --suites \
+                    --length ${{ matrix.type }} \
+                    --gcov=test-only \
+                    --exclude-tags gcn_gpu | \
+                    grep "$SUITEUID:" | \
+                    cut -d: -f2 | \
+                    cut -d/ -f 2- | \
+                    xargs dirname | \
+                    sort -u  | \
+                    while read x; do \
+                      if [ -z "${PREV}" ] || [ "$x" != "${PREV}/*" ]; then \
+                        PREV=$x; \
+                        echo $x; \
+                      fi; \
+                    done  | \
+                    jq -ncR '[inputs]'
+
+    flatten-length-and-testdir-matrices:
+        name: flatten-length-and-testdir-matrices
+        runs-on: ubuntu-24.04
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        outputs:
+            test-dirs-matrix-flattened: ${{ steps.flatten-matrix.outputs.matrix }}
+        needs: [get-date, get-testlib-dirs]
+        steps:
+            - id: flatten-matrix
+              run: |
+                  echo '${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }}'
+                  primary='["quick"]'
+                  secondary='{
+                      "quick": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }}
+                  }'
+
+                  flat_matrix=$(echo $secondary | jq -c '[
+                    to_entries[] |
+                    .key as $k |
+                    .value[] |
+                    {length: $k, testdir: .}
+                  ]')
+
+                  echo "matrix=$flat_matrix" >> $GITHUB_OUTPUT
+
+    # start running the very-long tests
+    testlib-tests:
+        name: testlib-tests
+        strategy:
+            fail-fast: false
+            matrix:
+                test-type: ${{ fromJson(needs.flatten-length-and-testdir-matrices.outputs.test-dirs-matrix-flattened) }}
+                # type: [quick, long, very-long]
+                # test-type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-${{ matrix.type }}) }}
+                # type: [{length: quick, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-quick)}}'}, {length: long, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-long)}}'}, {length: very-long, testdir: '${{fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long)}}'}]
+        runs-on: ubuntu-24.04
+        container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
+        timeout-minutes: 4320 # 3 days
+        needs: [get-date, get-testlib-dirs, flatten-length-and-testdir-matrices]
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Cache build/ALL
+              uses: actions/cache@v4
+              with:
+                  path: build/ALL
+                  key: testlib-build-all-${{ needs.get-date.outputs.date }}
+                  restore-keys: |
+                      testlib-build-all
+
+            - name: Run ${{ matrix.test-type.length }} ${{ matrix.test-type.testdir }} tests
+              id: run-tests
+              working-directory: ${{ github.workspace }}/tests
+              run: ./main.py run ${{ matrix.test-type.testdir }} --length ${{ matrix.test-type.length }} --gcov=test-only -j$(nproc) -vv --exclude-tags
+                  gcn_gpu
+
+            - name: Sanitize test-dir for artifact name
+              id: sanitize-test-dir
+              if: success() || failure()
+              run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type.testdir }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+
+            - name: Upload results
+              if: success() || failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-very-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
+                      }}-status-${{ steps.run-tests.outcome }}-output
+                  path: tests/testing-results
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: overall-length-${{matrix.test-type.length}}
+            # - name: Upload coverage reports to Codecov - length flag
+            #   uses: codecov/codecov-action@v5
+            #   with:
+            #       token: ${{ secrets.CODECOV_TOKEN }}
+            #       flags: ${{matrix.test-type.length}}
+            # - name: Upload coverage reports to Codecov - combination flag
+            #   uses: codecov/codecov-action@v5
+            #   with:
+            #       token: ${{ secrets.CODECOV_TOKEN }}
+            #       flags: ${{matrix.test-type.length}}-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}
+
+    gpu-tests:
+        runs-on: ubuntu-24.04
+        container: ghcr.io/gem5/gcn-gpu:latest
+        timeout-minutes: 1440 # 24 hours
+        needs: get-date
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Cache build/VEGA_X86
+              uses: actions/cache@v4
+              with:
+                  path: build/VEGA_X86
+                  key: testlib-build-vega-${{ needs.get-date.outputs.date }}
+                  restore-keys: |
+                      testlib-build-vega
+
+            - name: Run Testlib GPU Tests
+              id: run-tests
+              working-directory: ${{ github.workspace }}/tests
+              run: ./main.py run --length=very-long -vvv -j $(nproc) --host gcn_gpu
+
+            - name: Upload results
+              if: success() || failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-output
+                  path: tests/testing-results
