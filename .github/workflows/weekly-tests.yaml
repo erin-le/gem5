@@ -148,7 +148,7 @@ jobs:
                   restore-keys: |
                       testlib-build-all
 
-            - name: Run ${{ matrix.type }} ${{ matrix.test-type }} tests
+            - name: Run ${{ matrix.test-type.length }} ${{ matrix.test-type.testdir }} tests
               id: run-tests
               working-directory: ${{ github.workspace }}/tests
               run: ./main.py run ${{ matrix.test-type.testdir }} --length ${{ matrix.test-type.length }} --gcov=test-only -j$(nproc) -vv --exclude-tags
