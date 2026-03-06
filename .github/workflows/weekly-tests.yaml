@@ -1,7 +1,7 @@
 ---
 # This workflow runs all of the very-long tests within main.py
 
-name: Weekly Tests
+name: Weekly Tests - check that combined flags have expected coverage
 
 on:
     # This is triggered weekly via the 'scheduler.yaml' workflow.
