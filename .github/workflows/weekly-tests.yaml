@@ -82,8 +82,10 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                type: [quick, long, very-long]
-                test-type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-${{ matrix.type }}) }}
+                # type: [quick, long, very-long]
+                # test-type: ${{ fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-${{ matrix.type }}) }}
+                type: [{length: quick, testdir: $fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-quick)}, {length: long, testdir: $fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-long)},
+                     {length: very-long, testdir: $fromJson(needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long)}]
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         timeout-minutes: 4320 # 3 days
