@@ -183,3 +183,9 @@ jobs:
                   name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-length-${{
                       matrix.test-length }}-output
                   path: tests/testing-results
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: overall-gpu-tests,overall-length-${{matrix.test-length}},gpu-tests-${{matrix.test-type.length}}
