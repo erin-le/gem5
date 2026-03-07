@@ -23,21 +23,21 @@ jobs:
     unittests-fast-opt-debug:
         strategy:
             matrix:
-                type: [fast, opt, debug]
+                type: [{build: fast, length: quick}, {build: opt, length: quick}, {build: debug, length: long}]
         runs-on: ubuntu-24.04
         container: ejleucd/ubuntu-24.04-gcovr-codecov:latest
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v4
 
-            - name: Run ALL/unittests.${{ matrix.type }} UnitTests
-              run: scons build/ALL/unittests.${{ matrix.type }} --gcov -j $(nproc)
+            - name: Run ALL/unittests.${{ matrix.type.build }} UnitTests
+              run: scons build/ALL/unittests.${{ matrix.type.build }} --gcov -j $(nproc)
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: unittests-${{ matrix.type }},unittests-overall
+                  flags: unittests-${{ matrix.type.build }},overall-unittests,overall-length-${{ matrix.type.length }}
 
     # get TestLib test directories for quick, long, and very-long tests
     get-testlib-dirs:
