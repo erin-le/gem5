@@ -189,3 +189,83 @@ jobs:
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   flags: overall-gpu-tests,overall-length-${{matrix.test-length}},gpu-tests-${{matrix.test-type.length}}
+
+  # Get code coverage for sst-test (from the Daily Tests).
+    sst-test:
+        runs-on: [self-hosted, linux, x64]
+        container: ghcr.io/gem5/sst-env:latest
+        timeout-minutes: 180
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Build RISCV/libgem5_opt.so with SST
+              run: scons build/RISCV/libgem5_opt.so --without-tcmalloc --duplicate-sources --ignore-style --gcov -j $(nproc)
+            - name: Makefile ext/sst
+              working-directory: ${{ github.workspace }}/ext/sst
+              run: mv Makefile.linux Makefile
+            - name: Compile ext/sst
+              working-directory: ${{ github.workspace }}/ext/sst
+              run: make -j $(nproc)
+            - name: Run SST test
+              working-directory: ${{ github.workspace }}/ext/sst
+              run: sst --add-lib-path=./ sst/example.py
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: sst-test,overall-length-long
+
+  # Get code coverage for systemc-test (from the Daily Tests).
+    systemc-test:
+        runs-on: [self-hosted, linux, x64]
+        container: ghcr.io/gem5/systemc-env:latest
+        timeout-minutes: 180
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Build ARM/gem5.opt
+              run: scons build/ARM/gem5.opt --ignore-style --duplicate-sources --gcov -j$(nproc)
+            - name: disable systemc
+              run: scons setconfig build/ARM --ignore-style USE_SYSTEMC=n
+            - name: Build ARM/libgem5_opt.so
+              run: scons build/ARM/libgem5_opt.so --with-cxx-config --without-python --without-tcmalloc -j$(nproc) --duplicate-sources
+            - name: Compile gem5 withing SystemC
+              working-directory: ${{ github.workspace }}/util/systemc/gem5_within_systemc
+              run: make
+            - name: Run gem5 within SystemC test
+              run: ./build/ARM/gem5.opt configs/deprecated/example/se.py -c tests/test-progs/hello/bin/arm/linux/hello
+            - name: Continue gem5 within SystemC test
+              run: LD_LIBRARY_PATH=build/ARM/:/opt/systemc/lib-linux64/ ./util/systemc/gem5_within_systemc/gem5.opt.sc m5out/config.ini
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: systemc-test,overall-length-long
+
+# Get code coverage for dramsys-tests (from the Daily Tests).
+    dramsys-tests:
+        runs-on: [self-hosted, linux, x64]
+        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        timeout-minutes: 360 # 6 hours
+        steps:
+            - uses: actions/checkout@v4
+            - name: Checkout DRAMSys
+              working-directory: ${{ github.workspace }}/ext/dramsys
+              run: git clone https://github.com/tukl-msd/DRAMSys --branch v5.3.1 --depth 1 DRAMSys
+
+              # gem5 is built separately because it depends on the DRAMSys library
+            - name: Build gem5
+              working-directory: ${{ github.workspace }}
+              run: scons build/ALL/gem5.opt --gcov -j $(nproc)
+
+            - name: Run DRAMSys Checks
+              working-directory: ${{ github.workspace }}
+              run: |
+                  ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/arm-hello-dramsys.py
+                  ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/dramsys-traffic.py
+                  ./build/ALL/gem5.opt configs/example/dramsys.py
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: dramsys-tests,overall-length-long
