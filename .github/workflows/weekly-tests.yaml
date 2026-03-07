@@ -155,7 +155,7 @@ jobs:
             matrix:
                 test-length: [quick, long, very-long]
         runs-on: ubuntu-24.04
-        container: ghcr.io/gem5/gcn-gpu:latest
+        container: ejleucd/gcn-gpu-codecov
         timeout-minutes: 1440 # 24 hours
         needs: get-date
 
