@@ -151,6 +151,9 @@ jobs:
                   flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-${{matrix.test-type.length}},${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}-${{matrix.test-type.length}}
 
     gpu-tests:
+        strategy:
+            matrix:
+                test-length: [quick, long, very-long]
         runs-on: ubuntu-24.04
         container: ghcr.io/gem5/gcn-gpu:latest
         timeout-minutes: 1440 # 24 hours
@@ -170,12 +173,13 @@ jobs:
             - name: Run Testlib GPU Tests
               id: run-tests
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run --length=very-long -vvv -j $(nproc) --host gcn_gpu
+              run: ./main.py run --length=${{ matrix.test-length }} -vvv --gcov=test-only -j $(nproc) --host gcn_gpu
               timeout-minutes: 1410
 
             - name: Upload results
               if: always()
               uses: actions/upload-artifact@v4
               with:
-                  name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-output
+                  name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-length-${{
+                      matrix.test-length }}-output
                   path: tests/testing-results
