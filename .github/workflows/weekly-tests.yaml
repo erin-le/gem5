@@ -188,7 +188,7 @@ jobs:
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: overall-gpu-tests,overall-length-${{matrix.test-length}},gpu-tests-${{matrix.test-type.length}}
+                  flags: overall-gpu-tests,overall-length-${{ matrix.test-length }},gpu-tests-${{ matrix.test-length }}
 
   # Get code coverage for sst-test (from the Daily Tests).
     sst-test:
