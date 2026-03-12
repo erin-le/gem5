@@ -134,7 +134,7 @@ jobs:
   #           - name: Sanitize test-dir for artifact name
   #             id: sanitize-test-dir
   #             if: always()
-  #             run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+  #             run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type.testdir }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
   #           - name: Upload results
   #             if: always()
