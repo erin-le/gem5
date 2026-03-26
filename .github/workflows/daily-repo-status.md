@@ -43,6 +43,11 @@ Create an upbeat daily status report for the repo as a GitHub issue.
 
 - Recent repository activity (issues, PRs, discussions, releases, code changes)
 - Progress tracking, goal reminders and highlights
+- Notifications about PRs that haven't had any activity in the last two weeks
+  - Use the following two categories to sort these notifications:
+  1. PRs that are waiting for a maintainer's response
+  2. PRs that are waiting for the PR author's response
+- Newly opened issues
 - Project status and recommendations
 - Actionable next steps for maintainers
 
