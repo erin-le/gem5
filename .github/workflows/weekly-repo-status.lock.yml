@@ -21,16 +21,16 @@
 #
 # For more information: https://github.github.com/gh-aw/introduction/overview/
 #
-# This workflow creates daily repo status reports. It gathers recent repository
+# This workflow creates weekly repo status reports. It gathers recent repository
 # activity (issues, PRs, discussions, releases, code changes) and generates
 # engaging GitHub issues with productivity insights, community highlights,
 # and project recommendations.
 #
 # Source: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
 #
-# gh-aw-metadata: {"schema_version":"v3","frontmatter_hash":"3179b8650ae07752ee95dbb5a41a574eccddbe31fe61c51058885debbadc093e","compiler_version":"v0.64.0","strict":true,"agent_id":"copilot"}
+# gh-aw-metadata: {"schema_version":"v3","frontmatter_hash":"c39f375978bef5a0eef0b04aec7422500d1ef402f935cab701d174910baaa69d","compiler_version":"v0.64.0","strict":true,"agent_id":"copilot"}
 
-name: Daily Repo Status
+name: Weekly Repo Status
 on:
     schedule:
         - cron: 27 20 * * 1
@@ -48,7 +48,7 @@ permissions: {}
 concurrency:
     group: gh-aw-${{ github.workflow }}
 
-run-name: Daily Repo Status
+run-name: Weekly Repo Status
 
 jobs:
     activation:
@@ -75,7 +75,7 @@ jobs:
                   GH_AW_INFO_VERSION: latest
                   GH_AW_INFO_AGENT_VERSION: latest
                   GH_AW_INFO_CLI_VERSION: v0.64.0
-                  GH_AW_INFO_WORKFLOW_NAME: Daily Repo Status
+                  GH_AW_INFO_WORKFLOW_NAME: Weekly Repo Status
                   GH_AW_INFO_EXPERIMENTAL: 'false'
                   GH_AW_INFO_SUPPORTS_TOOLS_ALLOWLIST: 'true'
                   GH_AW_INFO_STAGED: 'false'
@@ -334,14 +334,14 @@ jobs:
                   mkdir -p /tmp/gh-aw/safeoutputs
                   mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
                   cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/config.json << 'GH_AW_SAFE_OUTPUTS_CONFIG_EOF'
-                  {"create_issue":{"close_older_issues":true,"labels":["report","daily-status"],"max":1,"title_prefix":"[repo-status] "},"mentions":{"enabled":false},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"}}
+                  {"create_issue":{"close_older_issues":true,"labels":["report","weekly-status"],"max":1,"title_prefix":"[repo-status] "},"mentions":{"enabled":false},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"}}
                   GH_AW_SAFE_OUTPUTS_CONFIG_EOF
             - name: Write Safe Outputs Tools
               run: |
                   cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/tools_meta.json << 'GH_AW_SAFE_OUTPUTS_TOOLS_META_EOF'
                   {
                     "description_suffixes": {
-                      "create_issue": " CONSTRAINTS: Maximum 1 issue(s) can be created. Title will be prefixed with \"[repo-status] \". Labels [\"report\" \"daily-status\"] will be automatically added."
+                      "create_issue": " CONSTRAINTS: Maximum 1 issue(s) can be created. Title will be prefixed with \"[repo-status] \". Labels [\"report\" \"weekly-status\"] will be automatically added."
                     },
                     "repo_params": {},
                     "dynamic_tools": []
@@ -788,7 +788,7 @@ jobs:
               env:
                   GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
                   GH_AW_NOOP_MAX: '1'
-                  GH_AW_WORKFLOW_NAME: Daily Repo Status
+                  GH_AW_WORKFLOW_NAME: Weekly Repo Status
                   GH_AW_WORKFLOW_SOURCE: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
                   GH_AW_WORKFLOW_SOURCE_URL: ${{ github.server_url }}/githubnext/agentics/tree/410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e/workflows/daily-repo-status.md
               with:
@@ -803,7 +803,7 @@ jobs:
               uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               env:
                   GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-                  GH_AW_WORKFLOW_NAME: Daily Repo Status
+                  GH_AW_WORKFLOW_NAME: Weekly Repo Status
                   GH_AW_WORKFLOW_SOURCE: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
                   GH_AW_WORKFLOW_SOURCE_URL: ${{ github.server_url }}/githubnext/agentics/tree/410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e/workflows/daily-repo-status.md
               with:
@@ -819,7 +819,7 @@ jobs:
               uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               env:
                   GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-                  GH_AW_WORKFLOW_NAME: Daily Repo Status
+                  GH_AW_WORKFLOW_NAME: Weekly Repo Status
                   GH_AW_WORKFLOW_SOURCE: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
                   GH_AW_WORKFLOW_SOURCE_URL: ${{ github.server_url }}/githubnext/agentics/tree/410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e/workflows/daily-repo-status.md
                   GH_AW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -844,7 +844,7 @@ jobs:
               uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               env:
                   GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-                  GH_AW_WORKFLOW_NAME: Daily Repo Status
+                  GH_AW_WORKFLOW_NAME: Weekly Repo Status
                   GH_AW_WORKFLOW_SOURCE: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
                   GH_AW_WORKFLOW_SOURCE_URL: ${{ github.server_url }}/githubnext/agentics/tree/410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e/workflows/daily-repo-status.md
                   GH_AW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -924,8 +924,8 @@ jobs:
               if: always() && steps.detection_guard.outputs.run_detection == 'true'
               uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               env:
-                  WORKFLOW_NAME: Daily Repo Status
-                  WORKFLOW_DESCRIPTION: "This workflow creates daily repo status reports. It gathers recent repository\nactivity (issues, PRs, discussions,\
+                  WORKFLOW_NAME: Weekly Repo Status
+                  WORKFLOW_DESCRIPTION: "This workflow creates weekly repo status reports. It gathers recent repository\nactivity (issues, PRs, discussions,\
                       \ releases, code changes) and generates\nengaging GitHub issues with productivity insights, community highlights,\nand project recommendations."
                   HAS_PATCH: ${{ needs.agent.outputs.has_patch }}
               with:
@@ -1017,7 +1017,7 @@ jobs:
             GH_AW_ENGINE_ID: copilot
             GH_AW_ENGINE_MODEL: ${{ needs.agent.outputs.model }}
             GH_AW_WORKFLOW_ID: weekly-repo-status
-            GH_AW_WORKFLOW_NAME: Daily Repo Status
+            GH_AW_WORKFLOW_NAME: Weekly Repo Status
             GH_AW_WORKFLOW_SOURCE: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
             GH_AW_WORKFLOW_SOURCE_URL: ${{ github.server_url }}/githubnext/agentics/tree/410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e/workflows/daily-repo-status.md
         outputs:
@@ -1065,7 +1065,7 @@ jobs:
                   GH_AW_ALLOWED_DOMAINS: api.business.githubcopilot.com,api.enterprise.githubcopilot.com,api.github.com,api.githubcopilot.com,api.individual.githubcopilot.com,api.snapcraft.io,archive.ubuntu.com,azure.archive.ubuntu.com,crl.geotrust.com,crl.globalsign.com,crl.identrust.com,crl.sectigo.com,crl.thawte.com,crl.usertrust.com,crl.verisign.com,crl3.digicert.com,crl4.digicert.com,crls.ssl.com,github.com,host.docker.internal,json-schema.org,json.schemastore.org,keyserver.ubuntu.com,ocsp.digicert.com,ocsp.geotrust.com,ocsp.globalsign.com,ocsp.identrust.com,ocsp.sectigo.com,ocsp.ssl.com,ocsp.thawte.com,ocsp.usertrust.com,ocsp.verisign.com,packagecloud.io,packages.cloud.google.com,packages.microsoft.com,ppa.launchpad.net,raw.githubusercontent.com,registry.npmjs.org,s.symcb.com,s.symcd.com,security.ubuntu.com,telemetry.enterprise.githubcopilot.com,ts-crl.ws.symantec.com,ts-ocsp.ws.symantec.com,www.googleapis.com
                   GITHUB_SERVER_URL: ${{ github.server_url }}
                   GITHUB_API_URL: ${{ github.api_url }}
-                  GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: '{"create_issue":{"close_older_issues":true,"labels":["report","daily-status"],"max":1,"title_prefix":"[repo-status]
+                  GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: '{"create_issue":{"close_older_issues":true,"labels":["report","weekly-status"],"max":1,"title_prefix":"[repo-status]
                       "},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"}}'
               with:
                   github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
