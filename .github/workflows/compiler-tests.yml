@@ -6,6 +6,8 @@ name: Compiler Tests
 on:
     # This is triggered weekly via the 'scheduler.yaml' workflow.
     workflow_dispatch:
+    # Allow this workflow to be called by Github Agentic Workflows
+    workflow_call:
 
 jobs:
   # replication of compiler-tests.sh
