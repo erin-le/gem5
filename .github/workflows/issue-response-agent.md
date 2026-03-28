@@ -15,6 +15,9 @@ tools:
 
 safe-outputs:
   add-comment: {}
+  noop:
+    report-as-issue: false
+
 ---
 
 # Issue Auto-Response Agent
