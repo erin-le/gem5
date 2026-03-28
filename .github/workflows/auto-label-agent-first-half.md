@@ -35,3 +35,7 @@ safe-outputs:
 Analyze the title and body of the opened PR or issue, then add zero or more of the allowed labels: `arch`, `arch-arm`, `arch-gcn3`, `arch-mips`, `arch-power`, `arch-riscv`, `arch-sparc`, `arch-vega`, `arch-x86`, `base`, `base-stats`, `bug`, `build error`, `classic caches`, `compilation error`, `configs`, `cpu`, `cpu base`, `cpu-kvm`, `cpu-minor`, `cpu-o3`, `cpu-simple`, `dependencies`, `dev`, `dev-arm`, `dev-hsa`, `dev-virtio`, `doc`, `dram`, `duplicate`, `enhancement`, `ext`.
 
 Do not add the `bug` label to PRs.
+
+Consider the title to be more important than the body when deciding which labels to add.
+If something corresponding to a label only comes up 1-2 times in the body,
+but isn't mentioned at all in the title, then don't add that label.
