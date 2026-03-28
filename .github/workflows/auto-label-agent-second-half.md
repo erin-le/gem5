@@ -37,3 +37,7 @@ zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`,
 Consider the title to be more important than the body when deciding which labels to add.
 If something corresponding to a label only comes up 1-2 times in the body,
 but isn't mentioned at all in the title, then don't add that label.
+
+Look at the file MAINTAINERS.yaml in the top level of the gem5 repository for information on when some of these labels should be applied.
+
+Aim to apply 0-2 new labels, stretching to 3 only if the third label is truly necessary and relevant.
