@@ -26,6 +26,8 @@ safe-outputs:
     # wontfix, Stale, and needs details excluded from this list
     # Removed for space:  invalid, low-priority, util-gem5art,
   add-comment: {}
+  noop:
+    report-as-issue: false
 ---
 
 # Auto Label Agent - First Half
