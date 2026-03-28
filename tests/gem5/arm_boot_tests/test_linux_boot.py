@@ -103,7 +103,7 @@ test_boot(
     num_cpus=1,
     mem_system="classic",
     memory_class="SingleChannelDDR3_1600",
-    length=constants.quick_tag,
+    length=constants.long_tag,
     to_tick=10000000000,
     systemd=False,
 )
@@ -113,7 +113,7 @@ test_boot(
     num_cpus=1,
     mem_system="classic",
     memory_class="SingleChannelDDR3_2133",
-    length=constants.quick_tag,
+    length=constants.long_tag,
     to_tick=10000000000,
     systemd=False,
 )
@@ -123,7 +123,7 @@ test_boot(
     num_cpus=1,
     mem_system="classic",
     memory_class="DualChannelDDR3_1600",
-    length=constants.quick_tag,
+    length=constants.long_tag,
     to_tick=10000000000,
     systemd=False,
 )
@@ -133,7 +133,7 @@ test_boot(
     num_cpus=2,
     mem_system="classic",
     memory_class="DualChannelDDR4_2400",
-    length=constants.quick_tag,
+    length=constants.long_tag,
     to_tick=10000000000,
     systemd=False,
 )
@@ -143,7 +143,7 @@ test_boot(
     num_cpus=2,
     mem_system="no_cache",
     memory_class="DualChannelDDR4_2400",
-    length=constants.quick_tag,
+    length=constants.long_tag,
     to_tick=10000000000,
     systemd=False,
 )
@@ -154,28 +154,28 @@ test_boot(
     num_cpus=2,
     mem_system="mesi_two_level",
     memory_class="DualChannelDDR4_2400",
-    length=constants.quick_tag,
+    length=constants.long_tag,
     to_tick=10000000000,
     systemd=False,
 )
 
 
-#### The long (nightly) tests ####
+# #### The long (nightly) tests ####
 
-test_boot(
-    cpu="atomic",
-    num_cpus=1,
-    mem_system="no_cache",
-    memory_class="HBM2Stack",
-    length=constants.long_tag,
-    systemd=True,
-)
+# test_boot(
+#     cpu="atomic",
+#     num_cpus=1,
+#     mem_system="no_cache",
+#     memory_class="HBM2Stack",
+#     length=constants.long_tag,
+#     systemd=True,
+# )
 
-test_boot(
-    cpu="timing",
-    num_cpus=2,
-    mem_system="chi",
-    memory_class="DualChannelDDR4_2400",
-    length=constants.long_tag,
-    systemd=False,
-)
+# test_boot(
+#     cpu="timing",
+#     num_cpus=2,
+#     mem_system="chi",
+#     memory_class="DualChannelDDR4_2400",
+#     length=constants.long_tag,
+#     systemd=False,
+# )

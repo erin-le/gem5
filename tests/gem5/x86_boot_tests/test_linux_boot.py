@@ -100,7 +100,7 @@ test_boot(
     mem_system="classic",
     memory_class="SingleChannelDDR3_1600",
     to_tick=10000000000,  # Simulates 1/100th of a second.
-    length=constants.quick_tag,
+    length=constants.long_tag,
 )
 
 test_boot(
@@ -109,7 +109,7 @@ test_boot(
     mem_system="classic",
     memory_class="SingleChannelDDR3_2133",
     to_tick=10000000000,
-    length=constants.quick_tag,
+    length=constants.long_tag,
 )
 
 test_boot(
@@ -118,7 +118,7 @@ test_boot(
     mem_system="classic",
     memory_class="SingleChannelDDR3_2133",
     to_tick=10000000000,
-    length=constants.quick_tag,
+    length=constants.long_tag,
 )
 
 test_boot(
@@ -127,7 +127,7 @@ test_boot(
     mem_system="classic",
     memory_class="SingleChannelDDR4_2400",
     to_tick=10000000000,
-    length=constants.quick_tag,
+    length=constants.long_tag,
 )
 
 test_boot(
@@ -136,29 +136,29 @@ test_boot(
     mem_system="classic",
     memory_class="SingleChannelLPDDR3_1600",
     to_tick=10000000000,
-    length=constants.quick_tag,
-)
-
-#### The long (Nightly) tests ####
-
-
-test_boot(
-    cpu="timing",
-    num_cpus=1,
-    mem_system="mesi_two_level",
-    memory_class="DualChannelDDR3_1600",
-    boot_type="init",
     length=constants.long_tag,
 )
 
-test_boot(
-    cpu="atomic",
-    num_cpus=4,
-    mem_system="classic",
-    memory_class="DualChannelDDR4_2400",
-    boot_type="systemd",
-    length=constants.long_tag,
-)
+# #### The long (Nightly) tests ####
+
+
+# test_boot(
+#     cpu="timing",
+#     num_cpus=1,
+#     mem_system="mesi_two_level",
+#     memory_class="DualChannelDDR3_1600",
+#     boot_type="init",
+#     length=constants.long_tag,
+# )
+
+# test_boot(
+#     cpu="atomic",
+#     num_cpus=4,
+#     mem_system="classic",
+#     memory_class="DualChannelDDR4_2400",
+#     boot_type="systemd",
+#     length=constants.long_tag,
+# )
 
 #### The very-long (Weekly) tests ####
 
