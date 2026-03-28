@@ -27,7 +27,7 @@ safe-outputs:
   add-comment: {}
 ---
 
-# Auto Label Agent
+# Auto Label Agent - Second Half
 
 Analyze the title and body of the opened PR or issue, then add
 zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `low-priority`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `system-arm`, `systemc`, `tests`, `util`, `util-docker`, `util-m5`, `website`.
