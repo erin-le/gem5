@@ -155,7 +155,7 @@ jobs:
     gpu-tests:
         strategy:
             matrix:
-                test-length: [quick, long, very-long]
+                test-length: [quick, very-long]
         runs-on: [self-hosted, linux, x64]
         container: ghcr.io/gem5/gcn-gpu:latest
         timeout-minutes: 1440 # 24 hours
@@ -172,10 +172,21 @@ jobs:
                   restore-keys: |
                       testlib-build-vega
 
-            - name: Run Testlib GPU Tests
-              id: run-tests
+            - name: Run Testlib GPU Tests (quick)
+              id: run-tests-quick
               working-directory: ${{ github.workspace }}/tests
+              # long and very-long gpu-tests run out of memory while building
+              # gem5 if --gcov is passed. As such, we only run the quick
+              # gpu-tests with --gcov.
+              if: ${{ matrix.test-length == 'quick' }}
               run: ./main.py run --length=${{ matrix.test-length }} -vvv --gcov=test-only -j $(nproc) --host gcn_gpu
+              timeout-minutes: 1410
+
+            - name: Run Testlib GPU Tests (very-long)
+              id: run-tests-very-long
+              working-directory: ${{ github.workspace }}/tests
+              if: ${{ matrix.test-length  == 'very-long' }}
+              run: ./main.py run --length=${{ matrix.test-length }} -vvv -j $(nproc) --host gcn_gpu
               timeout-minutes: 1410
 
             - name: Upload results
