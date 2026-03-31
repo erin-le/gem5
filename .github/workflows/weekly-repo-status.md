@@ -34,7 +34,7 @@ safe-outputs:
   add-comment:
     max: 10
     target: "*"
-    target-repo: "gem5/gem5"
+    target-repo: "erin-le/gem5" # change this later
 source: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
 engine: copilot
 ---
@@ -43,7 +43,7 @@ engine: copilot
 
 Create an weekly status report for the repo as a GitHub issue.
 
-## Leave Reminders on Inactive PRs
+## Reminders for Inactive PRs
 
 - Leave reminder messages on PRs that have been inactive for 2 weeks. After the first reminder message you send, wait another two weeks, and send a second message if the PR has remained inactive.
   - That is to say, only send this message twice. Send the first message after 2 weeks of inactivity, and send the second after 1 month. After two messages, if the PR doesn't have any changes, take no further action.
