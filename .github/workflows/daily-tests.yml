@@ -121,7 +121,7 @@ jobs:
               id: dir-matrix
               run: |
                   unset PREV
-                  echo "test-dirs-matrix=["gem5/arm_boot_tests", "gem5/x86_boot_tests"]" >>$GITHUB_OUTPUT
+                  echo 'test-dirs-matrix=["gem5/arm_boot_tests", "gem5/x86_boot_tests"]' >>$GITHUB_OUTPUT
 
   # start running all of the long tests
     testlib-long-tests:
