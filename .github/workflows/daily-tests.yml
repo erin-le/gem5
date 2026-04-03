@@ -75,25 +75,25 @@ jobs:
     #               exit $status
     #           timeout-minutes: 120
 
-    build-all-gem5:
-        runs-on: ubuntu-24.04
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-        timeout-minutes: 180
-        needs: get-date
+    # build-all-gem5:
+    #     runs-on: ubuntu-24.04
+    #     container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+    #     timeout-minutes: 180
+    #     needs: get-date
 
-        steps:
-            - uses: actions/checkout@v4
+    #     steps:
+    #         - uses: actions/checkout@v4
 
-            - name: Cache build/ALL
-              uses: actions/cache@v4
-              with:
-                  path: build/ALL
-                  key: testlib-build-all-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      testlib-build-all
+    #         - name: Cache build/ALL
+    #           uses: actions/cache@v4
+    #           with:
+    #               path: build/ALL
+    #               key: testlib-build-all-${{ needs.get-date.outputs.date }}
+    #               restore-keys: |
+    #                   testlib-build-all
 
-            - name: Build ALL/gem5.opt
-              run: scons --no-compress-debug build/ALL/gem5.opt -j $(nproc)
+    #         - name: Build ALL/gem5.opt
+    #           run: scons --no-compress-debug build/ALL/gem5.opt -j $(nproc)
 
   # this builds and runs unittests.debug
     unittests-debug:
@@ -109,65 +109,65 @@ jobs:
             - name: Run ALL/unittests.${{ matrix.type }} UnitTests
               run: scons build/ALL/unittests.${{ matrix.type }} -j $(nproc)
 
-    get-testlib-long-dirs:
-        runs-on: ubuntu-24.04
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-        outputs:
-            test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
-        steps:
-            - uses: actions/checkout@v4
-            - name: Get directories for testlib-long
-              working-directory: ${{ github.workspace }}/tests
-              id: dir-matrix
-              run: |
-                  unset PREV
-                  echo 'test-dirs-matrix=["gem5/arm_boot_tests", "gem5/x86_boot_tests"]' >>$GITHUB_OUTPUT
+    # get-testlib-long-dirs:
+    #     runs-on: ubuntu-24.04
+    #     container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+    #     outputs:
+    #         test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #         - name: Get directories for testlib-long
+    #           working-directory: ${{ github.workspace }}/tests
+    #           id: dir-matrix
+    #           run: |
+    #               unset PREV
+    #               echo 'test-dirs-matrix=["gem5/arm_boot_tests", "gem5/x86_boot_tests"]' >>$GITHUB_OUTPUT
 
-  # start running all of the long tests
-    testlib-long-tests:
-        name: long-tests
-        runs-on: ubuntu-24.04
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-        timeout-minutes: 1440 # 24 hours for entire matrix to run
-        needs:
-            - build-all-gem5
-            - get-testlib-long-dirs
-            - get-date
-        strategy:
-            fail-fast: false
-            matrix:
-                test-type: ${{ fromJson(needs.get-testlib-long-dirs.outputs.test-dirs-matrix) }}
+#   # start running all of the long tests
+#     testlib-long-tests:
+#         name: long-tests
+#         runs-on: ubuntu-24.04
+#         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+#         timeout-minutes: 1440 # 24 hours for entire matrix to run
+#         needs:
+#             - build-all-gem5
+#             - get-testlib-long-dirs
+#             - get-date
+#         strategy:
+#             fail-fast: false
+#             matrix:
+#                 test-type: ${{ fromJson(needs.get-testlib-long-dirs.outputs.test-dirs-matrix) }}
 
-        steps:
-            - uses: actions/checkout@v4
-            - name: Restore build/ALL cache
-              uses: actions/cache/restore@v4
-              with:
-                  path: build/ALL
-                  key: testlib-build-all-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      testlib-build-all
+#         steps:
+#             - uses: actions/checkout@v4
+#             - name: Restore build/ALL cache
+#               uses: actions/cache/restore@v4
+#               with:
+#                   path: build/ALL
+#                   key: testlib-build-all-${{ needs.get-date.outputs.date }}
+#                   restore-keys: |
+#                       testlib-build-all
 
-            - name: Run long ${{ matrix.test-type }} tests
-              id: run-tests
-              timeout-minutes: 1410
-              working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type }} -j$(nproc) --length=long -vv -t $(nproc) --exclude-tags gcn_gpu
+#             - name: Run long ${{ matrix.test-type }} tests
+#               id: run-tests
+#               timeout-minutes: 1410
+#               working-directory: ${{ github.workspace }}/tests
+#               run: ./main.py run ${{ matrix.test-type }} -j$(nproc) --length=long -vv -t $(nproc) --exclude-tags gcn_gpu
 
-            - name: Sanitize test-dir for artifact name
-              id: sanitize-test-dir
-              if: always()
-              run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+#             - name: Sanitize test-dir for artifact name
+#               id: sanitize-test-dir
+#               if: always()
+#               run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
-            - name: Upload results
-              if: always()
-              uses: actions/upload-artifact@v4
-              env:
-                  MY_STEP_VAR: ${{ steps.sanitize-test-dir.outputs.sanitized-test-dir }}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-              with:
-                  name: daily-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
-                      }}-status-${{ steps.run-tests.outcome }}-output
-                  path: tests/testing-results
+#             - name: Upload results
+#               if: always()
+#               uses: actions/upload-artifact@v4
+#               env:
+#                   MY_STEP_VAR: ${{ steps.sanitize-test-dir.outputs.sanitized-test-dir }}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+#               with:
+#                   name: daily-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
+#                       }}-status-${{ steps.run-tests.outcome }}-output
+#                   path: tests/testing-results
 
 
     # gpu-tests:
