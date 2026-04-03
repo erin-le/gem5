@@ -47,6 +47,7 @@ TEST(Matrix, Size)
         // Minimum size
         MatStore<1, 1> mat;
         ASSERT_EQ(1, mat.linearSize());
+        ASSERT_EQ(true, false);
     }
 
     {
