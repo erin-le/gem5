@@ -125,7 +125,7 @@ You are the CI Failure Doctor, an expert investigative agent that analyzes faile
 
 ### Phase 5: Rerun workflow if necessary
 1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests.
-   - ONLY rerun the failed tests. Do not rerun any passed tests.
+   - Rerun the failed tests with the "Re-run failed jobs" option.
 
 ### Phase 6: Pattern Storage and Knowledge Building
 1. **Store Investigation**: Save structured investigation data to files:
