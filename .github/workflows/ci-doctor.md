@@ -7,6 +7,7 @@ on:
       - completed
     branches:
       - develop
+      - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
     # This will trigger only when the CI workflow completes with failure
     # The condition is handled in the workflow body
   stop-after: +1mo
