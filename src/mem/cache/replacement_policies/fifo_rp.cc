@@ -62,6 +62,7 @@ FIFO::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
     // A touch does not modify the insertion tick. We still check if the data
     // exists to standardize the API
     assert(replacement_data);
+    assert(false);
 }
 
 void
