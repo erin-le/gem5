@@ -8,6 +8,10 @@ on:
     workflow_dispatch:
     # Allow this workflow to be called by Github Agentic Workflows
     workflow_call:
+        inputs:
+            payload:
+                type: string
+                required: false
 
 jobs:
 
