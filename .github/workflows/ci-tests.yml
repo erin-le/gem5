@@ -8,6 +8,12 @@ on:
         types: [opened, synchronize, ready_for_review]
     # Allow this workflow to be called by Github Agentic Workflows
     workflow_call:
+        inputs:
+            payload:
+                type: string
+                required: false
+
+
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
     cancel-in-progress: true
