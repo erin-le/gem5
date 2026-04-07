@@ -42,4 +42,7 @@ but isn't mentioned at all in the title, then don't add that label.
 
 Look at the file MAINTAINERS.yaml in the top level of the gem5 repository for information on when some of these labels should be applied.
 
-Aim to apply 0-2 new labels, stretching to 3 only if the third label is truly necessary and relevant.
+Aim to have a total of 1-3 labels on each issue/PR, and only apply the most relevant labels.
+Keep in mind that this workflow only has some of the labels, and that another workflow will look through the rest of the labels and apply them if they are relevant.
+
+The labels that the other workflow could add are as follows: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `low-priority`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `system-arm`, `systemc`, `tests`, `util`, `util-docker`, `util-m5`, `website`. If some of these labels are more relevant than the labels that this workflow can apply, then apply fewer labels in this workflow and allow the second workflow to apply the more relevant labels.

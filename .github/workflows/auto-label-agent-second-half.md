@@ -2,10 +2,15 @@
 timeout-minutes: 5
 
 on:
-  issues:
-    types: [opened]
-  pull_request:
-    types: [opened]
+  workflow_run:
+    workflows: ["Auto Label Agent - First Half"]
+    types:
+      - completed
+
+  # issues:
+  #   types: [opened]
+  # pull_request:
+  #   types: [opened]
 # on:
 #   schedule: daily
 #   workflow_dispatch:
@@ -40,4 +45,4 @@ but isn't mentioned at all in the title, then don't add that label.
 
 Look at the file MAINTAINERS.yaml in the top level of the gem5 repository for information on when some of these labels should be applied.
 
-Aim to apply 0-2 new labels, stretching to 3 only if the third label is truly necessary and relevant.
+Aim to have a total of 1-3 labels on each issue/PR, and only apply the most relevant labels.
