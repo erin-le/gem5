@@ -35,6 +35,7 @@ safe-outputs:
     max: 10
     target: "*"
     target-repo: "erin-le/gem5" # change this later
+  report-failure-as-issue: false
 source: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
 engine: copilot
 ---
