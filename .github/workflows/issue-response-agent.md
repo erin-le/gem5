@@ -9,9 +9,9 @@ permissions:
   issues: read
 
 tools:
-  lockdown: false
   github:
     toolsets: [issues]
+    lockdown: false
 
 safe-outputs:
   add-comment: {}

@@ -47,10 +47,9 @@ tools:
   cache-memory: true
   web-fetch:
   web-search:
-  lockdown: false
   github:
     toolsets: [default, actions]  # default: context, repos, issues, pull_requests; actions: workflow logs and artifacts
-
+    lockdown: false
 timeout-minutes: 20
 
 source: githubnext/agentics/workflows/ci-doctor.md@ea350161ad5dcc9624cf510f134c6a9e39a6f94d
