@@ -14,17 +14,18 @@ on:
 permissions:
   issues: read
   pull-requests: read
+  contents: read
 
 tools:
-  lockdown: false
   github:
-    toolsets: [issues, pull_requests, labels]
+    toolsets: [issues, pull_requests, labels, repos]
+    lockdown: false
 
 safe-outputs:
   add-labels:
     allowed: [arch, arch-arm, arch-gcn3, arch-mips, arch-power, arch-riscv, arch-sparc, arch-vega, arch-x86, base, base-stats, bug, build error, classic caches, compilation error, configs, cpu, cpu base, cpu-kvm, cpu-minor, cpu-o3, cpu-simple, dependencies, dev, dev-arm, dev-hsa, dev-virtio, doc, dram, duplicate, enhancement, ext]
     # wontfix, Stale, and needs details excluded from this list
-    # Removed for space:  invalid, low-priority, util-gem5art,
+    # Removed for space:  invalid, low-priority
   add-comment: {}
   noop:
     report-as-issue: false
@@ -45,4 +46,4 @@ Look at the file MAINTAINERS.yaml in the top level of the gem5 repository for in
 Aim to have a total of 1-3 labels on each issue/PR, and only apply the most relevant labels.
 Keep in mind that this workflow only has some of the labels, and that another workflow will look through the rest of the labels and apply them if they are relevant.
 
-The labels that the other workflow could add are as follows: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `low-priority`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `system-arm`, `systemc`, `tests`, `util`, `util-docker`, `util-m5`, `website`. If some of these labels are more relevant than the labels that this workflow can apply, then apply fewer labels in this workflow and allow the second workflow to apply the more relevant labels.
+The labels that the other workflow could add are as follows: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `system-arm`, `systemc`, `tests`, `util`, `util-docker`, `util-gem5art`, `util-m5`, `website`. If some of these labels are more relevant than the labels that this workflow can apply, then apply fewer labels in this workflow and allow the other workflow to apply the more relevant labels.
