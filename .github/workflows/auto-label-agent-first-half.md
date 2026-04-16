@@ -6,6 +6,9 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
+    branches:
+      - develop
+      - stable
 
 # on:
 #   schedule: daily
@@ -26,6 +29,7 @@ safe-outputs:
     allowed: [arch, arch-arm, arch-gcn3, arch-mips, arch-power, arch-riscv, arch-sparc, arch-vega, arch-x86, base, base-stats, bug, build error, classic caches, compilation error, configs, cpu, cpu base, cpu-kvm, cpu-minor, cpu-o3, cpu-simple, dependencies, dev, dev-arm, dev-hsa, dev-virtio, doc, dram, duplicate, enhancement, ext]
     # wontfix, Stale, and needs details excluded from this list
     # Removed for space:  invalid, low-priority
+    max: 2
   add-comment: {}
   noop:
     report-as-issue: false

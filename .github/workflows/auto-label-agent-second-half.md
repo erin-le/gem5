@@ -6,6 +6,9 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
+    branches:
+      - develop
+      - stable
 
   # workflow_call:
   # inputs:
@@ -37,6 +40,7 @@ safe-outputs:
   add-labels:
     allowed: [ext-testlib, fastmodel, gdb, github, good-first-contribution, gpu, gpu-compute, help wanted, learning-gem5,  mem, mem-cache, mem-garnet, mem-ruby, misc, python, question, resources, resources-website, scons, sim, sim-se, stats, stdlib, systemc, tests, util, util-docker, util-gem5art, util-m5, website]
     # invalid, low-priority, needs details, Stale, system-arm, and wontfix excluded from this list
+    max: 2
   add-comment: {}
   noop:
     report-as-issue: false
