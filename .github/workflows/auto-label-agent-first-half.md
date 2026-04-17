@@ -51,6 +51,8 @@ The labels that the other workflow could add are as follows: `ext-testlib`, `fas
 
 The following list is for PRs only. Only add the specified labels if the PR changes files at the following paths.
 
+- Exception: PR titles typically begin with a list of comma-separated labels, followed by a colon. An example of this is `tests, util:`. If a label is specifically listed in this section of the PR title, then add the label even if the PR doesn't modify the files the label is associated with.
+
 - Only apply labels starting with `arch` if files in `src/arch` are modified.
   - Apply `arch-vega` if files in `src/arch/amdgpu` are modified.
   - If the `arm`, `power`, `riscv`, `sparc`, or `x86` sub-directories in `src/arch` are modified, apply the label that starts with `arch-` and ends with the appropriate directory. For example, if a file in `src/arch/arm` is modified, the label `arch-arm` should be applied.
