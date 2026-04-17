@@ -47,7 +47,7 @@ safe-outputs:
 Analyze the title and body of the opened PR or issue, then add
 zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `systemc`, `tests`, `util`, `util-docker`, `util-gem5art`, `util-m5`, `website`.
 
-Do not add the `bug` label to PRs.
+Do not apply the following labels to PRs: `good-first-contribution`, `help wanted`, `question`.
 
 Consider the title to be more important than the body when deciding which labels to add.
 If something corresponding to a label only comes up 1-2 times in the body,
