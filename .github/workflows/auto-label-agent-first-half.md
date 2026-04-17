@@ -63,13 +63,15 @@ The following list is for PRs only. Only add the specified labels if the PR chan
 
 - Only apply labels starting with `dev` if files in `src/dev` are modified. If the `arm`, `hsa`, or `virtio` subdirectories in `src/dev` are modified, apply the more specific label and don't apply `dev`. For example, if `src/dev/arm` is modified, apply `dev-arm` and don't apply `dev`.
 
+The following list of restrictions is for reference only, as the following labels are applied by the other workflow.
+
 - Apply `ext-testlib` only if files in `ext/testlib` are modified.
 
 - Apply `fastmodel` only if files in `src/arch/arm/fastmodel` are modified.
 
-- Apply `gpu-compute` only if `src/gpu-compute` is mentioned.
+- Apply `gpu-compute` only if files in `src/gpu-compute` are modified.
 
-- Apply `learning-gem5` only if `src/learning_gem5`
+- Apply `learning-gem5` only if files in `src/learning_gem5` are modified
 - Apply labels starting with `mem` only if files in `src/mem` are modified.
   - If `src/mem/cache` modified: apply `mem-cache`
   - If `src/mem/ruby`: apply `mem-ruby`
@@ -82,6 +84,6 @@ The following list is for PRs only. Only add the specified labels if the PR chan
 - For PRs, only apply `tests` if files in `tests/` are modified
 - Only apply labels starting with `util` if files in `util/` are modified. If files in the subdirectories `dockerfiles`, `gem5art`, or `m5` are modified, apply the corresponding label starting with `util`, and don't apply `util`. For example, if a file in `util/m5` is modified, apply the label `util-m5` and don't apply `util`. For files in `util/dockerfiles`, the label `util-docker` should be applied.
 
-For both PRs and issues, apply the more specific labels for `arch`, `base`, `cpu`, `ext`, `mem`, `python`, and `util`, and don't apply the more generic label if a more specific label can be applied. A "more specific" label is a label that starts with one of the labels above, followed by a dash (-) and another word. For example, `arch-arm` would be one of the more specific labels for `arch`. If the label `arch-arm` can be applied, then apply that label, and don't apply `arch`.
+The following information applies to both workflows. The labels `arch`, `base`, `cpu`, `ext`, `mem`, `python`, and `util`, are all "generic" labels that have "more specific" labels. "More specific" labels are labels that start with one of the generic labels, followed by a dash (-) and another word. For example, `arch-arm` would be one of the more specific labels for `arch`. For both PRs and issues, apply the more specific label if possible (i.e. if it is relevant and is one of the labels this workflow is allowed to add), and don't apply the generic label if a more specific label is applied. For example, if the label `arch-arm` can be applied, then apply that label, and don't apply `arch`.
 
 - as mentioned above, the more specific label for `python` is `stdlib`, which should be applied to files in `src/python/gem5`.

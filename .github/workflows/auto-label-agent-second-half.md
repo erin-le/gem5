@@ -65,23 +65,13 @@ The following list is for PRs only. Only add the specified labels if the PR chan
 
 - Exception: PR titles typically begin with a list of comma-separated labels, followed by a colon. An example of this is `tests, util:`. If a label is specifically listed in this section of the PR title, then add the label even if the PR doesn't modify the files the label is associated with.
 
-- Only apply labels starting with `arch` if files in `src/arch` are modified.
-  - Apply `arch-vega` if files in `src/arch/amdgpu` are modified.
-  - If the `arm`, `power`, `riscv`, `sparc`, or `x86` sub-directories in `src/arch` are modified, apply the label that starts with `arch-` and ends with the appropriate directory. For example, if a file in `src/arch/arm` is modified, the label `arch-arm` should be applied.
-  - If the files modified in the issue or PR do not fall into any of the directories described above, apply the label `arch`. Do not apply `arch` if any of the labels starting with `arch-` can be applied. For example, if `arch-arm` can be applied, don't apply `arch`.
-
-- Only apply the label `base` if files in `src/base` are modified. If the file is in `src/base/stats`, apply the label `base-stats` instead and don't apply `base`.
-- Only apply labels starting with `cpu` if files in `src/cpu` are modified. If the modified files are in the sub-directories `kvm`, `minor`, `o3`, or `simple` in `src/cpu`, the apply the more specific label instead. For example, if a modified file is in `src/cpu/kvm`, then apply the label `cpu-kvm`, and don't apply `cpu`.
-
-- Only apply labels starting with `dev` if files in `src/dev` are modified. If the `arm`, `hsa`, or `virtio` subdirectories in `src/dev` are modified, apply the more specific label and don't apply `dev`. For example, if `src/dev/arm` is modified, apply `dev-arm` and don't apply `dev`.
-
 - Apply `ext-testlib` only if files in `ext/testlib` are modified.
 
 - Apply `fastmodel` only if files in `src/arch/arm/fastmodel` are modified.
 
-- Apply `gpu-compute` only if `src/gpu-compute` is mentioned.
+- Apply `gpu-compute` only if files in `src/gpu-compute` are modified.
 
-- Apply `learning-gem5` only if `src/learning_gem5`
+- Apply `learning-gem5` only if files in `src/learning_gem5` are modified
 - Apply labels starting with `mem` only if files in `src/mem` are modified.
   - If `src/mem/cache` modified: apply `mem-cache`
   - If `src/mem/ruby`: apply `mem-ruby`
@@ -94,6 +84,18 @@ The following list is for PRs only. Only add the specified labels if the PR chan
 - For PRs, only apply `tests` if files in `tests/` are modified
 - Only apply labels starting with `util` if files in `util/` are modified. If files in the subdirectories `dockerfiles`, `gem5art`, or `m5` are modified, apply the corresponding label starting with `util`, and don't apply `util`. For example, if a file in `util/m5` is modified, apply the label `util-m5` and don't apply `util`. For files in `util/dockerfiles`, the label `util-docker` should be applied.
 
-For both PRs and issues, apply the more specific labels for `arch`, `base`, `cpu`, `ext`, `mem`, `python`, and `util`, and don't apply the more generic label if a more specific label can be applied. A "more specific" label is a label that starts with one of the labels above, followed by a dash (-) and another word. For example, `arch-arm` would be one of the more specific labels for `arch`. If the label `arch-arm` can be applied, then apply that label, and don't apply `arch`.
+The following list of restrictions is for reference only, as the following labels are applied by the other workflow.
+
+- Only apply labels starting with `arch` if files in `src/arch` are modified.
+  - Apply `arch-vega` if files in `src/arch/amdgpu` are modified.
+  - If the `arm`, `power`, `riscv`, `sparc`, or `x86` sub-directories in `src/arch` are modified, apply the label that starts with `arch-` and ends with the appropriate directory. For example, if a file in `src/arch/arm` is modified, the label `arch-arm` should be applied.
+  - If the files modified in the issue or PR do not fall into any of the directories described above, apply the label `arch`. Do not apply `arch` if any of the labels starting with `arch-` can be applied. For example, if `arch-arm` can be applied, don't apply `arch`.
+
+- Only apply the label `base` if files in `src/base` are modified. If the file is in `src/base/stats`, apply the label `base-stats` instead and don't apply `base`.
+- Only apply labels starting with `cpu` if files in `src/cpu` are modified. If the modified files are in the sub-directories `kvm`, `minor`, `o3`, or `simple` in `src/cpu`, the apply the more specific label instead. For example, if a modified file is in `src/cpu/kvm`, then apply the label `cpu-kvm`, and don't apply `cpu`.
+
+- Only apply labels starting with `dev` if files in `src/dev` are modified. If the `arm`, `hsa`, or `virtio` subdirectories in `src/dev` are modified, apply the more specific label and don't apply `dev`. For example, if `src/dev/arm` is modified, apply `dev-arm` and don't apply `dev`.
+
+The following information applies to both workflows. The labels `arch`, `base`, `cpu`, `ext`, `mem`, `python`, and `util`, are all "generic" labels that have "more specific" labels. "More specific" labels are labels that start with one of the generic labels, followed by a dash (-) and another word. For example, `arch-arm` would be one of the more specific labels for `arch`. For both PRs and issues, apply the more specific label if possible (i.e. if it is relevant and is one of the labels this workflow is allowed to add), and don't apply the generic label if a more specific label is applied. For example, if the label `arch-arm` can be applied, then apply that label, and don't apply `arch`.
 
 - as mentioned above, the more specific label for `python` is `stdlib`, which should be applied to files in `src/python/gem5`.
