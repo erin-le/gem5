@@ -6,9 +6,6 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
-    branches:
-      - develop
-      - stable
 
 # on:
 #   schedule: daily
