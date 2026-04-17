@@ -2,7 +2,7 @@
 description: Investigates failed CI workflows to identify root causes and patterns and rerun if the failure isn't related to the code
 on:
   workflow_run:
-    workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
+    workflows: [Daily Tests, Weekly Tests, Compiler Tests, CI Tests]
     types:
       - completed
     branches:
@@ -23,18 +23,18 @@ permissions:
 
 network: defaults
 
-engine:
-  id: copilot
-  model: gpt-5.1-codex-mini
+# engine:
+#   id: copilot
+#   model: gpt-5.1-codex-mini
 
 safe-outputs:
-  create-issue:
-    expires: 1d
-    title-prefix: "[CI Failure Doctor] "
-    labels: [cookie]
-    close-older-issues: true
+  # create-issue:
+  #   expires: 1d
+  #   title-prefix: "[CI Failure Doctor] "
+  #   # labels: [cookie]
+  #   close-older-issues: true
   add-comment:
-  update-issue:
+  # update-issue:
   noop:
   call-workflow: ["daily-tests", "weekly-tests", "compiler-tests", "ci-tests"]
   messages:
@@ -137,7 +137,7 @@ You are the CI Failure Doctor, an expert investigative agent that analyzes faile
 2. **Update Pattern Database**: Enhance knowledge with new findings by updating pattern files
 3. **Save Artifacts**: Store detailed logs and analysis in the cached directories
 
-### Phase 7: Looking for existing issues and closing older ones
+<!-- ### Phase 7: Looking for existing issues and closing older ones
 
 1. **Search for existing CI failure doctor issues**
     - Use GitHub Issues search to find issues with label "cookie" and title prefix "[CI Failure Doctor]"
@@ -159,7 +159,7 @@ You are the CI Failure Doctor, an expert investigative agent that analyzes faile
       - Add a comment with your findings to the existing issue
       - Do NOT open a new issue (skip next phases)
       - Exit the workflow
-    - Otherwise, continue to create a new issue with fresh investigation data
+    - Otherwise, continue to create a new issue with fresh investigation data -->
 
 ### Phase 8: Reporting and Recommendations
 
@@ -171,11 +171,11 @@ You are the CI Failure Doctor, an expert investigative agent that analyzes faile
    - **Reproduction Steps**: How to reproduce the issue locally
    - **Recommended Actions**: Specific steps to fix the issue
    - **Prevention Strategies**: How to avoid similar failures
-   - **AI Team Self-Improvement**: Give a short set of additional prompting instructions to copy-and-paste into instructions.md for AI coding agents to help prevent this type of failure in future
+   <!-- - **AI Team Self-Improvement**: Give a short set of additional prompting instructions to copy-and-paste into instructions.md for AI coding agents to help prevent this type of failure in future -->
    - **Historical Context**: Similar past failures and their resolutions
 
 2. **Actionable Deliverables**:
-   - Create an issue with investigation results (if warranted)
+   <!-- - Create an issue with investigation results (if warranted) -->
    - Comment on related PR with analysis (if PR-triggered)
    - Provide specific file locations and line numbers for fixes
    - Suggest code changes or configuration updates
@@ -212,8 +212,8 @@ When creating an investigation issue, use this structure:
 ## Prevention Strategies
 [How to prevent similar failures]
 
-## AI Team Self-Improvement
-[Short set of additional prompting instructions to copy-and-paste into instructions.md for a AI coding agents to help prevent this type of failure in future]
+<!-- ## AI Team Self-Improvement
+[Short set of additional prompting instructions to copy-and-paste into instructions.md for a AI coding agents to help prevent this type of failure in future] -->
 
 ## Historical Context
 [Similar past failures and patterns]
