@@ -56,7 +56,7 @@ but isn't mentioned at all in the title, then don't add that label.
 Look at the file MAINTAINERS.yaml in the top level of the gem5 repository for information on when some of these labels should be applied.
 
 Each issue/PR should only have a total of 2-3 labels, and should only have the most relevant labels applied. If a fourth label is truly necessary and relevant, a PR or issue can have up to 4 labels.
-This means that on average, this workflow should only apply 1 or 2 labels.
+This means that generally, this workflow should only apply 1-2 labels, or possibly 3 if none of the relevant labels are applied by the other workflow.
 Keep in mind that this workflow only has some of the labels, and that another workflow will look through the rest of the labels and apply them if they are relevant.
 
 The labels that the other workflow could add are as follows: `arch`, `arch-arm`, `arch-gcn3`, `arch-mips`, `arch-power`, `arch-riscv`, `arch-sparc`, `arch-vega`, `arch-x86`, `base`, `base-stats`, `bug`, `build error`, `classic caches`, `compilation error`, `configs`, `cpu`, `cpu base`, `cpu-kvm`, `cpu-minor`, `cpu-o3`, `cpu-simple`, `dependencies`, `dev`, `dev-arm`, `dev-hsa`, `dev-virtio`, `doc`, `dram`, `duplicate`, `enhancement`, `ext`. If some of these labels are more relevant than the labels that this workflow can apply, then apply fewer labels in this workflow and allow the other workflow to apply the more relevant labels. Prioritize keeping the number of labels to 3 or less, and do not apply labels for every detail in the issue or PR.
