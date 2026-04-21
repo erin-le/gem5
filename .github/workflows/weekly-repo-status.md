@@ -31,10 +31,6 @@ safe-outputs:
     title-prefix: "[repo-status] "
     labels: [report, weekly-status]
     close-older-issues: true
-  add-comment:
-    max: 10
-    target: "*"
-    target-repo: "erin-le/gem5" # change this later
   report-failure-as-issue: false
 source: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
 engine: copilot
@@ -43,15 +39,6 @@ engine: copilot
 # Weekly Repo Status
 
 Create an weekly status report for the repo as a GitHub issue.
-
-<!-- ## Reminders for Inactive PRs
-
-- Leave reminder messages on PRs that have been inactive for 2 weeks. After the first reminder message you send, wait another two weeks, and send a second message if the PR has remained inactive.
-  - That is to say, only send this message twice. Send the first message after 2 weeks of inactivity, and send the second after 1 month. After two messages, if the PR doesn't have any changes, take no further action.
-  - In your message, either ping the author or one of the gem5 developers, depending on who needs to respond. Be positive and polite. If pinging the author, make sure to thank the author at the end.
-    - The GitHub usernames of the gem5 developers are as follows: erin-le, Harshil2107, BobbyRBruce, powerjg
-  - If the PR is updated with a new commit, you can send two more messages after two weeks/ 1 month of inactivity.
- -->
 
 ## What to include
 
@@ -81,7 +68,6 @@ Create an weekly status report for the repo as a GitHub issue.
   | PR | Title | Author | Summary |
   |----|-------|--------|---------|
 
-<!-- - A list of inactive PRs that you left reminder messages on in the previous step -->
 
 - A list of issues and PRs that might be high priority.
   - An issue might be high priority if:
