@@ -49,7 +49,8 @@ Create an weekly status report for the repo as a GitHub issue.
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
 
-- A list of PRs and issues that were modified in the last week, and a short summary of what the changes were. This list should also be formatted as a table with the PR number, title, author, and summary. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. Use the table template shown below:
+- A list of PRs and issues that were modified in the last week, and a short summary of what the changes were. This list should also be formatted as a table with the PR number, title, author, and summary. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+Use the table template shown below:
 
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
