@@ -10,6 +10,9 @@ on:
       - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
     # This will trigger only when the CI workflow completes with failure
     # The condition is handled in the workflow body
+  bots:
+    - "github-actions[bot]"
+    - "dependabot[bot]"
   stop-after: +1mo
 
 # Only trigger for failures - check in the workflow body
