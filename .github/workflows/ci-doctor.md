@@ -2,7 +2,7 @@
 description: Investigates failed CI workflows to identify root causes and patterns and rerun if the failure isn't related to the code
 on:
   workflow_run:
-    workflows: [Daily Tests, Weekly Tests, Compiler Tests, CI Tests]
+    workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
     types:
       - completed
     branches:
@@ -18,17 +18,19 @@ on:
 # Only trigger for failures - check in the workflow body
 if: ${{ github.event.workflow_run.conclusion == 'failure' }}
 
-permissions:
-  actions: read        # To query workflow runs, jobs, and logs
-  contents: read       # To read repository files
-  issues: read         # To search and analyze issues
-  pull-requests: read  # To analyze pull request context
+permissions: read-all
+  # actions: read        # To query workflow runs, jobs, and logs
+  # contents: read       # To read repository files
+  # issues: read         # To search and analyze issues
+  # pull-requests: read  # To analyze pull request context
+
 
 network: defaults
 
-# engine:
-#   id: copilot
-#   model: gpt-5.1-codex-mini
+engine:
+  id: copilot
+  # model: gpt-5.1-codex-mini
+  model: gpt-5-mini # multiplier for this model is 0
 
 safe-outputs:
   # create-issue:
@@ -40,19 +42,20 @@ safe-outputs:
   # update-issue:
   noop:
   call-workflow: ["daily-tests", "weekly-tests", "compiler-tests", "ci-tests"]
-  messages:
-    footer: "> 🩺 *Diagnosis provided by [{workflow_name}]({run_url})*"
-    run-started: "🏥 CI Doctor reporting for duty! [{workflow_name}]({run_url}) is examining the patient on this {event_type}..."
-    run-success: "🩺 Examination complete! [{workflow_name}]({run_url}) has delivered the diagnosis. Prescription issued! 💊"
-    run-failure: "🏥 Medical emergency! [{workflow_name}]({run_url}) {status}. Doctor needs assistance..."
-  report-failure-as-issue: false
+  # messages:
+  #   footer: "> 🩺 *Diagnosis provided by [{workflow_name}]({run_url})*"
+  #   run-started: "🏥 CI Doctor reporting for duty! [{workflow_name}]({run_url}) is examining the patient on this {event_type}..."
+  #   run-success: "🩺 Examination complete! [{workflow_name}]({run_url}) has delivered the diagnosis. Prescription issued! 💊"
+  #   run-failure: "🏥 Medical emergency! [{workflow_name}]({run_url}) {status}. Doctor needs assistance..."
+
+  # report-failure-as-issue: false
 
 tools:
   cache-memory: true
   web-fetch:
-  web-search:
+  # web-search:
   github:
-    toolsets: [default, actions]  # default: context, repos, issues, pull_requests; actions: workflow logs and artifacts
+    toolsets: [default, actions]  # default expands to context, repos, issues, pull_requests and users; actions: workflow logs and artifacts
     lockdown: false
 timeout-minutes: 20
 
