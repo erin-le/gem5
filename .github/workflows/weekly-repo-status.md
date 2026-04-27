@@ -49,7 +49,7 @@ Create an weekly status report for the repo as a GitHub issue.
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
 
-- A list of PRs and issues that were modified in the last week, and a short summary of what the changes were. This list should also be formatted as a table with the PR number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
+- A list of PRs and issues that were modified in the last week, and a short summary of what the changes were. This list should also be formatted as a table with the PR number, title, author, and summary. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. Use the table template shown below:
 
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
@@ -61,16 +61,18 @@ Create an weekly status report for the repo as a GitHub issue.
 
 - A list of issues and PRs that might be high priority.
   - An issue might be high priority if:
-    - a number of community members have commented on it and said that they have encountered the same issue
+    - a number of community members have commented on it and said that they have encountered the same issue, especially if the issue causes the simulation to crash or produce inaccurate results.
     - One of the gem5 developers was pinged on the issue. The GitHub usernames of the gem5 developers are `BobbyRBruce`, `Harshil2107`, `erin-le`, and `powerjg`.
-    - If the bug appears to be serious, e.g. causing simulations to crash or produce inaccurate results for a large number of users
+    <!-- - If the bug appears to be serious, e.g. causing simulations to crash or produce inaccurate results for a large number of users -->
 
   - A PR might be high priority if:
     - One of the gem5 developers has been pushing commits to it. The GitHub usernames of the gem5 developers are as follows: `erin-le`, `Harshil2107`, `BobbyRBruce`, `powerjg`.
     - If the PR has been marked for inclusion in the next release
-    - If the PR could be beneficial and affect a large number of community members
+    - If the PR is a fix for a high priority issue
     - One of the gem5 developers was pinged on the PR. The GitHub usernames of the gem5 developers are as follows: `erin-le`, `Harshil2107`, `BobbyRBruce`, `powerjg`.
-  - Organize this list so all of the PRs are listed, then all of the issues.
+  - Organize this list so all of the PRs are listed, then all of the issues. Use the following format:
+| PR | Title | Author | Why High Priority | Actions Needed |
+|----|-------|--------|-------------------|----------------|
 
 - A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows:
 | PR | Title | Author | gem5 Developer | Actions Needed |
