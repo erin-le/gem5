@@ -1,22 +1,26 @@
 ---
 description: Investigates failed CI workflows to identify root causes and patterns and rerun if the failure isn't related to the code
 on:
-  workflow_run:
-    workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
-    types:
-      - completed
-    branches:
-      - develop
-      - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
-    # This will trigger only when the CI workflow completes with failure
-    # The condition is handled in the workflow body
-  bots:
-    - "github-actions[bot]"
-    - "dependabot[bot]"
-  stop-after: +1mo
+  schedule: daily
+  workflow_dispatch:
+
+  # workflow_run:
+  #   workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
+  #   types:
+  #     - completed
+  #   branches:
+  #     - develop
+  #     - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
+  #   # This will trigger only when the CI workflow completes with failure
+  #   # The condition is handled in the workflow body
+  # bots:
+  #   - "github-actions[bot]"
+  #   - "dependabot[bot]"
+  # stop-after: +1mo
+
 
 # Only trigger for failures - check in the workflow body
-if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+# if: ${{ github.event.workflow_run.conclusion == 'failure' }}
 
 permissions: read-all
   # actions: read        # To query workflow runs, jobs, and logs
@@ -52,7 +56,7 @@ safe-outputs:
 
 tools:
   cache-memory: true
-  web-fetch:
+  # web-fetch:
   # web-search:
   github:
     toolsets: [default, actions]  # default expands to context, repos, issues, pull_requests and users; actions: workflow logs and artifacts
@@ -67,23 +71,24 @@ source: githubnext/agentics/workflows/ci-doctor.md@ea350161ad5dcc9624cf510f134c6
 
 You are the CI Failure Doctor, an expert investigative agent that analyzes failed GitHub Actions workflows to identify root causes and patterns. Your mission is to conduct a deep investigation when the CI workflow fails.
 
-## Current Context
-
-- **Repository**: ${{ github.repository }}
-- **Workflow Run**: ${{ github.event.workflow_run.id }}
-- **Conclusion**: ${{ github.event.workflow_run.conclusion }}
-- **Run URL**: ${{ github.event.workflow_run.html_url }}
-- **Head SHA**: ${{ github.event.workflow_run.head_sha }}
 
 ## Investigation Protocol
 
-**ONLY proceed if the workflow conclusion is 'failure' or 'cancelled'**. If the workflow was successful, **call the `noop` tool** immediately and exit.
+For each of the "Daily Tests", "Weekly Tests", "Compiler Tests", and "CI Tests"
+that have finished running in the past day, check if the workflow conclusion was
+'failure' or 'cancelled'. If the workflow was successful, skip that workflow.
+
+Otherwise, run the following procedure to diagnose the issues with the workflow, and rerun the failed tests in the workflow if it failed for reasons unrelated to the code/code changes.
+**ONLY proceed if the workflow conclusion is 'failure' or 'cancelled'**.
+
+If all workflows that finished in the last day were successful, then call the `noop` tool and exit.
+<!-- If the workflow was successful, **call the `noop` tool** immediately and exit. -->
 
 ### Phase 1: Initial Triage
-1. **Verify Failure**: Check that `${{ github.event.workflow_run.conclusion }}` is `failure` or `cancelled`
-   - **If the workflow was successful**: Call the `noop` tool with message "CI workflow completed successfully - no investigation needed" and **stop immediately**. Do not proceed with any further analysis.
+1. **Verify Failure**: Check that the workflow status is `failure` or `cancelled`
+   - **If the workflow was successful**: Do not proceed with any further analysis on the current test workflow, and immediately start looking at the next test workflow that finished within the last day.
    - **If the workflow failed**: Proceed with the investigation steps below.
-   - **If the workflow was intentionally cancelled by a maintainer**: Call the `noop` tool with message "CI workflow cancelled intentionally - no investigation needed" and **stop immediately**. Do not proceed with any further analysis.
+   - **If the workflow was intentionally cancelled by a maintainer**: Leave the message "CI workflow cancelled intentionally - no investigation needed" and **stop immediately**. Do not proceed with any further analysis, and start looking at the next test workflow that finished within the last day.
    - **If the workflow was cancelled under other circumstances**: proceed with the investigation steps below.
 2. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run
 3. **List Jobs**: Use `list_workflow_jobs` to identify which specific jobs failed
