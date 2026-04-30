@@ -25,6 +25,7 @@ tools:
     min-integrity: none # This workflow is allowed to examine and comment on any issues
 
 safe-outputs:
+  staged: true
   mentions: false
   allowed-github-references: []
   create-issue:
@@ -38,7 +39,7 @@ engine: copilot
 
 # Weekly Repo Status
 
-Create an weekly status report for the repo as a GitHub issue.
+Create an weekly status report for the gem5/gem5 repo as a GitHub issue.
 
 ## What to include
 

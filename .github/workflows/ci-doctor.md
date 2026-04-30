@@ -31,10 +31,10 @@ permissions: read-all
 
 network: defaults
 
-engine:
-  id: copilot
+engine: copilot
+  #id: copilot
   # model: gpt-5.1-codex-mini
-  model: gpt-5-mini # multiplier for this model is 0
+  #model: gpt-5-mini # multiplier for this model is 0
 
 safe-outputs:
   # create-issue:
