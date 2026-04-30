@@ -25,7 +25,7 @@ tools:
     min-integrity: none # This workflow is allowed to examine and comment on any issues
 
 safe-outputs:
-  staged: true
+  #staged: true
   mentions: false
   allowed-github-references: []
   create-issue:
