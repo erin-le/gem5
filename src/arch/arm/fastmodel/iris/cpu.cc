@@ -84,3 +84,5 @@ BaseCPU::serializeThread(CheckpointOut &cp, ThreadID tid) const
 
 } // namespace Iris
 } // namespace gem5
+
+// add trivial comment for labeler testing
