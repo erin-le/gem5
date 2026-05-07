@@ -382,3 +382,6 @@ def _sort_resources(resources: List) -> List:
         key=lambda resource: sort_tuple(resource),
         reverse=True,
     )
+
+
+# add trivial comment for resources label testing
