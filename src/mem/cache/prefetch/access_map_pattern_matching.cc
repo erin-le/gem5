@@ -274,3 +274,5 @@ AMPM::calculatePrefetch(const PrefetchInfo &pfi,
 
 } // namespace prefetch
 } // namespace gem5
+
+// add trivial comment for mem label testing
