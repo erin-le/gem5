@@ -61,3 +61,5 @@ BaseMemProbe::regProbeListeners()
 }
 
 } // namespace gem5
+
+// add comment to test mem label
