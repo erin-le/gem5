@@ -531,3 +531,6 @@ due to not running a board outside of the gem5 Standard Library Simulator
 module. If this is the case, this can be resolved by calling
 ``<AbstractBoard>._pre_instantiate()`` prior to ``m5.instantiate()``.
 """)
+
+
+# add trivial comment to test stdlib label
