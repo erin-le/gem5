@@ -96,3 +96,5 @@ SEWorkload::freeMemSize(int pool_id) const
 }
 
 } // namespace gem5
+
+// add trivial comment for testing sim-se label
