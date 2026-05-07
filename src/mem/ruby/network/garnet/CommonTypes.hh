@@ -79,3 +79,5 @@ struct RouteInfo
 } // namespace gem5
 
 #endif //__MEM_RUBY_NETWORK_GARNET_0_COMMONTYPES_HH__
+
+// add trivial comment for testing
