@@ -1,12 +1,12 @@
 ---
 arch:
     - changed-files:
-          - any-glob-to-any-file: [src/arch/**, '!src/arch/arm/**', '!src/arch/mips/**', '!src/arch/power/**', '!src/arch/riscv/**', '!src/arch/sparc/**',
+          - all-globs-to-any-file: [src/arch/**, '!src/arch/arm/**', '!src/arch/mips/**', '!src/arch/power/**', '!src/arch/riscv/**', '!src/arch/sparc/**',
                 '!src/arch/amdgpu/**', '!src/arch/x86/**']
 
 arch-arm:
     - changed-files:
-          - any-glob-to-any-file: src/arch/arm/**
+          - all-globs-to-any-file: [src/arch/arm/**, '!src/arch/arm/fastmodel/**']
 
 arch-mips:
     - changed-files:
@@ -34,7 +34,7 @@ arch-x86:
 
 base:
     - changed-files:
-          - any-glob-to-any-file: [src/base/**, '!src/base/stats/**']
+          - all-globs-to-any-file: [src/base/**, '!src/base/stats/**']
 
 base-stats:
     - changed-files:
@@ -50,7 +50,7 @@ configs:
 
 cpu:
     - changed-files:
-          - any-glob-to-any-file: [src/cpu/**, '!src/cpu/kvm/**', '!src/cpu/minor/**', '!src/cpu/o3/**', '!src/cpu/simple/**']
+          - all-globs-to-any-file: [src/cpu/**, '!src/cpu/kvm/**', '!src/cpu/minor/**', '!src/cpu/o3/**', '!src/cpu/simple/**']
 
 cpu-kvm:
     - changed-files:
@@ -74,7 +74,7 @@ dependencies:
 
 dev:
     - changed-files:
-          - any-glob-to-any-file: [src/dev/**, '!src/dev/arm/**', '!src/dev/hsa/**', '!src/dev/virtio/**']
+          - all-globs-to-any-file: [src/dev/**, '!src/dev/arm/**', '!src/dev/hsa/**', '!src/dev/virtio/**']
 
 dev-arm:
     - changed-files:
@@ -90,12 +90,12 @@ dev-virtio:
 
 doc:
     - changed-files:
-          - any-glob-to-any-file: [CODE-OF-CONDUCT.md, CONTRIBUTING.md, COPYING, KCONFIG.md, LICENSE, MAINTAINERS.yaml, '**/README.md', RELEASE-NOTES.md,
-                TESTING.md]
+          - any-glob-to-any-file: [CODE-OF-CONDUCT.md, CONTRIBUTING.md, COPYING, KCONFIG.md, LICENSE, MAINTAINERS.yaml, RELEASE-NOTES.md, TESTING.md]
+          - all-globs-to-any-file: ['**/README.md', '!tests/gem5/**/README.md'] # Don't apply the `doc` label for changes to README files for tests
 
-ext: # restrict
+ext:
     - changed-files:
-          - any-glob-to-any-file: [ext/**, '!ext/testlib/**']
+          - all-globs-to-any-file: [ext/**, '!ext/testlib/**']
 
 ext-testlib:
     - changed-files:
@@ -119,7 +119,7 @@ learning-gem5:
 
 mem:
     - changed-files:
-          - any-glob-to-any-file: [src/mem/**, '!src/mem/cache/**', '!src/mem/ruby/network/garnet/**', '!src/mem/ruby/**']
+          - all-globs-to-any-file: [src/mem/**, '!src/mem/cache/**', '!src/mem/ruby/network/garnet/**', '!src/mem/ruby/**']
 
 mem-cache:
     - changed-files:
@@ -131,30 +131,30 @@ mem-garnet:
 
 mem-ruby:
     - changed-files:
-          - any-glob-to-any-file: src/mem/ruby/**
+          - all-globs-to-any-file: [src/mem/ruby/**, '!src/mem/ruby/network/garnet/**']
 
-python: # restrict
+python:
     - changed-files:
-          - any-glob-to-any-file: [src/python/**, '!src/python/gem5/resources/**', '!src/python/gem5/**']
+          - all-globs-to-any-file: [src/python/**, '!src/python/gem5/resources/**', '!src/python/gem5/**']
 
 resources:
     - changed-files:
           - any-glob-to-any-file: src/python/gem5/resources/**
 
-sim: # restrict
+sim:
     - changed-files:
-          - any-glob-to-any-file: [src/sim/**, '!**/se_workload.cc']
+          - all-globs-to-any-file: [src/sim/**, '!src/sim/se_workload.**', '!src/sim/syscall**.**', '!src/sim/process.**']
 
-sim-se: # might need to list more files later
+sim-se:
     - changed-files:
-          - any-glob-to-any-file: '**/se_workload.cc'
+          - any-glob-to-any-file: ['**/se_**.**', '**/syscall**.**', '**/se_binary_workload.py', src/sim/process.**, src/sim/fd_**.**]
 
 stats:
     - head-branch: .*stat.*
 
 stdlib:
     - changed-files:
-          - any-glob-to-any-file: src/python/gem5/**
+          - all-globs-to-any-file: [src/python/gem5/**, '!src/python/gem5/resources/**']
 
 systemc:
     - changed-files:
@@ -166,7 +166,7 @@ tests:
 
 util:
     - changed-files:
-          - any-glob-to-any-file: [util/**, '!util/dockerfiles/**', '!util/gem5art/**', '!util/m5/**']
+          - all-globs-to-any-file: [util/**, '!util/dockerfiles/**', '!util/gem5art/**', '!util/m5/**']
 
 util-docker:
     - changed-files:
