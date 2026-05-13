@@ -38,3 +38,5 @@ volatile bool async_exception = false;
 volatile bool async_hypercall = false;
 
 } // namespace gem5
+
+// trivial comment for sim labeler testing
