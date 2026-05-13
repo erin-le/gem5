@@ -54,3 +54,5 @@ BasePartitioningPolicy::BasePartitioningPolicy
 } // namespace partitioning_policy
 
 } // namespace gem5
+
+// add comment to check that sim_se label is not incorrectly applied
