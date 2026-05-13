@@ -1,4 +1,7 @@
 ---
+# If this action would apply 5+ labels to a PR, don't apply any labels.
+changed-files-labels-limit: 4
+
 arch:
     - changed-files:
           - all-globs-to-any-file: [src/arch/**, '!src/arch/arm/**', '!src/arch/mips/**', '!src/arch/power/**', '!src/arch/riscv/**', '!src/arch/sparc/**',
