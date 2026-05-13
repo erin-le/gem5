@@ -1484,7 +1484,13 @@ InstructionQueue::doSquash(ThreadID tid)
             if (dest_reg->isAlwaysReady()) {
                 continue;
             }
-            assert(dependGraph.empty(dest_reg->flatIndex()));
+            // When squashing, remove any remaining dependents and clear the
+            // producer pointer. Squash ordering can leave dependents
+            // temporarily present, and keeping them around can trip later
+            // dependency graph sanity checks.
+            while (!dependGraph.empty(dest_reg->flatIndex())) {
+                dependGraph.pop(dest_reg->flatIndex());
+            }
             dependGraph.clearInst(dest_reg->flatIndex());
         }
         instList[tid].erase(squash_it--);
