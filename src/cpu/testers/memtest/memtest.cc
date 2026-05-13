@@ -193,7 +193,7 @@ MemTest::completeRequest(PacketPtr pkt, bool functional)
             }
 
             if (maxLoads != 0 && numReads >= maxLoads)
-                exitSimLoop("maximum number of loads reached");
+                exitSimulationLoopClassic("maximum number of loads reached");
         } else {
             assert(pkt->isWrite());
 
