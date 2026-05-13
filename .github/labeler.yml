@@ -149,9 +149,6 @@ sim-se:
     - changed-files:
           - any-glob-to-any-file: ['**/se_**.**', '**/syscall**.**', '**/se_binary_workload.py', src/sim/process.**, src/sim/fd_**.**]
 
-stats:
-    - head-branch: .*stat.*
-
 stdlib:
     - changed-files:
           - all-globs-to-any-file: [src/python/gem5/**, '!src/python/gem5/resources/**']
