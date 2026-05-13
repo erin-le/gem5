@@ -160,3 +160,6 @@ class PrivateL1CacheHierarchy(AbstractClassicCacheHierarchy):
         )
         self.iocache.mem_side = self.membus.cpu_side_ports
         self.iocache.cpu_side = board.get_mem_side_coherent_io_port()
+
+
+# add trivial comment for labeler testing
