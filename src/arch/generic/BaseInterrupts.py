@@ -32,3 +32,6 @@ class BaseInterrupts(SimObject):
     abstract = True
     cxx_header = "arch/generic/interrupts.hh"
     cxx_class = "gem5::BaseInterrupts"
+
+
+# add trivial comment for labeler testing
