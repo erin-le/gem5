@@ -28,7 +28,7 @@ safe-outputs:
 Analyze the title and body of the opened issue, then add
 zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `systemc`, `tests`, `util`, `util-docker`, `util-gem5art`, `util-m5`, `website`.
 
-Consider the title to be more important than the body when deciding which labels to add.
+Consider the title of the issue to be more important than the body when deciding which labels to add. If the title starts with a comma separated list of labels, followed by a colon, then make sure that the labels listed in the title are applied if they are valid. If there isn't a comma separated list followed by a colon, but there are keywords corresponding to a label in the title, try to apply labels based on the keywords.
 If something corresponding to a label only comes up 1-2 times in the body,
 but isn't mentioned at all in the title, then don't add that label.
 
@@ -40,6 +40,8 @@ Keep in mind that this workflow only has some of the labels, and that another wo
 
 The labels that the other workflow could add are as follows: `arch`, `arch-arm`, `arch-gcn3`, `arch-mips`, `arch-power`, `arch-riscv`, `arch-sparc`, `arch-vega`, `arch-x86`, `base`, `base-stats`, `bug`, `build error`, `classic caches`, `compilation error`, `configs`, `cpu`, `cpu base`, `cpu-kvm`, `cpu-minor`, `cpu-o3`, `cpu-simple`, `dependencies`, `dev`, `dev-arm`, `dev-hsa`, `dev-virtio`, `doc`, `dram`, `duplicate`, `enhancement`, `ext`. If some of these labels are more relevant than the labels that this workflow can apply, then apply fewer labels in this workflow and allow the other workflow to apply the more relevant labels. Prioritize keeping the number of labels to 3 or less, and do not apply labels for every detail in the issue.
 
-The labels `arch`, `base`, `cpu`, `ext`, `mem`, `python`, and `util`, are all "generic" labels that have "more specific" labels. "More specific" labels are labels that start with one of the generic labels, followed by a dash (-) and another word. For example, `arch-arm` would be one of the more specific labels for `arch`. Apply the more specific label if possible (i.e. if it is relevant and is one of the labels this workflow is allowed to add), and don't apply the generic label if a more specific label is applied. For example, if the label `arch-arm` can be applied, then apply that label, and don't apply `arch`.
+Avoid applying the label `sim` unless the filepath `src/sim` is mentioned in the issue, or it seems like files in `src/sim` are affected by or are the cause of the issue.
+
+The labels `arch`, `base`, `cpu`, `ext`, `mem`, `python`, `sim`, and `util`, are all "generic" labels that have "more specific" labels. "More specific" labels are labels that start with one of the generic labels, followed by a dash (-) and another word. For example, `arch-arm` would be one of the more specific labels for `arch`. Apply the more specific label if possible (i.e. if it is relevant and is one of the labels this workflow is allowed to add), and don't apply the generic label if a more specific label is applied. For example, if the label `arch-arm` can be applied, then apply that label, and don't apply `arch`.
 
 - as mentioned above, the more specific label for `python` is `stdlib`, which should be applied to files in `src/python/gem5`.
