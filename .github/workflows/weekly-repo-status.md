@@ -60,7 +60,7 @@ Use the table template shown below:
 |----|-------|--------|---------|
 
 - A list of PRs that haven't had any activity in the last two weeks. This list should have the PR number, title, name of the author, a summary of the changes made, and the status of the PR, e.g. if it's been waiting for a response from the author or reviewer for two weeks or more, if two weeks or more have passed with no activity since the PR was opened, etc. The summary for a PR should not include activity from previous runs of this workflow that mention the PR.
-Split this list into two parts. The first should be for PRs that haven't had activity in approximately two weeks, the second should be for PRs that haven't had activity for longer periods of time.
+Split this list into two parts. The first should be for PRs that haven't had activity in approximately two weeks, the second should be for PRs that haven't had activity for longer periods of time. Within each list, sort PRs by PR number in descending order.
 This list should be formatted as follows:
 
 | PR | Title | Author | Summary | Status |
@@ -76,11 +76,11 @@ This list should be formatted as follows:
     - If the PR has been marked for inclusion in the next release
     - If the PR is a fix for a high priority issue
     - One of the gem5 developers was pinged on the PR. The GitHub usernames of the gem5 developers are as follows: `erin-le`, `Harshil2107`, `BobbyRBruce`, `powerjg`.
-  - Organize this list so all of the PRs are listed, then all of the issues. Use the following format:
+  - Organize this list so all of the PRs are listed, then all of the issues. Use the following format, and sort PRs/issue by PR/issue number in descending order:
 | PR | Title | Author | Why High Priority | Actions Needed |
 |----|-------|--------|-------------------|----------------|
 
-- A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows:
+- A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows, and should be split up by gem5 Developer. Within each list, PRs and issues should be sorted in descending order of PR/issue number:
 | PR | Title | Author | gem5 Developer | Actions Needed |
 |----|-------|--------|----------------|----------------|
 
