@@ -48,12 +48,12 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 
 - An executive summary of what has been done in the last week.
 
-- A list of PRs and issues that were opened in the last week, and a short summary of each. This list should be formatted as a table with the PR number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
+- Lists of PRs and issues that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
 
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
 
-- A list of PRs and issues that were modified in the last week, and a short summary of what the changes were. This list should also be formatted as a table with the PR number, title, author, and summary. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR number, title, author, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
 Use the table template shown below:
 
 | PR | Title | Author | Summary |
