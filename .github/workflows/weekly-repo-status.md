@@ -6,7 +6,7 @@ description: |
   and project recommendations.
 
 on:
-  schedule: weekly
+  # schedule: weekly
   workflow_dispatch:
 
 permissions:
@@ -29,7 +29,7 @@ safe-outputs:
   mentions: false
   allowed-github-references: []
   create-issue:
-    title-prefix: "misc: [repo-status] "
+    title-prefix: "misc: "
     labels: [misc]
     close-older-issues: true
   report-failure-as-issue: false
@@ -40,6 +40,9 @@ engine: copilot
 # Weekly Repo Status
 
 Create an weekly status report for the gem5/gem5 repo as a GitHub issue.
+When "weekly" or "in the last week" is used, and the workflow was automatically launched (i.e. triggered by scheduler.yaml), it specifically refers to the time since the last automated run of this workflow. If this workflow was launched by a GitHub user, you should include all activity starting from exactly a week before the workflow was launched.
+
+For example, if this workflow is run at May 18th at 9pm, then the summary should include all activity between May 11th at 9pm and May 18th at 9pm.
 
 ## What to include
 
@@ -65,9 +68,8 @@ This list should be formatted as follows:
 
 - A list of issues and PRs that might be high priority.
   - An issue might be high priority if:
-    - a number of community members have commented on it and said that they have encountered the same issue, especially if the issue causes the simulation to crash or produce inaccurate results.
+    - several community members have commented on it and said that they have encountered the same issue, especially if the issue causes the simulation to crash or produce inaccurate results.
     - One of the gem5 developers was pinged on the issue. The GitHub usernames of the gem5 developers are `BobbyRBruce`, `Harshil2107`, `erin-le`, and `powerjg`.
-    <!-- - If the bug appears to be serious, e.g. causing simulations to crash or produce inaccurate results for a large number of users -->
 
   - A PR might be high priority if:
     - One of the gem5 developers has been pushing commits to it. The GitHub usernames of the gem5 developers are as follows: `erin-le`, `Harshil2107`, `BobbyRBruce`, `powerjg`.
@@ -84,6 +86,8 @@ This list should be formatted as follows:
 
 ## Style
 
+- The title of the summary issue should consist of the title prefix, `misc: `, followed by the following format:
+`Weekly Repo Status: {month} {start_day} - {month} {end_day}, {year}`, where the words enclosed in curly brackets should be swapped out for the appropriate days, months, and year. For example, if this workflow is run on May 18th, 2026, then it will contain activity starting from May 11th, so the title should be `Weekly Repo Status: May 11 - May 18, 2026`.
 - Be concise - adjust length based on actual activity
 - Be positive, encouraging, and helpful
 - Bold key words in summaries of issues/PRs
