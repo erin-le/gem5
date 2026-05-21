@@ -98,7 +98,7 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '4' ]] && [[ $HOUR  == '21' ]]
                   then
-                    gh workflow run weekly-repo-status.lock.yml --ref develop >/dev/null
+                    gh workflow run weekly-repo-status.lock.yml --ref github-agentic-workflow >/dev/null
                     echo "Weekly repo status summary workflow scheduled to run on the develop branch."
                   else
                     echo "Weekly repo status summary workflow not scheduled."
