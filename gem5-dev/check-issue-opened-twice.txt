@@ -1,0 +1,129 @@
+# gem5 Bug Report: ThermalModel Intermediate Node Initialized to 0 K (Absolute Zero), Causing Unphysical Junction Cooling
+
+## Summary
+
+`ThermalModel::startup()` in `src/sim/power/thermal_model.cc` fails to initialize
+intermediate RC network nodes. These nodes retain the `0.0f` value from
+`ThermalNode`'s constructor, which `Temperature` interprets as **0 Kelvin
+(−273.15 °C)**. In the first `doStep()` call, `ThermalCapacitor::getEquation()`
+uses this 0 K value as `T_prev` in the Backward Euler equation, creating a
+spurious absolute-zero heat sink that drives the die temperature far below
+ambient — a physically impossible result.
+
+## Affected Versions
+
+All gem5 versions that support multi-node thermal networks. The `temp(0.0f)`
+constructor line in `thermal_node.cc` has been unchanged since the thermal model
+was introduced (2017). Confirmed on **gem5 25.1.0.1 stable**.
+
+## Root Cause
+
+### 1. `ThermalNode` constructor defaults to 0 K
+
+```cpp
+// src/sim/power/thermal_node.cc
+ThermalNode::ThermalNode(const ThermalNodeParams &p)
+    : SimObject(p), id(-1), isref(false), temp(0.0f)  // 0 K = −273.15 °C
+{}
+```
+
+`Temperature(0.0f)` stores **0 Kelvin**, not 0 Celsius.
+
+### 2. `ThermalModel::startup()` initializes only two node categories
+
+```cpp
+// src/sim/power/thermal_model.cc — startup()
+for (auto ref : references)
+    ref->node->temp = ref->_temperature;   // ThermalReference nodes ✓
+
+for (auto dom : domains)
+    dom->getNode()->temp = dom->initialTemperature();  // ThermalDomain nodes ✓
+
+// Intermediate nodes (e.g. node_pkg in a 2-node Cauer RC network)
+// are added to eq_nodes here but NEVER initialized → remain at 0 K ✗
+for (auto n : nodes) { ... eq_nodes.push_back(n); }
+```
+
+Any node that is **neither** a `ThermalReference` nor directly owned by a
+`ThermalDomain` (e.g. a structural Package node in a Cauer 2-node RC network)
+is never touched by `startup()`.
+
+### 3. First `doStep()` call injects a massive spurious heat sink
+
+```cpp
+// ThermalCapacitor::getEquation() — Backward Euler discretization
+eq[eq.cnt()] += _capacitance / step *
+    (node1->temp - node2->temp).toKelvin();   // uses 0 K as T_prev
+```
+
+With `node_pkg->temp = 0 K`, the constant term evaluates as if there is a
+−273.15 °C thermal reservoir connected to the intermediate node, pulling the
+die temperature far below ambient on the very first solver step. The error
+then propagates transiently for several thermal time-constant periods.
+
+## Reproduction
+
+Configure a **2-node Cauer RC thermal network** in gem5 FS/SE mode:
+
+```python
+# Die node   → ThermalDomain (initialTemperature = 25 °C) ✓ initialized
+# Pkg node   → ThermalNode only (intermediate)            ✗ NOT initialized
+# Amb node   → ThermalReference (temperature = 25 °C)    ✓ initialized
+```
+
+With positive CPU power (~3 W), the die (Junction) temperature drops from
+**25 °C → ~12 °C** instead of rising toward steady-state.
+
+**Independent verification** using a Backward Euler Python solver with identical
+RC parameters:
+
+| Scenario | Initial `node_pkg` temp | Final die temp | Expected? |
+|:---|:---:|:---:|:---:|
+| Bug (0 K init) | 0 K (−273.15 °C) | **12.29 °C** | ✗ Impossible cooling |
+| Fixed (298 K init) | 298.15 K (25 °C) | **25.03 °C** | ✓ Correct slight rise |
+
+Observed gem5 result: **12.34 °C** — deviation from solver reproduction: **0.05 °C**.
+
+Full reproduction dataset and verification script:
+<https://github.com/rtester1111-tech/arm-thermal-research>
+(see `scripts/verify_absolute_zero_bug.py` and `results/phase5/`)
+
+## Proposed Fix
+
+Add the following block in `ThermalModel::startup()` after node IDs are assigned,
+before the first `schedule()` call:
+
+```cpp
+// Initialize intermediate nodes (neither ThermalDomain nor ThermalReference)
+// to the ambient reference temperature. Without this, these nodes retain
+// the 0 K (absolute zero) default from ThermalNode's constructor.
+// ThermalCapacitor::getEquation() uses n->temp as T_prev in the Backward
+// Euler discretization; a 0 K intermediate node acts as an absolute-zero
+// heat sink in the first solver step, causing physically impossible
+// junction cooling (observed: die temp drops from 25 C to ~12 C despite
+// positive power input in a 2-node Cauer RC network).
+if (!references.empty()) {
+    const Temperature ambient = references[0]->_temperature;
+    for (auto n : eq_nodes) {
+        if (n->temp.toKelvin() < 1.0)
+            n->temp = ambient;
+    }
+}
+```
+
+**Why `< 1.0` as the threshold:** Domain nodes are already initialized to their
+`initialTemperature()` (≥ ~200 K in any realistic simulation) before `eq_nodes`
+is built. Only truly uninitialized intermediate nodes still hold the 0 K
+constructor default. No legitimate simulation sets an initial temperature below
+1 K, so this check safely and precisely targets only the uninitialized nodes.
+
+The complete unified diff is provided in `gem5_thermal_fix.patch` in the
+linked repository.
+
+## Impact
+
+Any gem5 simulation that uses a **Cauer RC thermal network with at least one
+intermediate structural node** (i.e. more than a single die→ambient 1-node
+model) will produce incorrect thermal trajectories. This includes all multi-node
+configurations described in gem5's own thermal model documentation and the
+`fs_power.py` / `fs_bigLITTLE.py` example scripts.
