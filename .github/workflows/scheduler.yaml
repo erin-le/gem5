@@ -15,6 +15,7 @@ name: Workflow Scheduler
 # other workflows.
 
 on:
+    workflow_dispatch:
     schedule:
     # Runs every hour, 30 minutes past the hour.
         - cron: '*/5 * * * *'
