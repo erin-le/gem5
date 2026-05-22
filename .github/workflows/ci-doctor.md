@@ -37,13 +37,13 @@ engine: copilot
   #model: gpt-5-mini # multiplier for this model is 0
 
 safe-outputs:
-  # create-issue:
-  #   expires: 1d
-  #   title-prefix: "[CI Failure Doctor] "
-  #   # labels: [cookie]
-  #   close-older-issues: true
+  create-issue:
+   #  expires: 1d
+    title-prefix: "[CI Failure Doctor] "
+    # labels: [cookie]
+    close-older-issues: true
   add-comment:
-  # update-issue:
+  update-issue:
   noop:
   call-workflow: ["daily-tests", "weekly-tests", "compiler-tests", "ci-tests"]
   # messages:
@@ -71,14 +71,13 @@ source: githubnext/agentics/workflows/ci-doctor.md@ea350161ad5dcc9624cf510f134c6
 
 You are the CI Failure Doctor, an expert investigative agent that analyzes failed GitHub Actions workflows to identify root causes and patterns. Your mission is to conduct a deep investigation when the CI workflow fails.
 
-
 ## Investigation Protocol
 
 For each of the "Daily Tests", "Weekly Tests", "Compiler Tests", and "CI Tests"
 that have finished running in the past day, check if the workflow conclusion was
 'failure' or 'cancelled'. If the workflow was successful, skip that workflow.
 
-Otherwise, run the following procedure to diagnose the issues with the workflow, and rerun the failed tests in the workflow if it failed for reasons unrelated to the code/code changes.
+Otherwise, run the following procedure to diagnose the issues with the workflow, and rerun the failed tests in the workflow if it failed due to runner instability or other reasons unrelated to the code/code changes.
 **ONLY proceed if the workflow conclusion is 'failure' or 'cancelled'**.
 
 If all workflows that finished in the last day were successful, then call the `noop` tool and exit.
@@ -88,7 +87,7 @@ If all workflows that finished in the last day were successful, then call the `n
 1. **Verify Failure**: Check that the workflow status is `failure` or `cancelled`
    - **If the workflow was successful**: Do not proceed with any further analysis on the current test workflow, and immediately start looking at the next test workflow that finished within the last day.
    - **If the workflow failed**: Proceed with the investigation steps below.
-   - **If the workflow was intentionally cancelled by a maintainer**: Leave the message "CI workflow cancelled intentionally - no investigation needed" and **stop immediately**. Do not proceed with any further analysis, and start looking at the next test workflow that finished within the last day.
+   - **If the workflow was intentionally cancelled by a maintainer**: Most of the tests are automatically launched by the `github-actions` bot, although they will occasionally be launched by a maintainer. Disregard who the test was launched by, and only pay attention to who **cancelled** the test. If the test was cancelled by a maintainer, leave the message "CI workflow cancelled intentionally - no investigation needed" and **stop immediately**. Do not proceed with any further analysis, and start looking at the next test workflow that finished within the last day.
    - **If the workflow was cancelled under other circumstances**: proceed with the investigation steps below.
 2. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run
 3. **List Jobs**: Use `list_workflow_jobs` to identify which specific jobs failed
@@ -172,7 +171,7 @@ If all workflows that finished in the last day were successful, then call the `n
       - Exit the workflow
     - Otherwise, continue to create a new issue with fresh investigation data -->
 
-### Phase 8: Reporting and Recommendations
+### Phase 7: Reporting and Recommendations
 
 - Don't run this step if the failure type was **Infrastructure** or **Flaky Tests**.
 
@@ -187,7 +186,7 @@ If all workflows that finished in the last day were successful, then call the `n
 
 2. **Actionable Deliverables**:
    <!-- - Create an issue with investigation results (if warranted) -->
-   - Comment on related PR with analysis (if PR-triggered)
+   - Comment on related PR with analysis (if the failing test was a CI Test)
    - Provide specific file locations and line numbers for fixes
    - Suggest code changes or configuration updates
 
