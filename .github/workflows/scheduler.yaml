@@ -10,6 +10,10 @@ name: Workflow Scheduler
 # This workflow is designed to run on the stable branch and will trigger other
 # workflows on the develop branch.
 #
+# FOR TESTING: Rather than running the workflows on the `develop` branch, run
+# the workflows from the `github-agentic-workflow` branch.
+# Important for CI triage workflow.
+
 # To do so we simply schedule this workflow to run every hour and use some
 # simple bash logic to determine if the current time is when we want to run the
 # other workflows.
@@ -55,8 +59,8 @@ jobs:
                   # If current time is 7pm then run the workflow.
                   if [[ $HOUR  == '19' ]]
                   then
-                    gh workflow run daily-tests.yaml --ref develop >/dev/null
-                    echo "Daily test scheduled to run on develop branch."
+                    gh workflow run daily-tests.yaml --ref github-agentic-workflow >/dev/null
+                    echo "Daily test scheduled to run on github-agentic-workflow branch."
                   else
                     echo "Daily tests not scheduled."
                   fi
@@ -70,8 +74,8 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '5' ]] && [[ $HOUR  == '19' ]]
                   then
-                    gh workflow run weekly-tests.yaml --ref develop >/dev/null
-                    echo "Weekly test scheduled to run on develop branch."
+                    gh workflow run weekly-tests.yaml --ref github-agentic-workflow >/dev/null
+                    echo "Weekly test scheduled to run on github-agentic-workflow branch."
                   else
                     echo "Weekly tests not scheduled."
                   fi
@@ -85,8 +89,8 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '2' ]] && [[ $HOUR  == '21' ]]
                   then
-                    gh workflow run compiler-tests.yaml --ref develop >/dev/null
-                    echo "Compiler tests scheduled to run on the develop branch."
+                    gh workflow run compiler-tests.yaml --ref github-agentic-workflow >/dev/null
+                    echo "Compiler tests scheduled to run on the github-agentic-workflow branch."
                   else
                     echo "Compiler tests not scheduled."
                   fi
@@ -100,7 +104,7 @@ jobs:
                   if [[ $DAY == '4' ]] && [[ $HOUR  == '21' ]]
                   then
                     gh workflow run weekly-repo-status.lock.yml --ref github-agentic-workflow >/dev/null
-                    echo "Weekly repo status summary workflow scheduled to run on the develop branch."
+                    echo "Weekly repo status summary workflow scheduled to run on the github-agentic-workflow branch."
                   else
                     echo "Weekly repo status summary workflow not scheduled."
                   fi
