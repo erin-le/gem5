@@ -59,7 +59,7 @@ jobs:
                   # If current time is 7pm then run the workflow.
                   if [[ $HOUR  == '19' ]]
                   then
-                    gh workflow run daily-tests.yaml --ref github-agentic-workflow >/dev/null
+                    gh workflow run daily-tests.yal --ref github-agentic-workflow >/dev/null
                     echo "Daily test scheduled to run on github-agentic-workflow branch."
                   else
                     echo "Daily tests not scheduled."
@@ -74,7 +74,7 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '5' ]] && [[ $HOUR  == '19' ]]
                   then
-                    gh workflow run weekly-tests.yaml --ref github-agentic-workflow >/dev/null
+                    gh workflow run weekly-tests.yml --ref github-agentic-workflow >/dev/null
                     echo "Weekly test scheduled to run on github-agentic-workflow branch."
                   else
                     echo "Weekly tests not scheduled."
@@ -89,7 +89,7 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '2' ]] && [[ $HOUR  == '21' ]]
                   then
-                    gh workflow run compiler-tests.yaml --ref github-agentic-workflow >/dev/null
+                    gh workflow run compiler-tests.yml --ref github-agentic-workflow >/dev/null
                     echo "Compiler tests scheduled to run on the github-agentic-workflow branch."
                   else
                     echo "Compiler tests not scheduled."
