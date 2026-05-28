@@ -7,11 +7,11 @@ on:
     pull_request:
         types: [opened, synchronize, ready_for_review]
     # Allow this workflow to be called by Github Agentic Workflows
-    workflow_call:
-        inputs:
-            payload:
-                type: string
-                required: false
+    workflow_dispatch:
+        # inputs:
+        #     payload:
+        #         type: string
+        #         required: false
 
 
 concurrency:

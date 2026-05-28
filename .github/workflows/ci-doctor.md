@@ -45,7 +45,13 @@ safe-outputs:
   add-comment:
   update-issue:
   noop:
-  call-workflow: ["daily-tests", "weekly-tests", "compiler-tests", "ci-tests"]
+  dispatch-workflow:
+     workflows:
+      - "daily-tests"
+      -  "weekly-tests"
+      - "compiler-tests"
+      - "ci-tests"
+     max: 10
   # messages:
   #   footer: "> 🩺 *Diagnosis provided by [{workflow_name}]({run_url})*"
   #   run-started: "🏥 CI Doctor reporting for duty! [{workflow_name}]({run_url}) is examining the patient on this {event_type}..."
