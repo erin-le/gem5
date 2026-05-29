@@ -6,41 +6,21 @@ on:
 
   workflow_run:
     workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
-    types:
-      - completed
-   #  branches:
-   #    - develop
-   #    - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
-   #  # This will trigger only when the CI workflow completes with failure
-   #  # The condition is handled in the workflow body
-#   bots:
-#     - "github-actions[bot]"
-#     - "dependabot[bot]"
-#   stop-after: +1mo
-
-
+    types: [completed]
+   #  conclusion: [failure, cancelled, timed_out]
+  roles: all
 # Only trigger for failures - check in the workflow body
-# if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' }}
+if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out' }}
 
 permissions: read-all
-  # actions: read        # To query workflow runs, jobs, and logs
-  # contents: read       # To read repository files
-  # issues: read         # To search and analyze issues
-  # pull-requests: read  # To analyze pull request context
-
 
 network: defaults
 
 engine: copilot
-  #id: copilot
-  # model: gpt-5.1-codex-mini
-# model: gpt-5-mini # multiplier for this model is 0
 
 safe-outputs:
   create-issue:
-   #  expires: 1d
     title-prefix: "[CI Failure Doctor] "
-    # labels: [cookie]
     close-older-issues: true
   add-comment:
   update-issue:
@@ -52,12 +32,6 @@ safe-outputs:
       - "compiler-tests"
       - "ci-tests"
      max: 10
-  # messages:
-  #   footer: "> 🩺 *Diagnosis provided by [{workflow_name}]({run_url})*"
-  #   run-started: "🏥 CI Doctor reporting for duty! [{workflow_name}]({run_url}) is examining the patient on this {event_type}..."
-  #   run-success: "🩺 Examination complete! [{workflow_name}]({run_url}) has delivered the diagnosis. Prescription issued! 💊"
-  #   run-failure: "🏥 Medical emergency! [{workflow_name}]({run_url}) {status}. Doctor needs assistance..."
-
   # report-failure-as-issue: false
 
 tools:
@@ -70,8 +44,7 @@ tools:
 timeout-minutes: 20
 
 source: githubnext/agentics/workflows/ci-doctor.md@ea350161ad5dcc9624cf510f134c6a9e39a6f94d
-# imports:
-#   - shared/mood.md
+
 ---
 # CI Failure Doctor
 
