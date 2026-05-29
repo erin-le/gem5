@@ -8,10 +8,12 @@ on:
     workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
     types: [completed]
    #  conclusion: [failure, cancelled, timed_out]
-  roles: all
+#   roles: all
   bots: ["github-actions[bot]"]
 # Only trigger for failures - check in the workflow body
 if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out' }}
+
+# forks: ["erin-le/gem5"]
 
 permissions: read-all
 
@@ -43,8 +45,6 @@ tools:
     toolsets: [default, actions]  # default expands to context, repos, issues, pull_requests and users; actions: workflow logs and artifacts
     lockdown: false
 timeout-minutes: 20
-
-source: githubnext/agentics/workflows/ci-doctor.md@ea350161ad5dcc9624cf510f134c6a9e39a6f94d
 
 ---
 # CI Failure Doctor
