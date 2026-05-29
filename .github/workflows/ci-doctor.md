@@ -1,26 +1,26 @@
 ---
 description: Investigates failed CI workflows to identify root causes and patterns and rerun if the failure isn't related to the code
 on:
-  schedule: daily
+#   schedule: daily
   workflow_dispatch:
 
-  # workflow_run:
-  #   workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
-  #   types:
-  #     - completed
-  #   branches:
-  #     - develop
-  #     - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
-  #   # This will trigger only when the CI workflow completes with failure
-  #   # The condition is handled in the workflow body
-  # bots:
-  #   - "github-actions[bot]"
-  #   - "dependabot[bot]"
-  # stop-after: +1mo
+  workflow_run:
+    workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
+    types:
+      - completed
+   #  branches:
+   #    - develop
+   #    - github-agentic-workflow  # TAKE OUT ONCE DONE WITH TESTING
+   #  # This will trigger only when the CI workflow completes with failure
+   #  # The condition is handled in the workflow body
+#   bots:
+#     - "github-actions[bot]"
+#     - "dependabot[bot]"
+#   stop-after: +1mo
 
 
 # Only trigger for failures - check in the workflow body
-# if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+if: ${{ github.event.workflow_run.conclusion == 'failure' }}
 
 permissions: read-all
   # actions: read        # To query workflow runs, jobs, and logs
@@ -48,7 +48,7 @@ safe-outputs:
   dispatch-workflow:
      workflows:
       - "daily-tests"
-      -  "weekly-tests"
+      - "weekly-tests"
       - "compiler-tests"
       - "ci-tests"
      max: 10
