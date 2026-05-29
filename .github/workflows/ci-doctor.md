@@ -20,7 +20,7 @@ on:
 
 
 # Only trigger for failures - check in the workflow body
-if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' }}
+# if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' }}
 
 permissions: read-all
   # actions: read        # To query workflow runs, jobs, and logs
@@ -34,7 +34,7 @@ network: defaults
 engine: copilot
   #id: copilot
   # model: gpt-5.1-codex-mini
-  #model: gpt-5-mini # multiplier for this model is 0
+# model: gpt-5-mini # multiplier for this model is 0
 
 safe-outputs:
   create-issue:
