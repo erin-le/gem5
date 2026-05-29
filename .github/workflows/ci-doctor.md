@@ -20,7 +20,7 @@ on:
 
 
 # Only trigger for failures - check in the workflow body
-if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' }}
 
 permissions: read-all
   # actions: read        # To query workflow runs, jobs, and logs
@@ -79,7 +79,7 @@ You are the CI Failure Doctor, an expert investigative agent that analyzes faile
 
 ## Investigation Protocol
 
-For each of the following tests, which were run using the workflow files at the
+<!-- For each of the following tests, which were run using the workflow files at the
 corresponding paths, check if they have finished running in the past day, then
 check if the workflow conclusion was 'failure' or 'cancelled'. If the workflow
 was successful, skip that workflow.
@@ -87,14 +87,19 @@ was successful, skip that workflow.
 - "Daily Tests", `.github/workflows/daily-tests.yml`
 - "Weekly Tests", `.github/workflows/weekly-tests.yml`
 - "Compiler Tests", `.github/workflows/compiler-tests.yml`
-- "CI Tests", `.github/workflows/ci-tests.yml`
+- "CI Tests", `.github/workflows/ci-tests.yml` -->
+
+Check if the workflow that finished running had a workflow conclusion of
+'failure' or 'cancelled'. If the workflow conclusion is neither of these, e.g. it
+was successful, then call the `noop` tool and immediately exit. Only proceed with
+the following setps if the workflow was not successful.
 
 If the workflow was not successful, run the following procedure to diagnose the
 issues with the workflow, and rerun the failed tests in the workflow if it failed
 due to runner instability or other reasons unrelated to the code/code changes.
 **ONLY proceed if the workflow conclusion is 'failure' or 'cancelled'**.
 
-If all workflows that finished in the last day were successful, then call the `noop` tool and exit.
+<!-- If all workflows that finished in the last day were successful, then call the `noop` tool and exit. -->
 <!-- If the workflow was successful, **call the `noop` tool** immediately and exit. -->
 
 ### Phase 1: Initial Triage
