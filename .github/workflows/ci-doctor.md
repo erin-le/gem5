@@ -9,6 +9,7 @@ on:
     types: [completed]
    #  conclusion: [failure, cancelled, timed_out]
   roles: all
+  bots: ["github-actions[bot]"]
 # Only trigger for failures - check in the workflow body
 if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out' }}
 
