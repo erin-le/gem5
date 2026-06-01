@@ -152,7 +152,7 @@ due to runner instability or other reasons unrelated to the code/code changes.
 
 ### Phase 5: Rerun workflow if necessary
 
-1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests using the rerun-failed-jobs tool, and pass in the workflow run id of the triggering workflow.
+1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests in the **workflow run that triggered this CI Doctor run** using the rerun-failed-jobs tool.
 
 ### Phase 6: Pattern Storage and Knowledge Building
 
