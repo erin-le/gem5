@@ -1,7 +1,6 @@
 ---
 description: Investigates failed CI workflows to identify root causes and patterns and rerun if the failure isn't related to the code
 on:
-#   schedule: daily
   workflow_dispatch:
 
   workflow_run:
@@ -28,13 +27,34 @@ safe-outputs:
   add-comment:
   update-issue:
   noop:
-  dispatch-workflow:
-     workflows:
-      - "daily-tests"
-      - "weekly-tests"
-      - "compiler-tests"
-      - "ci-tests"
-     max: 10
+#   actions:\
+  jobs:
+    rerun-failed-jobs:
+      description: "Rerun failed jobs for a given workflow run ID."
+      inputs:
+        run_id:
+          description: "The ID of the failed workflow run to rerun."
+          required: true
+          type: string
+      steps:
+        - name: Rerun failed jobs
+          uses: actions/github-script@v8
+          env:
+             RUN_ID: ${{ inputs.run_id }}
+          with:
+             script: |
+                await github.rest.actions.reRunWorkflowFailedJobs({
+                   owner: context.repo.owner,
+                   repo: context.repo.repo,
+                   run_id: parseInt(process.env.RUN_ID, 10)
+                });
+#   dispatch-workflow:
+#      workflows:
+#       - "daily-tests"
+#       - "weekly-tests"
+#       - "compiler-tests"
+#       - "ci-tests"
+#     max: 10
   # report-failure-as-issue: false
 
 tools:
@@ -132,8 +152,7 @@ due to runner instability or other reasons unrelated to the code/code changes.
 
 ### Phase 5: Rerun workflow if necessary
 
-1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests.
-   - Rerun the failed tests with the "Re-run failed jobs" option.
+1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests using the rerun-failed-jobs tool, and pass in the workflow run id of the triggering workflow.
 
 ### Phase 6: Pattern Storage and Knowledge Building
 
