@@ -31,16 +31,17 @@ safe-outputs:
   jobs:
     rerun-failed-jobs:
       description: "Rerun failed jobs for a given workflow run ID."
-      inputs:
-        run_id:
-          description: "The ID of the failed workflow run to rerun."
-          required: true
-          type: string
+      # inputs:
+      #   run_id:
+      #     description: "The ID of the failed workflow run to rerun."
+      #     required: true
+      #     type: string
       steps:
         - name: Rerun failed jobs
           uses: actions/github-script@v8
           env:
-             RUN_ID: ${{ inputs.run_id }}
+            #  RUN_ID: ${{ inputs.run_id }}
+            RUN_ID: ${{ github.event.workflow_run.id }}
           with:
              script: |
                 await github.rest.actions.reRunWorkflowFailedJobs({
