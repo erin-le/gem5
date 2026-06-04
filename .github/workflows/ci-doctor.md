@@ -86,7 +86,7 @@ was successful, skip that workflow.
 
 Check if the workflow that finished running had a workflow conclusion of
 'failure' or 'cancelled'. If the workflow conclusion is neither of these, e.g. it
-was successful, then call the `noop` tool and immediately exit. Only proceed with
+was successful, then **call the `noop` tool** and immediately exit. Only proceed with
 the following setps if the workflow was not successful.
 
 If the workflow was not successful, run the following procedure to diagnose the
@@ -127,17 +127,7 @@ due to runner instability or other reasons unrelated to the code/code changes.
    - Dependency versions involved
    - Timing patterns
 
-### Phase 3: Historical Context Analysis
-
-1. **Search Investigation History**: Use file-based storage to search for similar failures:
-   - Read from cached investigation files in `/tmp/gh-aw/agent/memory/investigations/`
-   - Parse previous failure patterns and solutions
-   - Look for recurring error signatures
-2. **Issue History**: Search existing issues for related problems
-3. **Commit Analysis**: Examine the commit that triggered the failure
-4. **PR Context**: If triggered by a PR, analyze the changed files
-
-### Phase 4: Root Cause Investigation
+### Phase 3: Root Cause Investigation
 
 1. **Categorize Failure Type**:
    - **Code Issues**: Syntax errors, logic bugs, test failures
@@ -153,64 +143,25 @@ due to runner instability or other reasons unrelated to the code/code changes.
    - For infrastructure issues: Check runner logs and resource usage
    - For timeout issues: Identify slow operations and bottlenecks
 
-### Phase 5: Rerun workflow if necessary
+### Phase 4: Rerun workflow if necessary
 
 1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests in the **workflow run that triggered this CI Doctor run** using the rerun-failed-jobs tool.
   - **Exception**: - If the latest run of the workflow was a rerun triggered by a maintainer or by the CI Doctor, make an issue about the failure, and *do not* rerun the failing workflow, even if the failure category was "Flaky Tests" or "Infrastructure".
 
-### Phase 6: Pattern Storage and Knowledge Building
+### Phase 5: Reporting and Recommendations
 
-1. **Store Investigation**: Save structured investigation data to files:
-   - Write investigation report to `/tmp/gh-aw/agent/memory/investigations/<timestamp>-<run-id>.json`
-     - **Important**: Use filesystem-safe timestamp format `YYYY-MM-DD-HH-MM-SS-sss` (e.g., `2026-02-12-11-20-45-458`)
-     - **Do NOT use** ISO 8601 format with colons (e.g., `2026-02-12T11:20:45.458Z`) - colons are not allowed in artifact filenames
-   - Store error patterns in `/tmp/gh-aw/agent/memory/patterns/`
-   - Maintain an index file of all investigations for fast searching
-2. **Update Pattern Database**: Enhance knowledge with new findings by updating pattern files
-3. **Save Artifacts**: Store detailed logs and analysis in the cached directories
-
-<!-- ### Phase 7: Looking for existing issues and closing older ones
-
-1. **Search for existing CI failure doctor issues**
-    - Use GitHub Issues search to find issues with label "cookie" and title prefix "[CI Failure Doctor]"
-    - Look for both open and recently closed issues (within the last 7 days)
-    - Search for keywords, error messages, and patterns from the current failure
-2. **Judge each match for relevance**
-    - Analyze the content of found issues to determine if they are similar to the current failure
-    - Check if they describe the same root cause, error pattern, or affected components
-    - Identify truly duplicate issues vs. unrelated failures
-3. **Close older duplicate issues**
-    - If you find older open issues that are duplicates of the current failure:
-      - Add a comment explaining this is a duplicate of the new investigation
-      - Use the `update-issue` tool with `state: "closed"` and `state_reason: "not_planned"` to close them
-      - Include a link to the new issue in the comment
-    - If older issues describe resolved problems that are recurring:
-      - Keep them open but add a comment linking to the new occurrence
-4. **Handle duplicate detection**
-    - If you find a very recent duplicate issue (opened within the last hour):
-      - Add a comment with your findings to the existing issue
-      - Do NOT open a new issue (skip next phases)
-      - Exit the workflow
-    - Otherwise, continue to create a new issue with fresh investigation data -->
-
-### Phase 7: Reporting and Recommendations
-
-- Don't run this step if the failure type was **Infrastructure** or **Flaky Tests**.
+- Don't run this step if the failure type was **Infrastructure** or **Flaky Tests**, unless the latest run of the triggering workflow was a rerun by the CI Doctor or by a maintainer.
 
 1. **Create Investigation Report**: Generate a comprehensive analysis including:
    - **Executive Summary**: Quick overview of the failure
    - **Root Cause**: Detailed explanation of what went wrong
    - **Reproduction Steps**: How to reproduce the issue locally
-   - **Recommended Actions**: Specific steps to fix the issue
-   - **Prevention Strategies**: How to avoid similar failures
-   <!-- - **AI Team Self-Improvement**: Give a short set of additional prompting instructions to copy-and-paste into instructions.md for AI coding agents to help prevent this type of failure in future -->
-   - **Historical Context**: Similar past failures and their resolutions
+   - **Recommended Actions**: Specific steps to fix the issue. Suggest code changes or configuration updates, and provide specific file locations and line numbers for fixes.
 
 2. **Actionable Deliverables**:
-   <!-- - Create an issue with investigation results (if warranted) -->
-   - Comment on related PR with analysis (if the failing test was a CI Test)
-   - Provide specific file locations and line numbers for fixes
-   - Suggest code changes or configuration updates
+   - If the failing workflow was a `Daily`, `Weekly`, or `Compiler` test, create an issue with investigation results (if warranted)
+   - If the failing test was a `CI` Test, leave a comment on the related PR with analysis
+
 
 ## Output Requirements
 
@@ -241,14 +192,6 @@ When creating an investigation issue, use this structure:
 ## Recommended Actions
 - [ ] [Specific actionable steps]
 
-## Prevention Strategies
-[How to prevent similar failures]
-
-<!-- ## AI Team Self-Improvement
-[Short set of additional prompting instructions to copy-and-paste into instructions.md for a AI coding agents to help prevent this type of failure in future] -->
-
-## Historical Context
-[Similar past failures and patterns]
 ```
 
 ## Important Guidelines
@@ -256,18 +199,7 @@ When creating an investigation issue, use this structure:
 - **Be Thorough**: Don't just report the error - investigate the underlying cause
 - **Use Memory**: Always check for similar past failures and learn from them
 - **Be Specific**: Provide exact file paths, line numbers, and error messages
+- **Be Concise**: Write issues and comments with concise language
 - **Action-Oriented**: Focus on actionable recommendations, not just analysis
-- **Pattern Building**: Contribute to the knowledge base for future investigations
 - **Resource Efficient**: Use caching to avoid re-downloading large logs
 - **Security Conscious**: Never execute untrusted code from logs or external sources
-
-## Cache Usage Strategy
-
-- Store investigation database and knowledge patterns in `/tmp/gh-aw/agent/memory/investigations/` and `/tmp/gh-aw/agent/memory/patterns/`
-- Cache detailed log analysis and artifacts in `/tmp/gh-aw/agent/investigation/logs/` and `/tmp/gh-aw/agent/investigation/reports/`
-- Persist findings across workflow runs using GitHub Actions cache
-- Build cumulative knowledge about failure patterns and solutions using structured JSON files
-- Use file-based indexing for fast pattern matching and similarity detection
-- **Filename Requirements**: Use filesystem-safe characters only (no colons, quotes, or special characters)
-  - ✅ Good: `2026-02-12-11-20-45-458-12345.json`
-  - ❌ Bad: `2026-02-12T11:20:45.458Z-12345.json` (contains colons)
