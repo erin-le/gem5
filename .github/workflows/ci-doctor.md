@@ -29,7 +29,7 @@ safe-outputs:
   jobs:
     rerun-failed-jobs:
       permissions:
-        actions: write
+        actions: write    # needed to rerun failed jobs
       description: "Rerun failed jobs for a given workflow run ID."
       # inputs:
       #   run_id:
@@ -102,6 +102,8 @@ due to runner instability or other reasons unrelated to the code/code changes.
 1. **Verify Failure**: Check that the workflow status is `failure` or `cancelled`
    - **If the workflow was successful**: Do not proceed with any further analysis on the current test workflow, and immediately start looking at the next test workflow that finished within the last day.
    - **If the workflow failed**: Proceed with the investigation steps below.
+
+   - **If the workflow failed and the latest run was a rerun triggered by a maintainer or by the CI Doctor**: Make an issue about the failure, and *do not* rerun the failing workflow, even if the failure category was "Flaky Tests" or "Infrastructure".
    - **If the workflow was intentionally cancelled by a maintainer**: Most of the tests are automatically launched by the `github-actions` bot, although they will occasionally be launched by a maintainer. Disregard who the test was launched by, and only pay attention to who **cancelled** the test. If the test was cancelled by a maintainer, leave the message "CI workflow cancelled intentionally - no investigation needed" and **stop immediately**. Do not proceed with any further analysis, and start looking at the next test workflow that finished within the last day.
    - **If the workflow was cancelled under other circumstances**: proceed with the investigation steps below.
 2. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run
@@ -154,6 +156,7 @@ due to runner instability or other reasons unrelated to the code/code changes.
 ### Phase 5: Rerun workflow if necessary
 
 1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests in the **workflow run that triggered this CI Doctor run** using the rerun-failed-jobs tool.
+  - **Exception**: - If the latest run of the workflow was a rerun triggered by a maintainer or by the CI Doctor, make an issue about the failure, and *do not* rerun the failing workflow, even if the failure category was "Flaky Tests" or "Infrastructure".
 
 ### Phase 6: Pattern Storage and Knowledge Building
 
