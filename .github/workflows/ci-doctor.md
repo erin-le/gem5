@@ -12,8 +12,6 @@ on:
 # Only trigger for failures - check in the workflow body
 if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out' }}
 
-# forks: ["erin-le/gem5"]
-
 permissions: read-all
 
 network: defaults
@@ -30,6 +28,8 @@ safe-outputs:
 #   actions:\
   jobs:
     rerun-failed-jobs:
+      permissions:
+        actions: write
       description: "Rerun failed jobs for a given workflow run ID."
       # inputs:
       #   run_id:
