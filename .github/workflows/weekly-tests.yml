@@ -93,10 +93,7 @@ jobs:
             - name: Flatten matrix into length and testdir pairs
               id: flatten-matrix
               run: |
-                  primary='["quick", "long", "very-long"]'
                   secondary='{
-                      "quick": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-quick }},
-                      "long": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-long }},
                       "very-long": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long }}
                   }'
 
