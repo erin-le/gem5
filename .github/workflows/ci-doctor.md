@@ -10,7 +10,9 @@ on:
 #   roles: all
   bots: ["github-actions[bot]"]
 # Only trigger for failures - check in the workflow body
-if: ${{ github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out' }}
+# Don't run the CI Doctor if the triggering workflow is on its 2nd run/1st rerun (or past that point)
+# This is to try to save tokens.
+if: ${{ (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out') && !(github.event.workflow_run.run_attempt > 1) }}
 
 permissions: read-all
 
