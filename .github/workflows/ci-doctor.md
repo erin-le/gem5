@@ -6,12 +6,11 @@ on:
   workflow_run:
     workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
     types: [completed]
-   #  conclusion: [failure, cancelled, timed_out]
-#   roles: all
+
   bots: ["github-actions[bot]"]
 # Only trigger for failures - check in the workflow body
-# Don't run the CI Doctor if the triggering workflow is on its 2nd run/1st rerun (or past that point)
-# This is to try to save tokens.
+# The condition after the &&: Don't run the CI Doctor if the triggering
+# workflow is on its 2nd run/1st rerun (or greater). This is to try to save tokens.
 if: ${{ (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out') && !(github.event.workflow_run.run_attempt > 1) }}
 
 permissions: read-all
@@ -27,11 +26,10 @@ safe-outputs:
   add-comment:
   update-issue:
   noop:
-#   actions:\
   jobs:
     rerun-failed-jobs:
       permissions:
-        actions: write    # needed to rerun failed jobs
+        actions: write    # this permission is needed to rerun failed jobs
       description: "Rerun failed jobs for a given workflow run ID."
       # inputs:
       #   run_id:
@@ -51,21 +49,13 @@ safe-outputs:
                    repo: context.repo.repo,
                    run_id: parseInt(process.env.RUN_ID, 10)
                 });
-#   dispatch-workflow:
-#      workflows:
-#       - "daily-tests"
-#       - "weekly-tests"
-#       - "compiler-tests"
-#       - "ci-tests"
-#     max: 10
-  # report-failure-as-issue: false
 
 tools:
   cache-memory: true
-  # web-fetch:
-  # web-search:
   github:
-    toolsets: [default, actions]  # default expands to context, repos, issues, pull_requests and users; actions: workflow logs and artifacts
+    # `default` expands to context, repos, issues, pull_requests and users;
+    # `actions` allows for access to workflow logs and artifacts
+    toolsets: [default, actions]
     lockdown: false
 timeout-minutes: 20
 
@@ -97,7 +87,6 @@ due to runner instability or other reasons unrelated to the code/code changes.
 **ONLY proceed if the workflow conclusion is 'failure' or 'cancelled'**.
 
 <!-- If all workflows that finished in the last day were successful, then call the `noop` tool and exit. -->
-<!-- If the workflow was successful, **call the `noop` tool** immediately and exit. -->
 
 ### Phase 1: Initial Triage
 
