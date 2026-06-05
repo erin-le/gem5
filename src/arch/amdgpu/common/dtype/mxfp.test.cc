@@ -75,7 +75,7 @@ TEST(MxfpTest, MxBf16Test)
 
     int errors = test_type<T>(T::size());
 
-    EXPECT_EQ(errors, 100);
+    EXPECT_EQ(errors, 0);
 }
 
 TEST(MxfpTest, MxFp16Test)
