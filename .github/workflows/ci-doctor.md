@@ -11,7 +11,7 @@ on:
 # Only trigger for failures - check in the workflow body
 # The condition after the &&: Don't run the CI Doctor if the triggering
 # workflow is on its 2nd run/1st rerun (or greater). This is to try to save tokens.
-if: ${{ (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled' || github.event.workflow_run.conclusion == 'timed_out') && !(github.event.workflow_run.run_attempt > 1) }}
+if: ${{ (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out') && !(github.event.workflow_run.run_attempt > 1) }}
 
 permissions: read-all
 
@@ -141,7 +141,7 @@ due to runner instability or other reasons unrelated to the code/code changes.
 
 ### Phase 5: Reporting and Recommendations
 
-- Don't run this step if the failure type was **Infrastructure** or **Flaky Tests**, unless the latest run of the triggering workflow was a rerun by the CI Doctor or by a maintainer.
+- Don't run this step if the failure type was **Flaky Tests**, unless the latest run of the triggering workflow was a rerun by the CI Doctor or by a maintainer.
 
 1. **Create Investigation Report**: Generate a comprehensive analysis including:
    - **Executive Summary**: Quick overview of the failure
