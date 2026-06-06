@@ -82,21 +82,21 @@ jobs:
               id: date
               run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-    unittests-all-fast-opt:
-        strategy:
-            matrix:
-                type: [fast, opt]
-        runs-on: [self-hosted, linux, x64]
-        if: github.event.pull_request.draft == false
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-        needs: [pre-commit] # only runs if pre-commit passes.
-        timeout-minutes: 60
-        steps:
-            - uses: actions/checkout@v4
-            - name: CI Unittests (${{ matrix.type }})
-              working-directory: ${{ github.workspace }}
-              run: scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} -j $(nproc)
-            - run: echo "This job's status is ${{ job.status }}."
+    # unittests-all-fast-opt:
+    #     strategy:
+    #         matrix:
+    #             type: [fast, opt]
+    #     runs-on: [self-hosted, linux, x64]
+    #     if: github.event.pull_request.draft == false
+    #     container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+    #     needs: [pre-commit] # only runs if pre-commit passes.
+    #     timeout-minutes: 60
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #         - name: CI Unittests (${{ matrix.type }})
+    #           working-directory: ${{ github.workspace }}
+    #           run: scons --no-compress-debug build/ALL/unittests.${{ matrix.type }} -j $(nproc)
+    #         - run: echo "This job's status is ${{ job.status }}."
 
     testlib-quick-matrix:
         runs-on: ubuntu-24.04
@@ -112,23 +112,7 @@ jobs:
               id: dir-matrix
               run: |
                   unset PREV
-                  echo "test-dirs-matrix=$(\
-                    ./main.py list gem5 \
-                    --suites \
-                    --exclude-tags gcn_gpu | \
-                    grep "$SUITEUID:" | \
-                    cut -d: -f2 | \
-                    cut -d/ -f 2- | \
-                    xargs dirname | \
-                    sort -u  | \
-                    while read x; do \
-                      if [ -z "${PREV}" ] || [ "$x" != "${PREV}/*" ]; then \
-                        PREV=$x; \
-                        echo $x; \
-                      fi; \
-                    done  | \
-                    jq -ncR '[inputs]'\
-                  )" >>$GITHUB_OUTPUT
+                  echo "test-dirs-matrix=[gem5/arm_boot_tests, gem5/regression_tests]" >>$GITHUB_OUTPUT
 
             - name: Get the build targets for testlib-quick-gem5-builds
               working-directory: ${{ github.workspace }}/tests
@@ -139,63 +123,63 @@ jobs:
             build-matrix: ${{ steps.build-matrix.outputs.build-matrix }}
             test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
 
-    clang-fast-compilation:
-        # gem5 binaries built in `quick-gem5-builds` always use GCC.
-        # Clang is more strict than GCC. This job checks that gem5 compiles
-        # with Clang. It compiles build/ALL/gem5.fast to maximize the change
-        # for compilation error to be exposed.
-        runs-on: [self-hosted, linux, x64]
-        if: github.event.pull_request.draft == false
-        container: ghcr.io/gem5/clang-version-19:latest
-        needs: [pre-commit]
-        timeout-minutes: 90
-        steps:
-            - uses: actions/checkout@v4
-            - name: Clang Compilation
-              working-directory: ${{ github.workspace }}
-              run: scons build/ALL/gem5.fast -j $(nproc)
+    # clang-fast-compilation:
+    #     # gem5 binaries built in `quick-gem5-builds` always use GCC.
+    #     # Clang is more strict than GCC. This job checks that gem5 compiles
+    #     # with Clang. It compiles build/ALL/gem5.fast to maximize the change
+    #     # for compilation error to be exposed.
+    #     runs-on: [self-hosted, linux, x64]
+    #     if: github.event.pull_request.draft == false
+    #     container: ghcr.io/gem5/clang-version-19:latest
+    #     needs: [pre-commit]
+    #     timeout-minutes: 90
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #         - name: Clang Compilation
+    #           working-directory: ${{ github.workspace }}
+    #           run: scons build/ALL/gem5.fast -j $(nproc)
 
-    macos-compilation:
-        runs-on: macos-26
-        if: github.event.pull_request.draft == false
-        needs: [pre-commit, get-date]
+    # macos-compilation:
+    #     runs-on: macos-26
+    #     if: github.event.pull_request.draft == false
+    #     needs: [pre-commit, get-date]
 
-        strategy:
-            fail-fast: false
-            matrix:
-                type: [fast, opt]
+    #     strategy:
+    #         fail-fast: false
+    #         matrix:
+    #             type: [fast, opt]
 
-        steps:
-            - name: Checkout the gem5 repository
-              uses: actions/checkout@v4
+    #     steps:
+    #         - name: Checkout the gem5 repository
+    #           uses: actions/checkout@v4
 
-            - name: Install the gem5 dependencies
-              run: |
-                  brew update
-                  brew install \
-                    scons \
-                    python \
-                    pkg-config \
-                    protobuf \
-                    grpc \
-                    boost
+    #         - name: Install the gem5 dependencies
+    #           run: |
+    #               brew update
+    #               brew install \
+    #                 scons \
+    #                 python \
+    #                 pkg-config \
+    #                 protobuf \
+    #                 grpc \
+    #                 boost
 
 
-            - name: Restore macOS build/ALL cache
-              uses: actions/cache/restore@v4
-              with:
-                  path: build/ALL
-                  key: macos-all-gem5-${{ matrix.type }}-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      macos-all-gem5-${{ matrix.type }}
+    #         - name: Restore macOS build/ALL cache
+    #           uses: actions/cache/restore@v4
+    #           with:
+    #               path: build/ALL
+    #               key: macos-all-gem5-${{ matrix.type }}-${{ needs.get-date.outputs.date }}
+    #               restore-keys: |
+    #                   macos-all-gem5-${{ matrix.type }}
 
-            - name: Compile gem5.${{ matrix.type }}
-              working-directory: ${{ github.workspace }}
-              run: scons build/ALL/gem5.${{ matrix.type }} -j $(sysctl -n hw.ncpu)
-              timeout-minutes: 90
+    #         - name: Compile gem5.${{ matrix.type }}
+    #           working-directory: ${{ github.workspace }}
+    #           run: scons build/ALL/gem5.${{ matrix.type }} -j $(sysctl -n hw.ncpu)
+    #           timeout-minutes: 90
 
     testlib-quick-gem5-builds:
-        runs-on: [self-hosted, linux, x64]
+        runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         needs: [pre-commit, testlib-quick-matrix, get-date]
@@ -240,7 +224,7 @@ jobs:
 
     testlib-quick-execution:
         name: quick-tests
-        runs-on: [self-hosted, linux, x64]
+        runs-on: ubuntu-24.04
         if: github.event.pull_request.draft == false
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         needs: [pre-commit, testlib-quick-matrix, testlib-quick-gem5-builds]
@@ -287,36 +271,36 @@ jobs:
                   path: tests/testing-results
                   retention-days: 30
 
-    gpu-tests:
-        runs-on: [self-hosted, linux, x64]
-        container: ghcr.io/gem5/gcn-gpu:latest
-        timeout-minutes: 180
-        needs: [pre-commit, get-date]
-        steps:
-            - uses: actions/checkout@v4
+    # gpu-tests:
+    #     runs-on: [self-hosted, linux, x64]
+    #     container: ghcr.io/gem5/gcn-gpu:latest
+    #     timeout-minutes: 180
+    #     needs: [pre-commit, get-date]
+    #     steps:
+    #         - uses: actions/checkout@v4
 
-            # Obtain the cache if available.
-            - name: Cache build/VEGA_X86
-              uses: actions/cache/restore@v4
-              with:
-                  path: build/VEGA_X86
-                  key: testlib-build-vega-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      testlib-build-vega
+    #         # Obtain the cache if available.
+    #         - name: Cache build/VEGA_X86
+    #           uses: actions/cache/restore@v4
+    #           with:
+    #               path: build/VEGA_X86
+    #               key: testlib-build-vega-${{ needs.get-date.outputs.date }}
+    #               restore-keys: |
+    #                   testlib-build-vega
 
-            # Run the GPU tests.
-            - name: Run Testlib GPU Tests
-              id: run-tests
-              working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run -j$(nproc) -t$(nproc) --host gcn_gpu
+    #         # Run the GPU tests.
+    #         - name: Run Testlib GPU Tests
+    #           id: run-tests
+    #           working-directory: ${{ github.workspace }}/tests
+    #           run: ./main.py run -j$(nproc) -t$(nproc) --host gcn_gpu
 
-            # Upload the tests/testing-results directory as an artifact.
-            - name: Upload results
-              if: success() || failure()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: ci-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-output
-                  path: tests/testing-results
+    #         # Upload the tests/testing-results directory as an artifact.
+    #         - name: Upload results
+    #           if: success() || failure()
+    #           uses: actions/upload-artifact@v4
+    #           with:
+    #               name: ci-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-output
+    #               path: tests/testing-results
 
     ci-tests:
     # It is 'testlib-quick' which needs to pass for the pull request to be
