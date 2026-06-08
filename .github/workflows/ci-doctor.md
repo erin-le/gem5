@@ -50,7 +50,6 @@ safe-outputs:
                 });
 
 tools:
-  cache-memory: true
   github:
     # `default` expands to context, repos, issues, pull_requests and users;
     # `actions` allows for access to workflow logs and artifacts
