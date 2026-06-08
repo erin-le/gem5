@@ -21,8 +21,7 @@ engine: copilot
 
 safe-outputs:
   create-issue:
-    title-prefix: "[CI Failure Doctor] "
-    close-older-issues: true
+    title-prefix: "misc: [CI Failure Doctor] "
   add-comment:
   update-issue:
   noop:
@@ -158,10 +157,13 @@ due to runner instability or other reasons unrelated to the code/code changes.
 
 ### Investigation Issue Template
 
+When creating an issue, the title should start with the prefix, followed by `Daily Tests Failure - `, `Weekly Tests Failure -`, or `Compiler Tests Failure -`,
+depending on which workflow triggered this CI Doctor run, then a brief summary of the failure.
+
 When creating an investigation issue, use this structure:
 
 ```markdown
-# 🏥 CI Failure Investigation - Run #${{ github.event.workflow_run.run_number }}
+# CI Failure Investigation - Run #${{ github.event.workflow_run.run_number }}
 
 ## Summary
 [Brief description of the failure]
