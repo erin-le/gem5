@@ -1,18 +1,18 @@
 ---
 description: |
   This workflow creates weekly repo status reports. It gathers recent repository
-  activity (issues, PRs, discussions, releases, code changes) and generates
+  activity (issues, PRs, discussions, code changes) and generates
   engaging GitHub issues with productivity insights, community highlights,
   and project recommendations.
 
 on:
-  # schedule: weekly
   workflow_dispatch:
 
 permissions:
   contents: read
   issues: read
   pull-requests: read
+  discussions: read
 
 network: defaults
 
@@ -25,7 +25,6 @@ tools:
     min-integrity: none # This workflow is allowed to examine and comment on any issues
 
 safe-outputs:
-  #staged: true
   mentions: false
   allowed-github-references: []
   create-issue:
@@ -39,7 +38,7 @@ engine: copilot
 
 # Weekly Repo Status
 
-Create an weekly status report for the gem5/gem5 repo as a GitHub issue.
+Create a weekly status report for the gem5/gem5 repo as a GitHub issue.
 When "weekly" or "in the last week" is used, and the workflow was automatically launched (i.e. triggered by scheduler.yaml), it specifically refers to the time since the last automated run of this workflow. If this workflow was launched by a GitHub user, you should include all activity starting from exactly a week before the workflow was launched.
 
 For example, if this workflow is run at May 18th at 9pm, then the summary should include all activity between May 11th at 9pm and May 18th at 9pm.
@@ -48,7 +47,7 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 
 - An executive summary of what has been done in the last week.
 
-- Lists of PRs and issues that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
+- Lists of PRs, issues, and discussions that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
 
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
