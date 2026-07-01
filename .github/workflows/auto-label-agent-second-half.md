@@ -21,6 +21,11 @@ safe-outputs:
   add-comment: {}
   noop:
     report-as-issue: false
+
+engine:
+  id: copilot
+  model: gpt-5-mini
+
 ---
 
 # Auto Label Agent - Second Half
