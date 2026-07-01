@@ -106,8 +106,10 @@ jobs:
               id: run-tests
               timeout-minutes: 4290
               working-directory: ${{ github.workspace }}/tests
-              run: gdb --args -d testing-results/m5out ../build/ALL/gem5.opt gem5/x86_boot_tests/configs/x86_boot_exit_run.py --cpu=o3 --num-cpus=8 --mem-system=classic
-                  --dram-class=DualChannelDDR4_2400 --boot-type=init
+              run: |
+                  mkdir testing-results
+                  mkdir testing-results/m5out
+                  gdb --args ../build/ALL/gem5.opt -d testing-results/m5out ./gem5/x86_boot_tests/configs/x86_boot_exit_run.py --cpu=o3 --num-cpus=8 --mem-system=classic --dram-class=DualChannelDDR4_2400 --boot-type=init
 
             - name: Sanitize test-dir for artifact name
               id: sanitize-test-dir
