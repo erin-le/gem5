@@ -1,9 +1,7 @@
 ---
 description: |
   This workflow creates weekly repo status reports. It gathers recent repository
-  activity (issues, PRs, discussions, code changes) and generates
-  engaging GitHub issues with productivity insights, community highlights,
-  and project recommendations.
+  activity (issues, PRs, code changes) and generates a summary GitHub issue.
 
 on:
   workflow_dispatch:
@@ -12,7 +10,6 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-  discussions: read
 
 network: defaults
 
@@ -33,7 +30,11 @@ safe-outputs:
     close-older-issues: true
   report-failure-as-issue: false
 source: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
-engine: copilot
+
+engine:
+  id: copilot
+  model: gpt-5-mini
+
 ---
 
 # Weekly Repo Status
@@ -47,7 +48,7 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 
 - An executive summary of what has been done in the last week.
 
-- Lists of PRs, issues, and discussions that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
+- Lists of PRs and issues that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
 
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
@@ -85,7 +86,7 @@ This list should be formatted as follows:
 
 ## Style
 
-- The title of the summary issue should consist of the title prefix, `misc: `, followed by the following format:
+- The title of the summary issue should use the following format:
 `Weekly Repo Status: {month} {start_day} - {month} {end_day}, {year}`, where the words enclosed in curly brackets should be swapped out for the appropriate days, months, and year. For example, if this workflow is run on May 18th, 2026, then it will contain activity starting from May 11th, so the title should be `Weekly Repo Status: May 11 - May 18, 2026`.
 - Be concise - adjust length based on actual activity
 - Be positive, encouraging, and helpful
