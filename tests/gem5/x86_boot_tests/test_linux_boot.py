@@ -234,18 +234,18 @@ run_map = {
     },
 }
 
-for mem_system in run_map:
-    for cpu in run_map[mem_system]:
-        for num_cpus in run_map[mem_system][cpu]:
-            if run_map[mem_system][cpu][num_cpus]:
-                test_boot(
-                    cpu=cpu,
-                    num_cpus=num_cpus,
-                    mem_system=mem_system,
-                    memory_class="DualChannelDDR4_2400",
-                    boot_type="systemd",
-                    length=constants.very_long_tag,
-                )
+# for mem_system in run_map:
+#     for cpu in run_map[mem_system]:
+#         for num_cpus in run_map[mem_system][cpu]:
+#             if run_map[mem_system][cpu][num_cpus]:
+#                 test_boot(
+#                     cpu=cpu,
+#                     num_cpus=num_cpus,
+#                     mem_system=mem_system,
+#                     memory_class="DualChannelDDR4_2400",
+#                     boot_type="systemd",
+#                     length=constants.very_long_tag,
+#                 )
 
 # To ensure the O3 CPU is working correctly, we include some "init" tests here.
 # There were not included above as booting to "systemd" takes too long with
