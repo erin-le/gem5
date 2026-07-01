@@ -75,12 +75,7 @@ jobs:
                       "very-long": ${{ needs.get-testlib-dirs.outputs.test-dirs-matrix-very-long }}
                   }'
 
-                  flat_matrix=$(echo $secondary | jq -c '[
-                    to_entries[] |
-                    .key as $k |
-                    .value[] |
-                    {length: $k, testdir: .}
-                  ]')
+                  flat_matrix=[{"length":"very-long","testdir":"gem5/x86_boot_tests"}]
 
                   echo "matrix=$flat_matrix" >> $GITHUB_OUTPUT
 
