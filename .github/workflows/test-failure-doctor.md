@@ -17,8 +17,6 @@ permissions: read-all
 
 network: defaults
 
-engine: copilot
-
 safe-outputs:
   create-issue:
     title-prefix: "misc: [Test Failure Doctor] "
@@ -51,6 +49,10 @@ tools:
     lockdown: false
 timeout-minutes: 20
 
+engine:
+  id: copilot
+  model: gpt-5-mini
+
 ---
 # Test Failure Doctor
 
@@ -73,7 +75,7 @@ due to runner instability or other reasons unrelated to the code/code changes.
 1. **Verify Failure**: Check that the status of the triggering workflow is `failure` or `timed_out`.
 If the status was neither of these, call the `noop` tool and exit immediately. Otherwise, proceed with the investigation steps below.
 
-   - **If the workflow failed and the latest run was a rerun triggered by a maintainer or by the Test Failure Doctor**: Proceed with the investigation, make an issue about the failure, and *do not* rerun the failing workflow, even if the failure category was "Flaky Tests" or "Infrastructure".
+   - **If the workflow failed and the latest run was a rerun triggered by a maintainer or by the Test Failure Doctor**: Proceed with the investigation, but *do not* rerun the failing workflow, even if the failure category was "Flaky Tests" or "Infrastructure".
    - **If the workflow timed out, or was cancelled, but not by a maintainer**: proceed with the investigation steps below. Most of the tests are automatically launched by the `github-actions` bot, although they will occasionally be launched by a maintainer. Disregard who the test was launched by, and only pay attention to who **cancelled** the test.
 2. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run
 3. **List Jobs**: Use `list_workflow_jobs` to identify which specific jobs failed
@@ -103,7 +105,10 @@ If the status was neither of these, call the `noop` tool and exit immediately. O
    - **Infrastructure**: Runner issues, network problems, resource constraints
    - **Dependencies**: Version conflicts, missing packages, outdated libraries
    - **Configuration**: Workflow configuration, environment variables
-   - **Flaky Tests**: Intermittent failures, timing issues
+   - **Flaky Tests**: Intermittent failures, timing issues. A run might fall
+   into this category especially if the phrase `context cancelled` appears in
+   the logs, or if the test failed due to losing connection with the runner while
+   running.
    - **External Services**: Third-party API failures, downstream dependencies
 
 2. **Deep Dive Analysis**:
@@ -116,7 +121,7 @@ If the status was neither of these, call the `noop` tool and exit immediately. O
 
 1. If the failure type from the previous step was **Infrastructure** or **Flaky Tests**, rerun the failed tests in the **workflow run that triggered this Test Failure Doctor run** using the rerun-failed-jobs tool.
 
-- **Exception**: - If the latest run of the workflow was a rerun triggered by a maintainer or by the Test Failure Doctor, make an issue about the failure, and *do not* rerun the failing workflow, even if the failure category was **Flaky Tests** or **Infrastructure**.
+- **Exception**: - If the latest run of the workflow was a rerun triggered by a maintainer or by the Test Failure Doctor, *do not* rerun the failing workflow, even if the failure category was **Flaky Tests** or **Infrastructure**.
 
 ### Phase 5: Reporting and Recommendations
 
@@ -129,8 +134,10 @@ If the status was neither of these, call the `noop` tool and exit immediately. O
    - **Recommended Actions**: Specific steps to fix the issue. Suggest code changes or configuration updates, and provide specific file locations and line numbers for fixes.
 
 2. **Actionable Deliverables**:
-   - If the failing workflow was a `Daily`, `Weekly`, or `Compiler` test, create an issue with investigation results (if warranted, according to previously described conditions)
-   - If the failing test was a `CI` Test, leave a comment on the related PR with analysis
+   - If the failing workflow was a `Daily`, `Weekly`, or `Compiler` test, create an issue with investigation results.
+     - Check the existing issues opened by the Test Failure Doctor workflow. If there is an existing issue about the same failure, leave a comment on that issue saying that the test failure is still ongoing, and *do not* open a new issue.
+     - If the failure category was **Flaky Tests**, *do not* open an issue.
+   - If the failing test was a `CI` Test, leave a comment on the related PR with analysis.
 
 ## Output Requirements
 
