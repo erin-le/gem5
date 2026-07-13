@@ -59,7 +59,7 @@ jobs:
             max-parallel: 5
             matrix:
                 test-type: ${{ fromJson(needs.get-testlib-very-long-dirs.outputs.test-dirs-matrix) }}
-        runs-on: [self-hosted, linux, x64]
+        runs-on: ubuntu-24.04
         container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         timeout-minutes: 4320 # 3 days
         needs: [get-date, get-testlib-very-long-dirs]
@@ -102,7 +102,7 @@ jobs:
     gpu-tests:
         strategy:
             fail-fast: false
-        runs-on: [self-hosted, linux, x64]
+        runs-on: ubuntu-24.04
         container: ghcr.io/gem5/gcn-gpu:latest
         timeout-minutes: 4320 # 3 days
         needs: get-date
