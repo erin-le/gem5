@@ -32,7 +32,7 @@ safe-outputs:
 
 engine:
   id: copilot
-  model: gemini-3-flash-preview
+  model: gpt-5.6-luna
 
 ---
 
