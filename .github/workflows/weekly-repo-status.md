@@ -29,7 +29,6 @@ safe-outputs:
     labels: [misc]
     close-older-issues: true
   report-failure-as-issue: false
-source: githubnext/agentics/workflows/daily-repo-status.md@410f8f4fdfbd7d855fc58c2df6438d2ebfa7c93e
 
 engine:
   id: copilot
@@ -53,11 +52,11 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
 
-- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR number, title, author, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
 Use the table template shown below:
 
-| PR | Title | Author | Summary |
-|----|-------|--------|---------|
+| PR | Title | Author | Updated by | Summary |
+|----|-------|--------|------------|---------|
 
 - A list of PRs that haven't had any activity in the last two weeks. This list should have the PR number, title, name of the author, a summary of the changes made, and the status of the PR, e.g. if it's been waiting for a response from the author or reviewer for two weeks or more, if two weeks or more have passed with no activity since the PR was opened, etc. The summary for a PR should not include activity from previous runs of this workflow that mention the PR.
 Split this list into two parts. The first should be for PRs that haven't had activity in approximately two weeks, the second should be for PRs that haven't had activity for longer periods of time. Within each list, sort PRs by PR number in descending order.
