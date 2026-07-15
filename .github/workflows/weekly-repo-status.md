@@ -32,7 +32,7 @@ safe-outputs:
 
 engine:
   id: copilot
-  model: gemini-flash
+  model: gpt-5.4-mini
 
 ---
 
