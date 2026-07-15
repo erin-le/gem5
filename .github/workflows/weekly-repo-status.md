@@ -32,7 +32,6 @@ safe-outputs:
 
 engine:
   id: copilot
-  model: gpt-5.6-luna
 
 ---
 
