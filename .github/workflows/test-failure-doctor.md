@@ -137,7 +137,16 @@ following pattern: `weekly-tests-run-*/SuiteUID-*/TestUID-*/`.
 
 2. **Actionable Deliverables**:
    - If the failing workflow was a `Daily`, `Weekly`, or `Compiler` test, create an issue with investigation results.
-     - Check the existing issues opened by the Test Failure Doctor workflow. If there is an existing issue about the same failure, leave a comment on that issue saying that the test failure is still ongoing, and *do not* open a new issue.
+      - Do not close issues if they apply to different workflows, e.g. if a new
+      problem occurs in the `Daily` tests, and there is an issue open for a
+      different problem in the `Weekly` tests, *do not* close the issue for the
+      `Weekly` tests.
+     - Check the currently open issues that were made by the Test Failure
+      Doctor. If there is an issue about the same failure, leave a comment on
+      that issue saying that the test failure is still ongoing, and *do not*
+      open a new issue.
+     - If there is an open issue for a workflow, and a new problem occurs in the
+      same workflow, add a comment to the existing issue.
      - If the failure category was **Flaky Tests**, *do not* open an issue.
    - If the failing test was a `CI` Test, leave a comment on the related PR with analysis.
 
