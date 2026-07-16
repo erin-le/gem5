@@ -108,28 +108,3 @@ jobs:
                   else
                     echo "Weekly repo status summary workflow not scheduled."
                   fi
-            - name: Issue Labeler - First Half
-              env:
-                  HOUR: ${{ steps.timedate-recorder.outputs.HOUR }}
-              run: |
-                  # If the time is 9pm then run the workflow.
-                  if [[ $HOUR  == '21' ]]
-                  then
-                    gh workflow run auto-label-agent-first-half.lock.yml --ref github-agentic-workflow >/dev/null
-                    echo "Issue labeler workflow, first half, scheduled to run on the github-agentic-workflow branch."
-                  else
-                    echo "Issue labeler workflow, first half not scheduled."
-                  fi
-
-            - name: Issue Labeler - Second Half
-              env:
-                  HOUR: ${{ steps.timedate-recorder.outputs.HOUR }}
-              run: |
-                  # If the time is 9pm then run the workflow.
-                  if [[ $HOUR  == '21' ]]
-                  then
-                    gh workflow run auto-label-agent-second-half.lock.yml --ref github-agentic-workflow >/dev/null
-                    echo "Issue labeler workflow, second half, scheduled to run on the github-agentic-workflow branch."
-                  else
-                    echo "Issue labeler workflow, second half not scheduled."
-                  fi

@@ -1,8 +1,9 @@
 ---
-timeout-minutes: 15
+timeout-minutes: 5
 
 on:
-  workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   issues: read
@@ -29,9 +30,8 @@ engine:
 
 # Auto Label Agent - Second Half
 
-Fetch all issues opened in the past 25 hours that are unlabeled, or only have the `bug` label.
-
-For each issue, analyze the title and body of the opened issue, then add zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `systemc`, `tests`, `util`, `util-docker`, `util-gem5art`, `util-m5`, `website`.
+Analyze the title and body of the opened issue, then add
+zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `systemc`, `tests`, `util`, `util-docker`, `util-gem5art`, `util-m5`, `website`.
 
 Consider the title of the issue to be more important than the body when deciding which labels to add. If the title starts with a comma separated list of labels, followed by a colon, then make sure that the labels listed in the title are applied if they are valid. If there isn't a comma separated list followed by a colon, but there are keywords corresponding to a label in the title, try to apply labels based on the keywords.
 If something corresponding to a label only comes up 1-2 times in the body,
