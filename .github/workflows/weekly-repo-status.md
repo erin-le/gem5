@@ -58,7 +58,7 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 
 - Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded, and the summary itself should be kept concise. The summary for a PR or issue should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
 
-The lists should be split by whether the PRs or issues were created in the last two weeks. Pay special attention to older, formerly inactive PRs/issues that had recent activity.
+The lists should be split by whether the PRs or issues were created in the last 2-6 weeks, or if they were created over 6 weeks ago. Pay special attention to older, formerly inactive PRs/issues that had recent activity.
 
 Use the table template shown below:
 
