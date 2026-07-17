@@ -53,23 +53,25 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 
 - Lists of PRs and issues that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
 
-| PR | Title | Author | Summary |
-|----|-------|--------|---------|
+| PR/Issue # | Title | Author | Summary |
+|------------|-------|--------|---------|
 
-- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded, and the summary itself should be very concise. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded, and the summary itself should be kept concise. The summary for a PR or issue should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+
+The lists should be split by whether the PRs or issues were created in the last two weeks. Pay special attention to older, formerly inactive PRs/issues that had recent activity.
+
 Use the table template shown below:
 
-| PR | Title | Author | Updated by | Summary |
-|----|-------|--------|------------|---------|
+| PR/Issue # | Title | Author | Updated by | Summary |
+|------------|-------|--------|------------|---------|
 
-- A list of PRs that haven't had any activity in the last two weeks. This list should have the PR number, title, name of the author, a summary of the changes made, and the status of the PR, e.g. if it's been waiting for a response from the author or reviewer for two weeks or more, if two weeks or more have passed with no activity since the PR was opened, etc. The summary for a PR should not include activity from previous runs of this workflow that mention the PR.
-Split this list into two parts. The first should be for PRs that haven't had activity in approximately two weeks, the second should be for PRs that haven't had activity for longer periods of time. Within each list, sort PRs by PR number in descending order.
+- A list of PRs that haven't had any activity in the last two to six weeks. This list should have the PR number, title, name of the author, a summary of the changes made, and the status of the PR, e.g. if it's been waiting for a response from the author or reviewer for two weeks or more, if two weeks or more have passed with no activity since the PR was opened, etc. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. Sort PRs by descending order of PR number.
 This list should be formatted as follows:
 
 | PR | Title | Author | Summary | Status |
 |----|-------|--------|---------|--------|
 
-The `Summary` section for PRs that haven't had activity in around 2 weeks can be more detailed. In the `Status` section, include *what the last activity was*, *who the last activity was from* and *how long it has been since the last activity*. If it is necessary to save space, the `Summary` and `Status` columns for workflows inactive for over 2 weeks can be omitted.
+In the `Status` section, include *what the last activity was*, *who the last activity was from* and *how long it has been since the last activity*.
 
 
 - A list of issues and PRs that might be high priority.
@@ -83,8 +85,8 @@ The `Summary` section for PRs that haven't had activity in around 2 weeks can be
     - If the PR is a fix for a high priority issue
     - One of the gem5 developers was pinged on the PR. The GitHub usernames of the gem5 developers are as follows: `erin-le`, `Harshil2107`, `BobbyRBruce`, `powerjg`.
   - Organize this list so all of the PRs are listed, then all of the issues. Use the following format, and sort PRs/issue by PR/issue number in descending order:
-| PR | Title | Author | Why High Priority | Actions Needed |
-|----|-------|--------|-------------------|----------------|
+| PR/Issue # | Title | Author | Why High Priority | Actions Needed |
+|------------|-------|--------|-------------------|----------------|
 
 <!-- - A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows, and should be split up by gem5 Developer. Within each list, PRs and issues should be sorted in descending order of PR/issue number:
 | PR | Title | Author | gem5 Developer | Actions Needed |
