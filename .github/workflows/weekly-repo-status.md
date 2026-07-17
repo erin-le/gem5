@@ -69,6 +69,9 @@ This list should be formatted as follows:
 | PR | Title | Author | Summary | Status |
 |----|-------|--------|---------|--------|
 
+The `Summary` section for PRs that haven't had activity in around 2 weeks can be more detailed. In the `Status` section, include *what the last activity was*, *who the last activity was from* and *how long it has been since the last activity*. If it is necessary to save space, the `Summary` and `Status` columns for workflows inactive for over 2 weeks can be omitted.
+
+
 - A list of issues and PRs that might be high priority.
   - An issue might be high priority if:
     - several community members have commented on it and said that they have encountered the same issue, especially if the issue causes the simulation to crash or produce inaccurate results.
