@@ -51,7 +51,10 @@ timeout-minutes: 20
 
 engine:
   id: copilot
-  model: gpt-5-mini
+  env:
+    COPILOT_PROVIDER_BASE_URL: https://api.openai.com/v1
+    COPILOT_MODEL: gpt-5.4
+    COPILOT_PROVIDER_API_KEY: ${{ secrets.COPILOT_PROVIDER_API_KEY }}
 
 ---
 # Test Failure Doctor
