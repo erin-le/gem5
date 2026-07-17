@@ -32,6 +32,10 @@ safe-outputs:
 
 engine:
   id: copilot
+  env:
+    COPILOT_PROVIDER_BASE_URL: https://api.openai.com/v1
+    COPILOT_MODEL: gpt-5.5
+    COPILOT_PROVIDER_API_KEY: ${{ secrets.COPILOT_PROVIDER_API_KEY }}
 
 ---
 
