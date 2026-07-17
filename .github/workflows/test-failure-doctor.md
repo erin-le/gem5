@@ -8,6 +8,7 @@ on:
     types: [completed]
 
   bots: ["github-actions[bot]"]
+  roles: all
 # Only trigger for failures - check in the workflow body
 # The condition after the &&: Don't run the Test Failure Doctor if the triggering
 # workflow is on its 2nd run/1st rerun (or greater). This is to try to save tokens.
