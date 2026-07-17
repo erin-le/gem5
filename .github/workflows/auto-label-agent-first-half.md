@@ -8,6 +8,7 @@ on:
 permissions:
   issues: read
   contents: read
+  copilot-requests: write
 
 tools:
   github:
@@ -23,7 +24,11 @@ safe-outputs:
 
 engine:
   id: copilot
-  model: gpt-5-mini
+  env:
+    COPILOT_PROVIDER_BASE_URL: https://api.openai.com/v1
+    COPILOT_MODEL: gpt-5-mini
+    COPILOT_PROVIDER_API_KEY: ${{ secrets.COPILOT_PROVIDER_API_KEY }}
+
 
 ---
 
