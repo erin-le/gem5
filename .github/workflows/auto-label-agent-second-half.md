@@ -4,6 +4,7 @@ timeout-minutes: 5
 on:
   issues:
     types: [opened]
+  roles: all
 
 permissions:
   issues: read
