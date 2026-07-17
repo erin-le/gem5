@@ -10,6 +10,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
+  copilot-requests: write
 
 network: defaults
 
@@ -55,7 +56,7 @@ For example, if this workflow is run at May 18th at 9pm, then the summary should
 | PR | Title | Author | Summary |
 |----|-------|--------|---------|
 
-- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded, and the summary itself should be very concise. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
 Use the table template shown below:
 
 | PR | Title | Author | Updated by | Summary |
@@ -82,9 +83,9 @@ This list should be formatted as follows:
 | PR | Title | Author | Why High Priority | Actions Needed |
 |----|-------|--------|-------------------|----------------|
 
-- A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows, and should be split up by gem5 Developer. Within each list, PRs and issues should be sorted in descending order of PR/issue number:
+<!-- - A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows, and should be split up by gem5 Developer. Within each list, PRs and issues should be sorted in descending order of PR/issue number:
 | PR | Title | Author | gem5 Developer | Actions Needed |
-|----|-------|--------|----------------|----------------|
+|----|-------|--------|----------------|----------------| -->
 
 ## Style
 
