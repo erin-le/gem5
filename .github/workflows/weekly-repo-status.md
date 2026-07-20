@@ -1,7 +1,7 @@
 ---
 description: |
   This workflow creates weekly repo status reports. It gathers recent repository
-  activity (issues, PRs, code changes) and generates a summary GitHub issue.
+  activity (issues, PRs, discussions, code changes) and generates a summary GitHub issue.
 
 on:
   workflow_dispatch:
@@ -10,6 +10,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
+  discussions: read
   copilot-requests: write
 
 network: defaults
@@ -47,34 +48,39 @@ When "weekly" or "in the last week" is used, and the workflow was automatically 
 
 For example, if this workflow is run at May 18th at 9pm, then the summary should include all activity between May 11th at 9pm and May 18th at 9pm.
 
+- In the section below, the words "item" or "items" refers to PRs, issues, and discussions.
+
 ## What to include
 
 - An executive summary of what has been done in the last week.
 
-- Lists of PRs and issues that were opened in the last week, and a short summary of each. Only include PRs and issues that are still open. PRs and issues should be sorted into separate lists, and within each list, PRs and issues should be sorted from newest to oldest, i.e. by descending PR/issue number. These lists should be formatted as tables with the PR or issue number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
+- Lists of PRs, issues, and discussions that were opened in the last week, and a short summary of each. Only include items that are still open. PRs, issues, and discussions should be sorted into separate lists, and within each list, items should be sorted from newest to oldest, i.e. by descending PR/issue/discussion number. These lists should be formatted as tables with the PR/issue/discussion number, title, author, and summary. Key words and phrases in the summary should be bolded. Use the table template shown below:
 
-| PR/Issue # | Title | Author | Summary |
-|------------|-------|--------|---------|
+| # | Title | Author | Summary |
+|---|-------|--------|---------|
 
-- Lists of PRs and issues that were modified or had activity in the last week, and a short summary of what the changes were, and/or what the activity was. The PRs and issues in this section should be as though you filtered open PRs or issues by the `updated` qualifier between the current time and a week ago, and excluded PRs or issues that were `created` between the current time and a week ago. These lists should also be formatted as tables with the PR or issue number, title, author, person/people who updated, and summary, and should be sorted in order of descending PR/issue number. Key words and phrases in the summary should be bolded, and the summary itself should be kept concise. The summary for a PR or issue should not include activity from previous runs of this workflow that mention the PR. The summaries also should not mention runs of CI tests for the PR, unless there were test failures.
+- Lists of PRs, issues, and discussions that were modified, had new comments added, or had other activity in the last week. Provide a short summary of what the changes were, and/or what the activity was. The PRs, issues, and discussions in this section should be as though you filtered them by the `updated` qualifier between the current time and a week ago, and excluded the ones that were `created` between the current time and a week ago.
 
-The lists should be split by whether the PRs or issues were created in the last 2-6 weeks, or if they were created over 6 weeks ago. Pay special attention to older, formerly inactive PRs/issues that had recent activity.
+There should be two lists in total. The first should contain items that were created in the last 2-6 weeks, and the second should contain items created over 6 weeks ago. Pay special attention to older, formerly inactive items that had recent activity.
 
-Use the table template shown below:
+Within each table, items should first be sorted by whether they are PRs, issues, or discussions, then sorted in order of descending PR/issue/discussion number. Key words and phrases in the summary should be bolded, and the summary itself should be kept concise. The summary should not include activity from previous runs of this workflow that mention the PR/issue/discussion. The summaries also should not mention runs of CI tests for PRs, unless there were test failures.
 
-| PR/Issue # | Title | Author | Updated by | Summary |
-|------------|-------|--------|------------|---------|
 
-- A list of PRs that haven't had any activity in the last two to six weeks. This list should have the PR number, title, name of the author, a summary of the changes made, and the status of the PR, e.g. if it's been waiting for a response from the author or reviewer for two weeks or more, if two weeks or more have passed with no activity since the PR was opened, etc. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. Sort PRs by descending order of PR number.
+These lists should also be formatted as tables with the PR/issue/discussion number (in the `| # |` column), whether the item is a PR/issue/discussion (in the `| Type |` column), the title, author, person/people who updated, and summary. The PR/issue/discussion number should link to the PR/issue/discussion.
+
+| # | Type | Title | Author | Updated by | Summary |
+|---|------|-------|--------|------------|---------|
+
+- A list of PRs that were last updated in the last six weeks, but haven't had any activity in the last two weeks. This list should have the PR number, title, name of the author, a summary of the changes made, and the status of the PR, e.g. if it's been waiting for a response from the author or reviewer for two weeks or more, if two weeks or more have passed with no activity since the PR was opened, etc. The summary for a PR should not include activity from previous runs of this workflow that mention the PR. Sort PRs by descending order of PR number.
 This list should be formatted as follows:
 
-| PR | Title | Author | Summary | Status |
-|----|-------|--------|---------|--------|
+| PR # | Title | Author | Summary | Status |
+|------|-------|--------|---------|--------|
 
 In the `Status` section, include *what the last activity was*, *who the last activity was from* and *how long it has been since the last activity*.
 
 
-- A list of issues and PRs that might be high priority.
+- A list of issues, PRs, and discussions that might be high priority.
   - An issue might be high priority if:
     - several community members have commented on it and said that they have encountered the same issue, especially if the issue causes the simulation to crash or produce inaccurate results.
     - One of the gem5 developers was pinged on the issue. The GitHub usernames of the gem5 developers are `BobbyRBruce`, `Harshil2107`, `erin-le`, and `powerjg`.
@@ -84,13 +90,15 @@ In the `Status` section, include *what the last activity was*, *who the last act
     - If the PR has been marked for inclusion in the next release
     - If the PR is a fix for a high priority issue
     - One of the gem5 developers was pinged on the PR. The GitHub usernames of the gem5 developers are as follows: `erin-le`, `Harshil2107`, `BobbyRBruce`, `powerjg`.
-  - Organize this list so all of the PRs are listed, then all of the issues. Use the following format, and sort PRs/issue by PR/issue number in descending order:
-| PR/Issue # | Title | Author | Why High Priority | Actions Needed |
-|------------|-------|--------|-------------------|----------------|
 
-<!-- - A list of actionable next steps for PRs and issues, split up by gem5 developer. The list should be formatted as follows, and should be split up by gem5 Developer. Within each list, PRs and issues should be sorted in descending order of PR/issue number:
-| PR | Title | Author | gem5 Developer | Actions Needed |
-|----|-------|--------|----------------|----------------| -->
+  - A discussion might be high priority if:
+    - several community members have commented on the discussion
+    - One of the gem5 developers was pinged on the discussion. The GitHub usernames of the gem5 developers are `BobbyRBruce`, `Harshil2107`, `erin-le`, and `powerjg`.
+
+  - Organize this list so items are grouped by whether they're PRs, issues, or discussions. Within each group, sort items in descending order of PR/issue/discussion number. Use the table template shown below:
+
+| # | Type | Title | Author | Why High Priority | Actions Needed |
+|---|------|-------|--------|-------------------|----------------|
 
 ## Style
 
@@ -103,5 +111,5 @@ In the `Status` section, include *what the last activity was*, *who the last act
 ## Process
 
 1. Gather recent activity from the repository
-2. Study the repository, its issues and its pull requests
+2. Study the repository and its issues, pull requests, and discussions.
 3. Create a new GitHub issue with your findings and insights
