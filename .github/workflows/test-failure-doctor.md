@@ -55,10 +55,14 @@ engine:
   id: copilot
   env:
     COPILOT_PROVIDER_BASE_URL: https://api.openai.com/v1
-    COPILOT_MODEL: gpt-5.4
+    COPILOT_MODEL: gpt-5-mini
     COPILOT_PROVIDER_API_KEY: ${{ secrets.COPILOT_PROVIDER_API_KEY }}
 
 ---
 # Test Failure Doctor
 
-Call the noop tool immediately and exit.
+Print the following message to the Agentic Conversation:
+
+`Using the test failure doctor workflow file from the stable branch`
+
+Next, call the noop tool and exit.
