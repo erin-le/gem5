@@ -1,5 +1,6 @@
 ---
-# This workflow runs all of the very-long tests within main.py
+# This workflow runs all of the very-long tests within main.py and uploads gcov
+# code coverage information to Codecov
 
 name: Weekly Tests
 
@@ -24,7 +25,7 @@ jobs:
         outputs:
             test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Get directories for testlib-very-long
               working-directory: ${{ github.workspace }}/tests
               id: dir-matrix
@@ -34,6 +35,7 @@ jobs:
                     ./main.py list gem5 \
                     --suites \
                     --length very-long \
+                    --gcov=test-only \
                     --exclude-tags gcn_gpu | \
                     grep "$SUITEUID:" | \
                     cut -d: -f2 | \
@@ -54,6 +56,7 @@ jobs:
         name: very-long-tests
         strategy:
             fail-fast: false
+            max-parallel: 5
             matrix:
                 test-type: ${{ fromJson(needs.get-testlib-very-long-dirs.outputs.test-dirs-matrix) }}
         runs-on: [self-hosted, linux, x64]
@@ -61,10 +64,10 @@ jobs:
         timeout-minutes: 4320 # 3 days
         needs: [get-date, get-testlib-very-long-dirs]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Cache build/ALL
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: build/ALL
                   key: testlib-build-all-${{ needs.get-date.outputs.date }}
@@ -73,33 +76,42 @@ jobs:
 
             - name: Run very-long ${{ matrix.test-type }} tests
               id: run-tests
+              timeout-minutes: 4290
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type }} --length very-long -j$(nproc) -vv --exclude-tags gcn_gpu
+              run: ./main.py run ${{ matrix.test-type }} --length very-long --gcov=test-only -j$(nproc) -vv --exclude-tags gcn_gpu
 
             - name: Sanitize test-dir for artifact name
               id: sanitize-test-dir
-              if: success() || failure()
+              if: always()
               run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
             - name: Upload results
-              if: success() || failure()
-              uses: actions/upload-artifact@v4
+              if: always()
+              uses: actions/upload-artifact@v7
               with:
                   name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-very-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
                       }}-status-${{ steps.run-tests.outcome }}-output
                   path: tests/testing-results
 
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v7
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-very-long,${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}-very-long
+
     gpu-tests:
+        strategy:
+            fail-fast: false
         runs-on: [self-hosted, linux, x64]
         container: ghcr.io/gem5/gcn-gpu:latest
-        timeout-minutes: 1440 # 24 hours
+        timeout-minutes: 4320 # 3 days
         needs: get-date
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Cache build/VEGA_X86
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: build/VEGA_X86
                   key: testlib-build-vega-${{ needs.get-date.outputs.date }}
@@ -109,11 +121,18 @@ jobs:
             - name: Run Testlib GPU Tests
               id: run-tests
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run --length=very-long -vvv -j $(nproc) --host gcn_gpu
+              run: ./main.py run --length=very-long -vvv --gcov=test-only -j $(nproc) --host gcn_gpu --isa=VEGA_X86
+              timeout-minutes: 4290
 
             - name: Upload results
-              if: success() || failure()
-              uses: actions/upload-artifact@v4
+              if: always()
+              uses: actions/upload-artifact@v7
               with:
                   name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-gpu-status-${{ steps.run-tests.outcome }}-output
                   path: tests/testing-results
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v7
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: overall-gpu-tests,overall-length-very-long,gpu-tests-very-long
