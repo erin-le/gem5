@@ -4,9 +4,9 @@ name: Run Test Failure Doctor GitHub agentic workflow on test failure
 
 on:
     workflow_dispatch:
-    workflow_run:
-        workflows: [Daily Tests, Weekly Tests, Compiler Tests, CI Tests]
-        types: [completed]
+    # workflow_run:
+    #     workflows: [Daily Tests, Weekly Tests, Compiler Tests, CI Tests]
+    #     types: [completed]
 
 
 env:
