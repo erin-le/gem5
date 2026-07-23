@@ -3,9 +3,9 @@ description: Investigates failed test workflows to identify root causes and patt
 on:
   workflow_dispatch:
 
-  workflow_run:
-    workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
-    types: [completed]
+  # workflow_run:
+  #   workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
+  #   types: [completed]
 
   bots: ["github-actions[bot]"]
   roles: all
@@ -13,7 +13,7 @@ on:
 # The condition after the &&: Don't run the Test Failure Doctor if the triggering
 # workflow is on its 2nd run/1st rerun (or greater). This is to try to save tokens.
 
-if: ${{ (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out') && !(github.event.workflow_run.run_attempt > 1) }}
+# if: ${{ (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out') && !(github.event.workflow_run.run_attempt > 1) }}
 
 permissions: read-all
 
