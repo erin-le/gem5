@@ -28,6 +28,9 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
 
+            - name: Install gh-aw extension
+              run: gh extension install github/gh-aw
+
             - name: Test Failure Doctor
               if: |
                   (github.event.workflow_run.conclusion == 'failure' ||
