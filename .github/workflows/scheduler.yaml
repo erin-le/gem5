@@ -15,6 +15,7 @@ name: Workflow Scheduler
 # other workflows.
 
 on:
+    workflow_dispatch:
     schedule:
     # Runs every hour, 30 minutes past the hour.
         - cron: 30 * * * *
@@ -52,9 +53,9 @@ jobs:
                   HOUR: ${{ steps.timedate-recorder.outputs.HOUR }}
               run: |
                   # If current time is 7pm then run the workflow.
-                  if [[ $HOUR  == '19' ]]
+                  if [[ $HOUR  == '22' ]]
                   then
-                    gh workflow run daily-tests.yaml --ref develop >/dev/null
+                    gh workflow run daily-tests.yml --ref github-agentic-workflow >/dev/null
                     echo "Daily test scheduled to run on develop branch."
                   else
                     echo "Daily tests not scheduled."
@@ -69,7 +70,7 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '5' ]] && [[ $HOUR  == '19' ]]
                   then
-                    gh workflow run weekly-tests.yaml --ref develop >/dev/null
+                    gh workflow run weekly-tests.yml --ref github-agentic-workflow >/dev/null
                     echo "Weekly test scheduled to run on develop branch."
                   else
                     echo "Weekly tests not scheduled."
@@ -84,7 +85,7 @@ jobs:
                   # the workflow.
                   if [[ $DAY == '2' ]] && [[ $HOUR  == '21' ]]
                   then
-                    gh workflow run compiler-tests.yaml --ref develop >/dev/null
+                    gh workflow run compiler-tests.yml --ref github-agentic-workflow >/dev/null
                     echo "Compiler tests scheduled to run on the develop branch."
                   else
                     echo "Compiler tests not scheduled."
