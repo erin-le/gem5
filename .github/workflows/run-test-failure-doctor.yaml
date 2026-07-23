@@ -18,6 +18,7 @@ jobs:
     run_workflows:
         permissions:
             actions: write
+            contents: read
         runs-on: ubuntu-24.04
         steps:
             # This step is necessary to allow the `gh` CLI to be used in the
