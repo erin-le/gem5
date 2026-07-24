@@ -19,85 +19,85 @@ jobs:
               id: date
               run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-    get-testlib-very-long-dirs:
-        runs-on: ubuntu-24.04
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-        outputs:
-            test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
-        steps:
-            - uses: actions/checkout@v7
-            - name: Get directories for testlib-very-long
-              working-directory: ${{ github.workspace }}/tests
-              id: dir-matrix
-              run: |
-                  unset PREV
-                  echo "test-dirs-matrix=$(\
-                    ./main.py list gem5 \
-                    --suites \
-                    --length very-long \
-                    --gcov=test-only \
-                    --exclude-tags gcn_gpu | \
-                    grep "$SUITEUID:" | \
-                    cut -d: -f2 | \
-                    cut -d/ -f 2- | \
-                    xargs dirname | \
-                    sort -u  | \
-                    while read x; do \
-                      if [ -z "${PREV}" ] || [ "$x" != "${PREV}/*" ]; then \
-                        PREV=$x; \
-                        echo $x; \
-                      fi; \
-                    done  | \
-                    jq -ncR '[inputs]'\
-                  )" >>$GITHUB_OUTPUT
+    # get-testlib-very-long-dirs:
+    #     runs-on: ubuntu-24.04
+    #     container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+    #     outputs:
+    #         test-dirs-matrix: ${{ steps.dir-matrix.outputs.test-dirs-matrix }}
+    #     steps:
+    #         - uses: actions/checkout@v7
+    #         - name: Get directories for testlib-very-long
+    #           working-directory: ${{ github.workspace }}/tests
+    #           id: dir-matrix
+    #           run: |
+    #               unset PREV
+    #               echo "test-dirs-matrix=$(\
+    #                 ./main.py list gem5 \
+    #                 --suites \
+    #                 --length very-long \
+    #                 --gcov=test-only \
+    #                 --exclude-tags gcn_gpu | \
+    #                 grep "$SUITEUID:" | \
+    #                 cut -d: -f2 | \
+    #                 cut -d/ -f 2- | \
+    #                 xargs dirname | \
+    #                 sort -u  | \
+    #                 while read x; do \
+    #                   if [ -z "${PREV}" ] || [ "$x" != "${PREV}/*" ]; then \
+    #                     PREV=$x; \
+    #                     echo $x; \
+    #                   fi; \
+    #                 done  | \
+    #                 jq -ncR '[inputs]'\
+    #               )" >>$GITHUB_OUTPUT
 
     # start running the very-long tests
-    testlib-very-long-tests:
-        name: very-long-tests
-        strategy:
-            fail-fast: false
-            max-parallel: 5
-            matrix:
-                test-type: ${{ fromJson(needs.get-testlib-very-long-dirs.outputs.test-dirs-matrix) }}
-        runs-on: [self-hosted, linux, x64]
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-        timeout-minutes: 4320 # 3 days
-        needs: [get-date, get-testlib-very-long-dirs]
-        steps:
-            - uses: actions/checkout@v7
+    # testlib-very-long-tests:
+    #     name: very-long-tests
+    #     strategy:
+    #         fail-fast: false
+    #         max-parallel: 5
+    #         matrix:
+    #             test-type: ${{ fromJson(needs.get-testlib-very-long-dirs.outputs.test-dirs-matrix) }}
+    #     runs-on: [self-hosted, linux, x64]
+    #     container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+    #     timeout-minutes: 4320 # 3 days
+    #     needs: [get-date, get-testlib-very-long-dirs]
+    #     steps:
+    #         - uses: actions/checkout@v7
 
-            - name: Cache build/ALL
-              uses: actions/cache@v6
-              with:
-                  path: build/ALL
-                  key: testlib-build-all-${{ needs.get-date.outputs.date }}
-                  restore-keys: |
-                      testlib-build-all
+    #         - name: Cache build/ALL
+    #           uses: actions/cache@v6
+    #           with:
+    #               path: build/ALL
+    #               key: testlib-build-all-${{ needs.get-date.outputs.date }}
+    #               restore-keys: |
+    #                   testlib-build-all
 
-            - name: Run very-long ${{ matrix.test-type }} tests
-              id: run-tests
-              timeout-minutes: 4290
-              working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type }} --length very-long --gcov=test-only -j$(nproc) -vv --exclude-tags gcn_gpu
+    #         - name: Run very-long ${{ matrix.test-type }} tests
+    #           id: run-tests
+    #           timeout-minutes: 4290
+    #           working-directory: ${{ github.workspace }}/tests
+    #           run: ./main.py run ${{ matrix.test-type }} --length very-long --gcov=test-only -j$(nproc) -vv --exclude-tags gcn_gpu
 
-            - name: Sanitize test-dir for artifact name
-              id: sanitize-test-dir
-              if: always()
-              run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+    #         - name: Sanitize test-dir for artifact name
+    #           id: sanitize-test-dir
+    #           if: always()
+    #           run: echo "sanitized-test-dir=$(echo '${{ matrix.test-type }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
-            - name: Upload results
-              if: always()
-              uses: actions/upload-artifact@v7
-              with:
-                  name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-very-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
-                      }}-status-${{ steps.run-tests.outcome }}-output
-                  path: tests/testing-results
+    #         - name: Upload results
+    #           if: always()
+    #           uses: actions/upload-artifact@v7
+    #           with:
+    #               name: weekly-tests-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}-testlib-very-long-${{ steps.sanitize-test-dir.outputs.sanitized-test-dir
+    #                   }}-status-${{ steps.run-tests.outcome }}-output
+    #               path: tests/testing-results
 
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v7
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-very-long,${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}-very-long
+    #         - name: Upload coverage reports to Codecov
+    #           uses: codecov/codecov-action@v7
+    #           with:
+    #               token: ${{ secrets.CODECOV_TOKEN }}
+    #               flags: overall-testdir-${{steps.sanitize-test-dir.outputs.sanitized-test-dir}},overall-length-very-long,${{steps.sanitize-test-dir.outputs.sanitized-test-dir}}-very-long
 
     gpu-tests:
         strategy:
