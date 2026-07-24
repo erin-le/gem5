@@ -2,6 +2,11 @@
 description: Investigates failed test workflows to identify root causes and patterns and rerun if the failure isn't related to the code
 on:
   workflow_dispatch:
+    inputs:
+      failed-workflow-id:
+        description: 'Workflow ID for the workflow that originally triggered the test failure doctor'
+        required: true
+        type: string
 
   # workflow_run:
   #   workflows: ["Daily Tests", "Weekly Tests", "Compiler Tests", "CI Tests"]
@@ -34,7 +39,7 @@ safe-outputs:
         - name: Rerun failed jobs
           uses: actions/github-script@v8
           env:
-            RUN_ID: ${{ github.event.workflow_run.id }}
+            RUN_ID: ${{ github.event.inputs.failed-workflow-id }}
           with:
              script: |
                 await github.rest.actions.reRunWorkflowFailedJobs({
