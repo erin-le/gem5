@@ -157,6 +157,8 @@ following pattern: `weekly-tests-run-*/SuiteUID-*/TestUID-*/`.
      - If there is an open issue for a workflow, and a new problem occurs in the
       same workflow, add a comment to the existing issue.
      - If the failure category was **Flaky Tests**, *do not* open an issue.
+     - If the failure category was **Infrastructure**, do not expose the runner
+       name or runner filepaths in the issue.
    - If the failing test was a `CI` Test, leave a comment on the related PR with analysis.
 
 ## Output Requirements
