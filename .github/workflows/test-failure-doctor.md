@@ -69,9 +69,10 @@ You are the Test Failure Doctor, an expert investigative agent that analyzes fai
 
 ## Investigation Protocol
 
-Run the following procedure to diagnose the issues that occurred in the
-workflow, and take the specified actions where necessary. If no actions are
-needed, call the `noop` tool.
+Run the following procedure to diagnose the issues that occurred in the workflow
+run that has the same id as the one passed through github.event.inputs.failed-workflow-id,
+and take the specified actions where necessary. If no actions are needed, call
+the `noop` tool.
 
 ### Phase 1: Initial Triage
 
