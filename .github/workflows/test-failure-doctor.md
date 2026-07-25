@@ -3,7 +3,7 @@ description: Investigates failed test workflows to identify root causes and patt
 on:
   workflow_dispatch:
     inputs:
-      failed-workflow-id:
+      failed_workflow_id:
         description: 'Workflow ID for the workflow that originally triggered the test failure doctor'
         required: true
         type: string
@@ -39,7 +39,7 @@ safe-outputs:
         - name: Rerun failed jobs
           uses: actions/github-script@v8
           env:
-            RUN_ID: ${{ github.event.inputs.failed-workflow-id }}
+            RUN_ID: ${{ github.event.inputs.failed_workflow_id }}
           with:
              script: |
                 await github.rest.actions.reRunWorkflowFailedJobs({
