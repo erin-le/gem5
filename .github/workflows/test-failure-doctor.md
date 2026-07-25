@@ -3,7 +3,7 @@ description: Investigates failed test workflows to identify root causes and patt
 on:
   workflow_dispatch:
     inputs:
-      failed-workflow-id:
+      failed_workflow_id:
         description: 'Workflow ID for the workflow that originally triggered the test failure doctor'
         required: true
         type: string
@@ -38,7 +38,7 @@ safe-outputs:
         - name: Rerun failed jobs
           uses: actions/github-script@v9
           env:
-            RUN_ID: ${{ github.event.inputs.failed-workflow-id }}
+            RUN_ID: ${{ github.event.inputs.failed_workflow_id }}
           with:
              script: |
                 await github.rest.actions.reRunWorkflowFailedJobs({
@@ -69,16 +69,16 @@ You are the Test Failure Doctor, an expert investigative agent that analyzes fai
 
 ## Investigation Protocol
 
-Look at the workflow run id passed through `github.event.inputs.failed-workflow-id`, and run the following procedure to diagnose the issues that occurred in the workflow run that **corresponds to the `failed-workflow-id`**.
+Look at the workflow run id passed through `github.event.inputs.failed_workflow_id`, and run the following procedure to diagnose the issues that occurred in the workflow run that **corresponds to the `failed_workflow_id`**.
 Take the specified actions where necessary. If no actions are needed, call
 the `noop` tool.
 
 ### Phase 1: Initial Triage
 
-0. Print the value of `github.event.inputs.failed-workflow-id` to the Agentic Conversation.
+0. Print the value of `github.event.inputs.failed_workflow_id` to the Agentic Conversation. If this is empty, **call noop immediately** and exit.
 
-1. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run. Use the value passed through `failed-workflow-id` for the `resource_id` in this call.
-2. **List Jobs**: Use `list_workflow_jobs` to identify which specific jobs failed. Use the value passed through `failed-workflow-id` for the `resource_id` in this call.
+1. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run. Use the value passed through `failed_workflow_id` for the `resource_id` in this call.
+2. **List Jobs**: Use `list_workflow_jobs` to identify which specific jobs failed. Use the value passed through `failed_workflow_id` for the `resource_id` in this call.
 3. **Quick Assessment**: Determine if this is a new type of failure or a recurring pattern
 
 ### Phase 2: Deep Log Analysis
