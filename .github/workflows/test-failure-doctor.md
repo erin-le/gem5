@@ -75,7 +75,7 @@ the `noop` tool.
 
 ### Phase 1: Initial Triage
 
-0. Print the value of `github.event.inputs.failed_workflow_id` to the Agentic Conversation. If this is empty, **call noop immediately** and exit.
+0. When this workflow is launched via `workflow_dispatch`, an input with the name `failed_workflow_id` should be passed to this workflow. Print the value of `failed_workflow_id` to the Agentic Conversation. If this is empty, **call noop immediately** and exit.
 
 1. **Get Workflow Details**: Use `get_workflow_run` to get full details of the failed run. Use the value passed through `failed_workflow_id` for the `resource_id` in this call.
 2. **List Jobs**: Use `list_workflow_jobs` to identify which specific jobs failed. Use the value passed through `failed_workflow_id` for the `resource_id` in this call.
