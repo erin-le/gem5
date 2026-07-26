@@ -39,7 +39,7 @@ engine:
 
 ---
 
-# Issue Labeler - First Half
+# Issue Labeler - Second Half
 
 Print the following message to the Agentic Conversation:
 
