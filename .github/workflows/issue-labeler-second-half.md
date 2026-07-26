@@ -8,14 +8,6 @@ on:
         description: 'Issue id'
         required: true
         type: string
-      issue_title:
-        description: 'Issue title'
-        required: true
-        type: string
-      issue_body:
-        description: 'Issue body'
-        required: true
-        type: string
   # issues:
   #   types: [opened]
   # roles: all
@@ -49,7 +41,9 @@ engine:
 
 # Issue Labeler - Second Half
 
-The following is the context of the issue that you should analyze: ${{ github.event.inputs.issue_context }}
+The following is the id of the issue that you should analyze:
+
+id: ${{ github.event.inputs.issue_id }}
 
 Analyze the title and body of the opened issue, then add
 zero or more of the allowed labels: `ext-testlib`, `fastmodel`, `gdb`, `github`, `good-first-contribution`, `gpu`, `gpu-compute`, `help wanted`, `learning-gem5`, `mem`, `mem-cache`, `mem-garnet`, `mem-ruby`, `misc`, `python`, `question`, `resources`, `resources-website`, `scons`, `sim`, `sim-se`, `stats`, `stdlib`, `systemc`, `tests`, `util`, `util-docker`, `util-gem5art`, `util-m5`, `website`.
