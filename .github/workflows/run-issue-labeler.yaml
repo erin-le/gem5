@@ -31,7 +31,9 @@ jobs:
 
             - name: Run Issue labeler
               run: |
-                  gh aw run issue-labeler-first-half --ref github-agentic-workflow --raw-field issue_context=${{ github.event.issue }}
-                  gh aw run issue-labeler-second-half --ref github-agentic-workflow --raw-field issue_context=${{ github.event.issue }}
-                  echo ${{ github.event.issue }}
+                  gh aw run issue-labeler-first-half --ref github-agentic-workflow --raw-field issue_id=${{ github.event.issue.id }} --raw-field issue_title=${{ github.event.issue.title }} --raw-field issue_body=${{ github.event.issue.body }}
+                  gh aw run issue-labeler-second-half --ref github-agentic-workflow --raw-field issue_id=${{ github.event.issue.id }} --raw-field issue_title=${{ github.event.issue.title }} --raw-field issue_body=${{ github.event.issue.body }}
+                  echo ${{ github.event.issue.id }}
+                  echo ${{ github.event.issue.title }}
+                  echo ${{ github.event.issue.body }}
                   echo "Issue labeler scheduled to run on github-agentic-workflow branch"

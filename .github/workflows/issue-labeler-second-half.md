@@ -4,8 +4,16 @@ timeout-minutes: 5
 on:
   workflow_dispatch:
     inputs:
-      issue_context:
-        description: 'Context of the issue that the workflow should label'
+      issue_id:
+        description: 'Issue id'
+        required: true
+        type: string
+      issue_title:
+        description: 'Issue title'
+        required: true
+        type: string
+      issue_body:
+        description: 'Issue body'
         required: true
         type: string
   # issues:
