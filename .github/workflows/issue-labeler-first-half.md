@@ -39,7 +39,7 @@ engine:
 
 ---
 
-# Auto Label Agent - First Half
+# Issue Labeler - First Half
 
 The following is the context of the issue that you should analyze: ${{ github.event.inputs.issue_context }}
 
