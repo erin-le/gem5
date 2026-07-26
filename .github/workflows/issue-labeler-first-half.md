@@ -2,9 +2,15 @@
 timeout-minutes: 5
 
 on:
-  issues:
-    types: [opened]
-  roles: all
+  workflow_dispatch:
+    inputs:
+      issue_context:
+        description: 'Context of the issue that the workflow should label'
+        required: true
+        type: string
+  # issues:
+  #   types: [opened]
+  # roles: all
 
 permissions:
   issues: read
@@ -34,6 +40,8 @@ engine:
 ---
 
 # Auto Label Agent - First Half
+
+The following is the context of the issue that you should analyze: ${{ github.event.inputs.issue_context }}
 
 Analyze the title and body of the opened issue, then add zero or more of the allowed labels: `arch`, `arch-arm`, `arch-gcn3`, `arch-mips`, `arch-power`, `arch-riscv`, `arch-sparc`, `arch-vega`, `arch-x86`, `base`, `base-stats`, `bug`, `build error`, `classic caches`, `compilation error`, `configs`, `cpu`, `cpu base`, `cpu-kvm`, `cpu-minor`, `cpu-o3`, `cpu-simple`, `dependencies`, `dev`, `dev-arm`, `dev-hsa`, `dev-virtio`, `doc`, `dram`, `duplicate`, `enhancement`, `ext`.
 
