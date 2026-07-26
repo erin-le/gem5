@@ -4,8 +4,16 @@ timeout-minutes: 5
 on:
   workflow_dispatch:
     inputs:
-      issue_context:
-        description: 'Context of the issue that the workflow should label'
+      issue_id:
+        description: 'Issue id'
+        required: true
+        type: string
+      issue_title:
+        description: 'Issue title'
+        required: true
+        type: string
+      issue_body:
+        description: 'Issue body'
         required: true
         type: string
   # issues:
@@ -41,7 +49,11 @@ engine:
 
 # Issue Labeler - First Half
 
-The following is the context of the issue that you should analyze: ${{ github.event.inputs.issue_context }}
+The following are the id, title, and body of the context of the issue that you should analyze:
+
+id: ${{ github.event.inputs.issue_id }}
+title: ${{ github.event.inputs.issue_title }}
+body: ${{ github.event.inputs.issue_body }}
 
 Analyze the title and body of the opened issue, then add zero or more of the allowed labels: `arch`, `arch-arm`, `arch-gcn3`, `arch-mips`, `arch-power`, `arch-riscv`, `arch-sparc`, `arch-vega`, `arch-x86`, `base`, `base-stats`, `bug`, `build error`, `classic caches`, `compilation error`, `configs`, `cpu`, `cpu base`, `cpu-kvm`, `cpu-minor`, `cpu-o3`, `cpu-simple`, `dependencies`, `dev`, `dev-arm`, `dev-hsa`, `dev-virtio`, `doc`, `dram`, `duplicate`, `enhancement`, `ext`.
 
