@@ -4,8 +4,8 @@ timeout-minutes: 5
 on:
   workflow_dispatch:
     inputs:
-      issue_id:
-        description: 'Issue id'
+      issue_number:
+        description: 'Issue number'
         required: true
         type: string
   # issues:
@@ -41,7 +41,7 @@ engine:
 
 # Issue Labeler - Second Half
 
-The following is the id of the issue that you should analyze:
+The following is the issue number of the issue that you should analyze:
 
 id: ${{ github.event.inputs.issue_id }}
 
