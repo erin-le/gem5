@@ -73,25 +73,57 @@ jobs:
   #                 exit $status
   #             timeout-minutes: 120
 
-    # build-all-gem5:
-    #     runs-on: [self-hosted, linux, x64]
-    #     container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
-    #     timeout-minutes: 180
-    #     needs: get-date
+    riscv-build-all-gem5:
+        runs-on: cloud-v-riscv64
+        # container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        timeout-minutes: 180
+        needs: get-date
 
-    #     steps:
-    #         - uses: actions/checkout@v7
+        steps:
+            - uses: actions/checkout@v7
 
-    #         - name: Cache build/ALL
-    #           uses: actions/cache@v6
-    #           with:
-    #               path: build/ALL
-    #               key: testlib-build-all-${{ needs.get-date.outputs.date }}
-    #               restore-keys: |
-    #                   testlib-build-all
+            - name: Install all gem5 dependencies # except for codecov
+              run: |
+                  apt -y update && apt -y upgrade && apt -y install \
+                  build-essential \
+                  scons \
+                  python3-dev \
+                  git \
+                  pre-commit \
+                  zlib1g \
+                  zlib1g-dev \
+                  libprotobuf-dev \
+                  protobuf-compiler \
+                  libprotoc-dev \
+                  libgoogle-perftools-dev \
+                  libboost-all-dev \
+                  libhdf5-serial-dev \
+                  python3-pydot \
+                  python3-venv \
+                  python3-tk \
+                  mypy \
+                  m4 \
+                  libcapstone-dev \
+                  libpng-dev \
+                  libelf-dev \
+                  pkg-config \
+                  wget \
+                  cmake \
+                  doxygen \
+                  vim \
+                  sudo \
+                  jq \
 
-    #         - name: Build ALL/gem5.opt
-    #           run: scons --no-compress-debug build/ALL/gem5.opt -j $(nproc)
+            - name: Cache build/ALL
+              uses: actions/cache@v6
+              with:
+                  path: build/ALL
+                  key: testlib-build-all-${{ needs.get-date.outputs.date }}
+                  restore-keys: |
+                      testlib-build-all
+
+            - name: Build ALL/gem5.opt
+              run: scons --no-compress-debug build/ALL/gem5.opt -j $(nproc)
 
   # # this builds and runs unittests.debug
   #   unittests-debug:
@@ -124,11 +156,11 @@ jobs:
   # start running all of the long tests
     testlib-long-tests:
         name: long-tests
-        runs-on: ubuntu-24.04
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        runs-on: cloud-v-riscv64
+        # container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
         timeout-minutes: 1440 # 24 hours for entire matrix to run
         needs:
-            # - build-all-gem5
+            - riscv-build-all-gem5
             - get-testlib-long-dirs
             - get-date
         strategy:
@@ -138,6 +170,39 @@ jobs:
 
         steps:
             - uses: actions/checkout@v7
+
+            - name: Install all gem5 dependencies # except for codecov
+              run: |
+                  apt -y update && apt -y upgrade && apt -y install \
+                  build-essential \
+                  scons \
+                  python3-dev \
+                  git \
+                  pre-commit \
+                  zlib1g \
+                  zlib1g-dev \
+                  libprotobuf-dev \
+                  protobuf-compiler \
+                  libprotoc-dev \
+                  libgoogle-perftools-dev \
+                  libboost-all-dev \
+                  libhdf5-serial-dev \
+                  python3-pydot \
+                  python3-venv \
+                  python3-tk \
+                  mypy \
+                  m4 \
+                  libcapstone-dev \
+                  libpng-dev \
+                  libelf-dev \
+                  pkg-config \
+                  wget \
+                  cmake \
+                  doxygen \
+                  vim \
+                  sudo \
+                  jq \
+
             - name: Restore build/ALL cache
               uses: actions/cache/restore@v6
               with:
@@ -150,7 +215,7 @@ jobs:
               id: run-tests
               timeout-minutes: 1410
               working-directory: ${{ github.workspace }}/tests
-              run: ./main.py run ${{ matrix.test-type }} -j$(nproc) --length=long -vv -t $(nproc) --exclude-tags gcn_gpu
+              run: ./main.py run ${{ matrix.test-type }} -j$(nproc) --length=long -vv -t $(nproc) --exclude-tags gcn_gpu --skip-build
 
             - name: Sanitize test-dir for artifact name
               id: sanitize-test-dir
