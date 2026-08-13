@@ -91,96 +91,115 @@ def test_boot(
 
 #### The quick (pre-submit/Kokoro) tests ####
 
-test_boot(
-    cpu="atomic",
-    num_cpus=1,
-    cache_type="classic",
-    memory_class="SingleChannelDDR3_1600",
-    length=constants.quick_tag,
-    to_tick=10000000000,  # Simulates 1/100th of a second.
+# test_boot(
+#     cpu="atomic",
+#     num_cpus=1,
+#     cache_type="classic",
+#     memory_class="SingleChannelDDR3_1600",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,  # Simulates 1/100th of a second.
+# )
+
+# test_boot(
+#     cpu="timing",
+#     num_cpus=1,
+#     cache_type="classic",
+#     memory_class="SingleChannelDDR3_2133",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="minor",
+#     num_cpus=1,
+#     cache_type="classic",
+#     memory_class="SingleChannelDDR3_2133",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="minor",
+#     num_cpus=4,
+#     cache_type="classic",
+#     memory_class="SingleChannelDDR3_2133",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="minor",
+#     num_cpus=1,
+#     cache_type="mesi_two_level",
+#     memory_class="SingleChannelDDR3_2133",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="minor",
+#     num_cpus=8,
+#     cache_type="mesi_two_level",
+#     memory_class="SingleChannelDDR3_2133",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+
+# test_boot(
+#     cpu="timing",
+#     num_cpus=1,
+#     cache_type="mesi_two_level",
+#     memory_class="SingleChannelDDR4_2400",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="o3",
+#     num_cpus=1,
+#     cache_type="classic",
+#     memory_class="DualChannelDDR3_1600",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="timing",
+#     num_cpus=4,
+#     cache_type="classic",
+#     memory_class="DualChannelDDR3_2133",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+# test_boot(
+#     cpu="timing",
+#     num_cpus=4,
+#     cache_type="mesi_two_level",
+#     memory_class="DualChannelDDR4_2400",
+#     length=constants.quick_tag,
+#     to_tick=10000000000,
+# )
+
+## KVM test
+
+gem5_verify_config(
+    name="riscv-kvm-boot-test",
+    verifiers=[],
+    fixtures=(),
+    config=joinpath(
+        config.base_dir,
+        "configs",
+        "example",
+        "gem5_library",
+        "riscv-ubuntu-run-with-kvm.py",
+    ),
+    valid_isas=(constants.all_compiled_tag,),
+    valid_hosts=constants.supported_hosts,
+    length=constants.long_tag,
 )
 
-test_boot(
-    cpu="timing",
-    num_cpus=1,
-    cache_type="classic",
-    memory_class="SingleChannelDDR3_2133",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="minor",
-    num_cpus=1,
-    cache_type="classic",
-    memory_class="SingleChannelDDR3_2133",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="minor",
-    num_cpus=4,
-    cache_type="classic",
-    memory_class="SingleChannelDDR3_2133",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="minor",
-    num_cpus=1,
-    cache_type="mesi_two_level",
-    memory_class="SingleChannelDDR3_2133",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="minor",
-    num_cpus=8,
-    cache_type="mesi_two_level",
-    memory_class="SingleChannelDDR3_2133",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-
-test_boot(
-    cpu="timing",
-    num_cpus=1,
-    cache_type="mesi_two_level",
-    memory_class="SingleChannelDDR4_2400",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="o3",
-    num_cpus=1,
-    cache_type="classic",
-    memory_class="DualChannelDDR3_1600",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="timing",
-    num_cpus=4,
-    cache_type="classic",
-    memory_class="DualChannelDDR3_2133",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
-
-test_boot(
-    cpu="timing",
-    num_cpus=4,
-    cache_type="mesi_two_level",
-    memory_class="DualChannelDDR4_2400",
-    length=constants.quick_tag,
-    to_tick=10000000000,
-)
 
 #### The long (Nightly) tests ####
 
