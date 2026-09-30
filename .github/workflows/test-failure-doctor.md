@@ -23,7 +23,9 @@ safe-outputs:
   create-issue:
     title-prefix: "misc: [Test Failure Doctor] "
     labels: [misc, agentic-workflows]
-  add-comment:
+  create-pull-request-review-comment:
+    max: 10
+    target: "*"
   update-issue:
   noop:
   jobs:
@@ -178,8 +180,8 @@ information available to you.
      - If the failure category was **Flaky Tests**, *do not* open an issue.
      - If the failure category was **Infrastructure**, do not expose the runner
        name or runner filepaths in the issue.
-   - If the failing test was a `CI` Test, leave a comment on the related PR with analysis.
-      - If one of the failure types was **Clang format failure**, leave the following comment
+   - If the failing test was a `CI` Test, leave review comment(s) on the related PR with analysis.
+      - If one of the failure types was **Clang format failure**, leave the following comment:
 
 ## Output Requirements
 
