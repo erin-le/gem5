@@ -181,6 +181,8 @@ information available to you.
      - If the failure category was **Infrastructure**, do not expose the runner
        name or runner filepaths in the issue.
    - If the failing test was a `CI` Test, leave review comment(s) on the related PR with analysis.
+      - If there aren't any particular line(s) changed or file(s) that the failure is related to,
+      anchor the review comment to the first file shown in the `Files changed` tab on GitHub.
       - If one of the failure types was **Clang format failure**, leave the following comment:
 
 ## Output Requirements
